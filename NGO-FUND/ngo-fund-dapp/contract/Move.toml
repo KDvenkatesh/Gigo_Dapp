@@ -1,0 +1,12 @@
+[package]
+name = "NGO"
+version = "1.0.0"
+authors = []
+
+[addresses]
+charity_tracker = "0xbc6672e193635582a91fa845509987cd628c5f2a9a12f02440fa47b861139e58"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-framework.git", rev = "mainnet", subdir = "aptos-framework" }
+
+[dev-dependencies]
