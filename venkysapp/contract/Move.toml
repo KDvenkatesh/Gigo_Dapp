@@ -1,12 +1,11 @@
 [package]
-name = "MessageBoard"
+name = "DiceGame"
 version = "1.0.0"
 authors = []
 
 [addresses]
-message_board_addr = "_"
+dice_game = "0xd63581cf3db31763341cabe7a31484c6ce58540a7744f133f0ecd2221c29f6e4"
+
 
 [dependencies]
-AptosFramework = { git = "https://github.com/aptos-labs/aptos-framework.git", rev = "mainnet", subdir = "aptos-framework" }
-
-[dev-dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "testnet", subdir = "aptos-move/framework/aptos-framework" }

@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #05070a;
+  --color-panel: rgba(10, 12, 16, 0.78);
+  --color-panel-strong: rgba(12, 15, 20, 0.92);
+  --color-line: rgba(255, 255, 255, 0.1);
+  --color-copy-muted: rgba(255, 255, 255, 0.58);
+  --color-accent: #6ee7b7;
+  --color-accent-strong: #34d399;
+  --color-warm: #fbbf24;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --bg: #05070a;
+    --panel: rgba(10, 12, 16, 0.78);
+    --panel-strong: rgba(12, 15, 20, 0.92);
+    --line: rgba(255, 255, 255, 0.1);
+    --copy-muted: rgba(255, 255, 255, 0.58);
+    --shadow-panel: 0 30px 80px rgba(0, 0, 0, 0.42);
+    font-family: "Satoshi", "Avenir Next", "Segoe UI", sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(52, 211, 153, 0.12), transparent 28%),
+      radial-gradient(circle at top right, rgba(251, 191, 36, 0.08), transparent 26%),
+      #05070a;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at top left, rgba(52, 211, 153, 0.08), transparent 24%),
+      radial-gradient(circle at 80% 0%, rgba(56, 189, 248, 0.08), transparent 22%),
+      #05070a;
+    color: white;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.32);
+  }
+
+  ::selection {
+    background: rgba(52, 211, 153, 0.34);
+    color: white;
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    background: linear-gradient(180deg, rgba(20, 24, 32, 0.96), rgba(10, 14, 20, 0.98));
+    backdrop-filter: blur(28px);
+    box-shadow: var(--shadow-panel);
+  }
+
+  .map-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  .route-dots {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+.leaflet-container {
+  background: #0b1117;
+  font-family: "Satoshi", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.leaflet-control-attribution {
+  background: rgba(5, 7, 10, 0.75) !important;
+  color: rgba(255, 255, 255, 0.58) !important;
+  border-radius: 10px 0 0 0;
+}
+
+.leaflet-control-attribution a {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.leaflet-marker-shell {
+  background: transparent;
+  border: 0;
+}
+
+.leaflet-marker {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.08), 0 12px 26px rgba(0, 0, 0, 0.35);
+}
+
+.leaflet-marker-pickup {
+  background: linear-gradient(135deg, #34d399, #10b981);
+}
+
+.leaflet-marker-drop {
+  background: linear-gradient(135deg, #38bdf8, #06b6d4);
+}
+
+.leaflet-tooltip {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.leaflet-tooltip::before {
+  display: none;
+}
+
+.leaflet-tooltip-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(5, 7, 10, 0.85);
+  padding: 0.45rem 0.7rem;
+  color: white;
+  font-size: 0.75rem;
+  backdrop-filter: blur(14px);
+}
