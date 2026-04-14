@@ -93,7 +93,7 @@ Gigo solves these problems using **smart contract-based escrow**:
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/your-username/gigo-dapp.git
+git clone https://github.com/DKvenkatesh/gigo-dapp.git
 cd gigo-dapp
 
 install :
