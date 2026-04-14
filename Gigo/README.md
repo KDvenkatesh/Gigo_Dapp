@@ -1,45 +1,107 @@
-# Gigo
+# 🚀 Gigo – Decentralized Ride-Sharing DApp (Algorand)
 
-This starter full stack project has been generated using AlgoKit. See below for default getting started instructions.
+Gigo is a decentralized ride-sharing platform built on the Algorand blockchain that enables secure, trustless, and transparent ride transactions without intermediaries.
 
-## Setup
+---
 
-### Initial setup
-1. Clone this repository to your local machine.
-2. Ensure [Docker](https://www.docker.com/) is installed and operational. Then, install `AlgoKit` following this [guide](https://github.com/algorandfoundation/algokit-cli#install).
-3. Run `algokit project bootstrap all` in the project directory. This command sets up your environment by installing necessary dependencies, setting up a Python virtual environment, and preparing your `.env` file.
-4. In the case of a smart contract project, execute `algokit generate env-file -a target_network localnet` from the `Gigo-contracts` directory to create a `.env.localnet` file with default configuration for `localnet`.
-5. To build your project, execute `algokit project run build`. This compiles your project and prepares it for running.
-6. For project-specific instructions, refer to the READMEs of the child projects:
-   - Smart Contracts: [Gigo-contracts](projects/Gigo-contracts/README.md)
-   - Frontend Application: [Gigo-frontend](projects/Gigo-frontend/README.md)
+## 📌 Problem Statement
 
-> This project is structured as a monorepo, refer to the [documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/project/run.md) to learn more about custom command orchestration via `algokit project run`.
+Traditional ride-sharing platforms suffer from:
+- ❌ Trust issues between users  
+- ❌ Delayed payments  
+- ❌ High commissions & middlemen  
 
-### Subsequently
+---
 
-1. If you update to the latest source code and there are new dependencies, you will need to run `algokit project bootstrap all` again.
-2. Follow step 3 above.
+## 💡 Solution
 
-## Tools
+Gigo solves these problems using **smart contract-based escrow**:
 
-This project makes use of Python and React to build Algorand smart contracts and to provide a base project configuration to develop frontends for your Algorand dApps and interactions with smart contracts. The following tools are in use:
+- Customer deposits payment into smart contract  
+- Driver completes the ride  
+- Payment is automatically released after verification  
 
-- Algorand, AlgoKit, and AlgoKit Utils
-- Python dependencies including Poetry, Black, Ruff or Flake8, mypy, pytest, and pip-audit
-- React and related dependencies including AlgoKit Utils, Tailwind CSS, daisyUI, use-wallet, npm, jest, playwright, Prettier, ESLint, and Github Actions workflows for build validation
+✔ Secure  
+✔ Fast  
+✔ Trustless  
 
-### VS Code
+---
 
-It has also been configured to have a productive dev experience out of the box in [VS Code](https://code.visualstudio.com/), see the [backend .vscode](./backend/.vscode) and [frontend .vscode](./frontend/.vscode) folders for more details.
+## 🔥 Features
 
-## Integrating with smart contracts and application clients
+- 🔐 Smart Contract Escrow Payments  
+- 🚗 Customer & Driver Role System  
+- 📍 Ride Booking & Tracking  
+- 🔑 OTP-based Ride Verification  
+- ⚡ Instant Payment Settlement  
+- 💸 Low Transaction Fees (Algorand)  
 
-Refer to the [Gigo-contracts](projects/Gigo-contracts/README.md) folder for overview of working with smart contracts, [projects/Gigo-frontend](projects/Gigo-frontend/README.md) for overview of the React project and the [projects/Gigo-frontend/contracts](projects/Gigo-frontend/src/contracts/README.md) folder for README on adding new smart contracts from backend as application clients on your frontend. The templates provided in these folders will help you get started.
-When you compile and generate smart contract artifacts, your frontend component will automatically generate typescript application clients from smart contract artifacts and move them to `frontend/src/contracts` folder, see [`generate:app-clients` in package.json](projects/Gigo-frontend/package.json). Afterwards, you are free to import and use them in your frontend application.
+---
 
-The frontend starter also provides an example of interactions with your HelloWorldClient in [`AppCalls.tsx`](projects/Gigo-frontend/src/components/AppCalls.tsx) component by default.
+## 🧠 How It Works
 
-## Next Steps
+1. User selects role (Customer / Driver)  
+2. Connects wallet (Pera Wallet)  
+3. Customer books ride (pickup/drop)  
+4. Payment locked in escrow  
+5. Driver accepts ride  
+6. OTP verification  
+7. Ride completion  
+8. Payment released to driver  
 
-You can take this project and customize it to build your own decentralized applications on Algorand. Make sure to understand how to use AlgoKit and how to write smart contracts for Algorand before you start.
+---
+
+## 🏗 System Architecture
+
+- **Frontend**: React.js  
+- **Blockchain**: Algorand  
+- **Smart Contracts**: PyTeal / Algopy  
+- **Wallet Integration**: Pera Wallet  
+- **Backend (optional)**: OTP verification & APIs  
+
+---
+
+## ⚙️ Smart Contract Logic
+
+- `create_ride()` → Initializes ride  
+- `accept_ride()` → Assigns driver  
+- `start_ride()` → Locks funds in escrow  
+- `verify_otp()` → Secures ride start  
+- `complete_ride()` → Releases payment  
+
+---
+
+## 🚀 Future Enhancements
+
+- 🤖 AI-based ride matching & fare prediction  
+- 🎟 NFT-based ride passes (Weekly / Monthly)  
+- 📊 Driver analytics dashboard  
+- 🌐 Multi-chain integration  
+
+---
+
+## 💡 Why Algorand?
+
+- ⚡ Instant finality  
+- 💸 Near-zero transaction fees  
+- 🔐 High security  
+- 📈 Highly scalable  
+
+---
+
+## 🛠 Installation & Setup
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/KDvenkatesh/gigo-dapp.git
+cd gigo-dapp
+
+Install dependencies
+npm install
+
+Run frontend
+npm start 
+
+Deploy smart contract
+Configure Algorand testnet
+Deploy using PyTeal / Algopy
