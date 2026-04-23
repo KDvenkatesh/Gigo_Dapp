@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, BadgeCheck, CarFront, Check, CheckCircle2, Clock3, CreditCard, Gem, History, Loader2, LoaderCircle, MapPin, RefreshCw, Search, ShieldCheck, Sparkles, Trash2, UserRound, X, Zap } from 'lucide-react'
+import { ArrowLeft, CarFront, CheckCircle2, Clock3, Gem, History, Loader2, LoaderCircle, MapPin, RefreshCw, Search, ShieldCheck, Trash2, UserRound, X, Zap } from 'lucide-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { NFTPassCard } from './NFTPassCard'
 import { BookingMap } from './BookingMap'
@@ -26,7 +26,6 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
    const [pickupTouched, setPickupTouched] = useState(false)
    const [destinationTouched, setDestinationTouched] = useState(false)
    const [activeInput, setActiveInput] = useState<'pickup' | 'drop' | null>(null)
-   const [rideMode, setRideMode] = useState<'paid' | 'pass'>('paid')
    const { results: pickupSuggestions, isLoading: pickupSearchLoading } = usePlaceSearch(pickupInput, pickupTouched)
    const { results: destinationSuggestions, isLoading: destinationSearchLoading } = usePlaceSearch(
       destinationInput,
@@ -58,14 +57,6 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
       [estimatedFare, passData.applyDiscount],
    )
    const hasActivePass = Boolean(passData.activePass && passData.activePass.isActive)
-   const canUsePassRide = hasActivePass && passData.freeRideAvailable
-   const isUsingPassRide = rideMode === 'pass' && canUsePassRide
-
-   // Auto-default to pass ride if available
-   useEffect(() => {
-      if (canUsePassRide) setRideMode('pass')
-      else setRideMode('paid')
-   }, [canUsePassRide])
 
    const activeRide = useMemo(
       () => ride.customerRides.find(r =>
@@ -109,11 +100,8 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
 
    async function handleCreateRide() {
       try {
-         const fareToCharge = isUsingPassRide ? 0n : (hasActivePass ? discountedFare : estimatedFare)
+         const fareToCharge = hasActivePass ? discountedFare : estimatedFare
          await ride.createRide(pickupLocation, destinationLocation, fareToCharge)
-         if (isUsingPassRide) {
-            passData.useFreeRide()
-         }
          setShowSuccess(true)
          setTimeout(() => setShowSuccess(false), 3000)
       } catch (err) {
@@ -360,83 +348,6 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                               })}
                            </div>
 
-                           {/* ── Ride Type Selector (Paid vs Pass) ── */}
-                           {hasActivePass && (
-                              <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-1">
-                                 <p className="px-3 pt-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-white/30">Ride type</p>
-                                 <div className="mt-2 grid grid-cols-2 gap-1.5 p-1">
-                                    {/* Pass Ride option */}
-                                    <button
-                                       type="button"
-                                       onClick={() => setRideMode('pass')}
-                                       disabled={!canUsePassRide}
-                                       className={cn(
-                                          'relative flex flex-col items-center gap-2 rounded-lg px-3 py-3.5 transition',
-                                          rideMode === 'pass' && canUsePassRide
-                                             ? 'bg-emerald-500/10 border border-emerald-500/20'
-                                             : 'border border-transparent hover:bg-white/[0.03]',
-                                          !canUsePassRide && 'opacity-40 cursor-not-allowed',
-                                       )}
-                                    >
-                                       <div className={cn(
-                                          'flex h-9 w-9 items-center justify-center rounded-lg',
-                                          rideMode === 'pass' && canUsePassRide ? 'bg-emerald-500/20' : 'bg-white/[0.06]',
-                                       )}>
-                                          <Gem className={cn('h-4 w-4', rideMode === 'pass' && canUsePassRide ? 'text-emerald-400' : 'text-white/40')} />
-                                       </div>
-                                       <div className="text-center">
-                                          <p className={cn('text-sm font-semibold', rideMode === 'pass' && canUsePassRide ? 'text-emerald-300' : 'text-white/60')}>
-                                             Pass Ride
-                                          </p>
-                                          <p className="mt-0.5 text-[11px] text-white/35">
-                                             {canUsePassRide ? 'FREE' : 'Used today'}
-                                          </p>
-                                       </div>
-                                       {rideMode === 'pass' && canUsePassRide && (
-                                          <div className="absolute right-2 top-2">
-                                             <Check className="h-3.5 w-3.5 text-emerald-400" />
-                                          </div>
-                                       )}
-                                    </button>
-
-                                    {/* Paid Ride option */}
-                                    <button
-                                       type="button"
-                                       onClick={() => setRideMode('paid')}
-                                       className={cn(
-                                          'relative flex flex-col items-center gap-2 rounded-lg px-3 py-3.5 transition',
-                                          rideMode === 'paid'
-                                             ? 'bg-white/[0.06] border border-white/[0.15]'
-                                             : 'border border-transparent hover:bg-white/[0.03]',
-                                       )}
-                                    >
-                                       <div className={cn(
-                                          'flex h-9 w-9 items-center justify-center rounded-lg',
-                                          rideMode === 'paid' ? 'bg-white/[0.1]' : 'bg-white/[0.06]',
-                                       )}>
-                                          <CreditCard className={cn('h-4 w-4', rideMode === 'paid' ? 'text-white/80' : 'text-white/40')} />
-                                       </div>
-                                       <div className="text-center">
-                                          <p className={cn('text-sm font-semibold', rideMode === 'paid' ? 'text-white' : 'text-white/60')}>
-                                             Paid Ride
-                                          </p>
-                                          <p className="mt-0.5 text-[11px] text-white/35">
-                                             {hasActivePass && discountedFare < estimatedFare
-                                                ? `${passData.activePass!.discount}% off`
-                                                : ride.formatAlgoAmount(estimatedFare)
-                                             }
-                                          </p>
-                                       </div>
-                                       {rideMode === 'paid' && (
-                                          <div className="absolute right-2 top-2">
-                                             <Check className="h-3.5 w-3.5 text-white/60" />
-                                          </div>
-                                       )}
-                                    </button>
-                                 </div>
-                              </div>
-                           )}
-
                            {/* Trip summary */}
                            <div className="grid grid-cols-3 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.04]">
                               <div className="bg-[#05060a] p-3.5">
@@ -452,12 +363,11 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                               </div>
                               <div className="bg-[#05060a] p-3.5">
                                  <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30">Fare</p>
-                                 {isUsingPassRide ? (
-                                    <p className="mt-1 text-sm font-semibold text-emerald-400">FREE</p>
-                                 ) : hasActivePass && discountedFare < estimatedFare ? (
+                                 {hasActivePass && discountedFare < estimatedFare ? (
                                     <div className="mt-1">
                                        <p className="text-sm font-semibold text-white">{ride.formatAlgoAmount(discountedFare)}</p>
                                        <p className="text-[10px] text-white/25 line-through">{ride.formatAlgoAmount(estimatedFare)}</p>
+                                       <p className="mt-1 text-[9px] font-bold text-emerald-400 uppercase tracking-widest">{passData.activePass!.discount}% Pass applied</p>
                                     </div>
                                  ) : (
                                     <p className="mt-1 text-sm font-semibold text-white">{ride.formatAlgoAmount(estimatedFare)}</p>
@@ -472,23 +382,17 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                               onClick={() => void handleCreateRide()}
                               className={cn(
                                  'flex w-full items-center justify-center gap-2.5 rounded-xl px-5 py-3.5 text-[15px] font-semibold transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100',
-                                 isUsingPassRide
-                                    ? 'bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.2)]'
-                                    : 'bg-white text-[#05060a]',
+                                 'bg-white text-[#05060a]',
                               )}
                            >
                               {ride.actionState.createRide ? (
                                  <LoaderCircle className="h-4.5 w-4.5 animate-spin" />
-                              ) : isUsingPassRide ? (
-                                 <Gem className="h-4.5 w-4.5" />
                               ) : (
                                  <CarFront className="h-4.5 w-4.5" />
                               )}
                               {ride.actionState.createRide
                                  ? 'Creating ride\u2026'
-                                 : isUsingPassRide
-                                    ? `Free Ride \u00B7 ${ride.selectedVehicle.name}`
-                                    : `Book ${ride.selectedVehicle.name}`
+                                 : `Book ${ride.selectedVehicle.name}`
                               }
                            </button>
                         </>
@@ -652,8 +556,7 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
 
 // ── Passes Tab ──
 function PassesTabContent() {
-   const { passes, activeTier, activePass, isLoading, error, refetch, hasPriorityMatching, hasZeroSurge, freeRideAvailable } = useAlgorandAssets()
-   const [detailModal, setDetailModal] = useState<{ tier: PassTier; discount: number; daysRemaining: number; freeRideToday: boolean } | null>(null)
+   const { passes, activeTier, isLoading, error, refetch, hasPriorityMatching, hasZeroSurge } = useAlgorandAssets()
 
    const tierNames: Record<PassTier, string> = { silver: 'Silver', gold: 'Gold', platinum: 'Platinum' }
 
@@ -666,16 +569,15 @@ function PassesTabContent() {
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
                <h2 className="text-2xl font-bold text-white sm:text-3xl">Your Passes</h2>
                <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/40">
-                  NFT-powered ride passes on Algorand. Get 1 free ride per day and discounts on additional rides.
+                  NFT-powered ride passes on Algorand. Get automatic discounts on every ride.
                </p>
             </motion.div>
 
             {/* Stats */}
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
-               className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+               className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
                {[
                   { label: 'Active Tier', value: activeTier ? tierNames[activeTier] : 'None', on: Boolean(activeTier) },
-                  { label: 'Free Ride', value: freeRideAvailable ? 'Available' : 'Used', on: freeRideAvailable },
                   { label: 'Priority', value: hasPriorityMatching ? 'On' : 'Off', on: hasPriorityMatching },
                   { label: 'Zero Surge', value: hasZeroSurge ? 'On' : 'Off', on: hasZeroSurge },
                ].map((s) => (
@@ -716,7 +618,6 @@ function PassesTabContent() {
                         <NFTPassCard
                            pass={pass}
                            isWalletConnected={true}
-                           onUsePass={() => setDetailModal({ tier: pass.tier, discount: pass.discount, daysRemaining: pass.daysRemaining, freeRideToday: pass.freeRideToday })}
                            onBuyPass={() => window.open(`https://testnet.explorer.perawallet.app/asset/${pass.assetId}/`, '_blank')}
                         />
                      </motion.div>
@@ -733,7 +634,7 @@ function PassesTabContent() {
                      {[
                         { n: '01', t: 'Opt-in', d: 'Opt-in to a Gigo pass NFT (ASA) via Pera Wallet.' },
                         { n: '02', t: 'Auto-verified', d: 'We detect ownership and activate your pass instantly.' },
-                        { n: '03', t: '1 free ride/day', d: 'Get a daily free ride plus discounts on additional trips.' },
+                        { n: '03', t: 'Enjoy Benefits', d: 'Discounts apply automatically. Higher tiers unlock priority matching & zero surge.' },
                      ].map((item) => (
                         <div key={item.n} className="flex gap-3">
                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/[0.05] text-[11px] font-bold text-white/40">{item.n}</div>
@@ -747,49 +648,6 @@ function PassesTabContent() {
                </motion.div>
             )}
          </div>
-
-         {/* Detail Modal */}
-         <AnimatePresence>
-            {detailModal && (
-               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
-                  onClick={() => setDetailModal(null)}>
-                  <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-                     onClick={(e) => e.stopPropagation()}
-                     className="w-full max-w-sm rounded-2xl border border-white/[0.1] bg-[#0a0c12] p-6 shadow-2xl">
-                     <div className="flex items-center justify-center">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/10">
-                           <BadgeCheck className="h-7 w-7 text-emerald-400" />
-                        </div>
-                     </div>
-                     <h3 className="mt-5 text-center text-xl font-bold text-white">
-                        {tierNames[detailModal.tier]} Pass
-                     </h3>
-                     <p className="mt-2 text-center text-sm text-white/40">
-                        {detailModal.daysRemaining} days remaining
-                     </p>
-
-                     <div className="mt-5 space-y-2">
-                        {[
-                           { icon: CarFront, text: detailModal.freeRideToday ? '1 free ride available today' : 'Free ride used today', active: detailModal.freeRideToday },
-                           { icon: Sparkles, text: `${detailModal.discount}% off additional rides`, active: true },
-                           ...(detailModal.tier !== 'silver' ? [{ icon: Zap, text: `Priority matching${detailModal.tier === 'platinum' ? ' + zero surge' : ''}`, active: true }] : []),
-                        ].map((item, i) => (
-                           <div key={i} className="flex items-center gap-2.5 rounded-lg bg-white/[0.03] p-3">
-                              <item.icon className={cn('h-4 w-4', item.active ? 'text-emerald-400' : 'text-white/25')} />
-                              <span className={cn('text-sm', item.active ? 'text-white/70' : 'text-white/35')}>{item.text}</span>
-                           </div>
-                        ))}
-                     </div>
-
-                     <button type="button" onClick={() => setDetailModal(null)}
-                        className="mt-5 w-full rounded-xl bg-white py-2.5 text-sm font-semibold text-[#05060a] transition hover:bg-white/90">
-                        Done
-                     </button>
-                  </motion.div>
-               </motion.div>
-            )}
-         </AnimatePresence>
       </motion.div>
    )
 }
