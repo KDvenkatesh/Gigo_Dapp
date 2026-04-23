@@ -26,8 +26,6 @@ export interface PassInfo {
   daysRemaining: number
   /** Whether the pass period is currently active */
   isActive: boolean
-  /** Whether the user has a free ride available today */
-  freeRideToday: boolean
   /** Date string of when the pass was activated */
   activatedAt: string | null
 }
@@ -36,12 +34,12 @@ const INDEXER_BASE = 'https://testnet-idx.algonode.cloud'
 
 const PASS_CONFIG: Record<
   PassTier,
-  Omit<PassInfo, 'owned' | 'amount' | 'assetId' | 'name' | 'daysRemaining' | 'isActive' | 'freeRideToday' | 'activatedAt'>
+  Omit<PassInfo, 'owned' | 'amount' | 'assetId' | 'name' | 'daysRemaining' | 'isActive' | 'activatedAt'>
 > = {
   silver: {
     tier: 'silver',
     discount: 5,
-    benefits: ['5% discount on paid rides', '1 free ride per day', 'Weekly validity (7 days)'],
+    benefits: ['5% discount on all rides', 'Weekly validity (7 days)'],
     validity: 'Weekly',
     validityDays: 7,
     priorityMatching: false,
@@ -50,7 +48,7 @@ const PASS_CONFIG: Record<
   gold: {
     tier: 'gold',
     discount: 10,
-    benefits: ['10% discount on paid rides', '1 free ride per day', 'Priority driver matching', 'Monthly validity (30 days)'],
+    benefits: ['10% discount on all rides', 'Priority driver matching', 'Monthly validity (30 days)'],
     validity: 'Monthly',
     validityDays: 30,
     priorityMatching: true,
@@ -58,8 +56,8 @@ const PASS_CONFIG: Record<
   },
   platinum: {
     tier: 'platinum',
-    discount: 20,
-    benefits: ['20% discount on paid rides', '1 free ride per day', 'Priority driver matching', 'Zero surge pricing', 'Monthly validity (30 days)'],
+    discount: 15,
+    benefits: ['15% discount on all rides', 'Priority driver matching', 'Zero surge pricing', 'Monthly validity (30 days)'],
     validity: 'Monthly',
     validityDays: 30,
     priorityMatching: true,
@@ -71,11 +69,6 @@ const PASS_CONFIG: Record<
 function getStorageKey(address: string, tier: PassTier, suffix: string) {
   return `gigo_pass_${address}_${tier}_${suffix}`
 }
-
-function todayStr() {
-  return new Date().toISOString().slice(0, 10) // "YYYY-MM-DD"
-}
-
 function getActivationDate(address: string, tier: PassTier): string | null {
   return localStorage.getItem(getStorageKey(address, tier, 'activated'))
 }
@@ -93,16 +86,6 @@ function getDaysRemaining(address: string, tier: PassTier, validityDays: number)
   return Math.max(0, validityDays - elapsed)
 }
 
-function isFreeRideUsedToday(address: string, tier: PassTier): boolean {
-  const key = getStorageKey(address, tier, `freeride_${todayStr()}`)
-  return localStorage.getItem(key) === 'used'
-}
-
-function markFreeRideUsed(address: string, tier: PassTier) {
-  const key = getStorageKey(address, tier, `freeride_${todayStr()}`)
-  localStorage.setItem(key, 'used')
-}
-
 export interface AlgorandAssetsResult {
   passes: PassInfo[]
   activeTier: PassTier | null
@@ -113,12 +96,8 @@ export interface AlgorandAssetsResult {
   applyDiscount: (fareInMicroAlgos: bigint) => bigint
   hasPriorityMatching: boolean
   hasZeroSurge: boolean
-  /** Whether the user can take a free ride right now */
-  freeRideAvailable: boolean
   /** Activate a pass (starts the validity countdown) */
   activatePass: (tier: PassTier) => void
-  /** Mark today's free ride as used */
-  useFreeRide: () => void
   /** Force re-render of pass state */
   refreshPassState: () => void
 }
@@ -186,14 +165,12 @@ export function useAlgorandAssets(): AlgorandAssetsResult {
 
       let daysRemaining = 0
       let isActive = false
-      let freeRideToday = false
       let activatedAt: string | null = null
 
       if (owned && activeAddress) {
         activatedAt = getActivationDate(activeAddress, tier)
         daysRemaining = activatedAt ? getDaysRemaining(activeAddress, tier, config.validityDays) : config.validityDays
         isActive = daysRemaining > 0 || !activatedAt // active if not yet activated (pre-activation) or has days left
-        freeRideToday = isActive && !isFreeRideUsedToday(activeAddress, tier)
 
         // Auto-activate on first detection if not already activated
         if (owned && !activatedAt) {
@@ -201,7 +178,6 @@ export function useAlgorandAssets(): AlgorandAssetsResult {
           activatedAt = new Date().toISOString()
           daysRemaining = config.validityDays
           isActive = true
-          freeRideToday = true
         }
       }
 
@@ -213,7 +189,6 @@ export function useAlgorandAssets(): AlgorandAssetsResult {
         amount,
         daysRemaining,
         isActive,
-        freeRideToday,
         activatedAt,
       }
     })
@@ -227,8 +202,6 @@ export function useAlgorandAssets(): AlgorandAssetsResult {
     null
 
   const activePass = activeTier ? passes.find((p) => p.tier === activeTier) ?? null : null
-
-  const freeRideAvailable = activePass?.freeRideToday ?? false
 
   const applyDiscount = useCallback(
     (fareInMicroAlgos: bigint): bigint => {
@@ -250,12 +223,6 @@ export function useAlgorandAssets(): AlgorandAssetsResult {
     [activeAddress],
   )
 
-  const useFreeRide = useCallback(() => {
-    if (!activeAddress || !activeTier) return
-    markFreeRideUsed(activeAddress, activeTier)
-    setPassStateVersion((v) => v + 1)
-  }, [activeAddress, activeTier])
-
   const refreshPassState = useCallback(() => {
     setPassStateVersion((v) => v + 1)
   }, [])
@@ -272,9 +239,7 @@ export function useAlgorandAssets(): AlgorandAssetsResult {
     applyDiscount,
     hasPriorityMatching: activePass?.priorityMatching ?? false,
     hasZeroSurge: activePass?.zeroSurge ?? false,
-    freeRideAvailable,
     activatePass,
-    useFreeRide,
     refreshPassState,
   }
 }
