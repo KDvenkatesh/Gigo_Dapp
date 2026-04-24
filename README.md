@@ -104,6 +104,6 @@ npm run dev
 
 Deploy smart contract
 Configure Algorand testnet
-Deploy using PyTeal / Algopy
+Deploy using PyTeal / Algopy.
 
 📸 Demo : https://youtu.be/IwIqgCa2mk8
