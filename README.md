@@ -1,110 +1,91 @@
-# 🚀 Gigo – Decentralized Ride-Sharing DApp (Algorand)
+# Gigo — Ride-Sharing on the Blockchain
 
-Gigo is a decentralized ride-sharing platform built on the Algorand blockchain that enables secure, trustless, and transparent ride transactions without intermediaries.
-
----
-
-## 📌 Problem Statement
-
-Traditional ride-sharing platforms suffer from:
-- ❌ Trust issues between users  
-- ❌ Delayed payments  
-- ❌ High commissions & middlemen  
+Hey there 👋 — welcome to Gigo, my take on what ride-sharing should actually look like. No middlemen, no delayed payouts, no black-box algorithms deciding what drivers earn. Just riders, drivers, and a smart contract keeping everyone honest.
 
 ---
 
-## 💡 Solution
+## Why I Built This
 
-Gigo solves these problems using **smart contract-based escrow**:
+I got tired of seeing how traditional ride-sharing platforms work. Drivers wait days for earnings. Riders have no idea where their money actually goes. A faceless company sits in the middle taking a massive cut and calling it "service fees."
 
-- Customer deposits payment into smart contract  
-- Driver completes the ride  
-- Payment is automatically released after verification  
-
-✔ Secure  
-✔ Fast  
-✔ Trustless  
+Gigo is my answer to that. It runs on **Algorand** — a blockchain that's genuinely fast and cheap enough for everyday transactions — and puts the financial relationship directly between the rider and the driver.
 
 ---
 
-## 🔥 Features
+## What It Can Do
 
-- 🔐 Smart Contract Escrow Payments  
-- 🚗 Customer & Driver Role System  
-- 📍 Ride Booking & Tracking  
-- 🔑 OTP-based Ride Verification  
-- ⚡ Instant Payment Settlement  
-- 💸 Low Transaction Fees (Algorand)  
+### Core Ride Flow
+A rider opens the app, picks a pickup and drop location, and books a ride. Their payment locks into a **smart contract escrow** — the driver doesn't get it, the app doesn't get it, it just sits there safely until the ride is done. The driver accepts, picks up the rider (after a quick OTP verification), completes the trip, and the funds release automatically. That's it.
 
----
+### AI Features
+I added an AI layer (powered by **Groq**) that actually makes the experience smarter:
 
-## 🧠 How It Works
+- **Fare Prediction** — Before booking, the app analyzes current demand, distance, and vehicle type to suggest a fair price.
+- **Smart Routing** — The driver's map uses AI + OpenRouteService to find traffic-aware routes, not just the shortest line on a map.
+- **Earnings Insights** — Drivers get a personal breakdown of their week: total earned, distance covered, best-performing areas, and strategy tips.
 
-1. User selects role (Customer / Driver)  
-2. Connects wallet (Pera Wallet)  
-3. Customer books ride (pickup/drop)  
-4. Payment locked in escrow  
-5. Driver accepts ride  
-6. OTP verification  
-7. Ride completion  
-8. Payment released to driver  
+### NFT Ride Passes
+Regular riders can subscribe to a pass (Silver, Gold, or Platinum). These are actual NFTs on Algorand, not just loyalty points. Hold one and you unlock:
+- Daily free rides (1 to 3, depending on tier)
+- Fare discounts up to 40%, applied automatically at checkout
 
 ---
 
-## 🏗 System Architecture
+## How It's Built
 
-- **Frontend**: React.js  
-- **Blockchain**: Algorand  
-- **Smart Contracts**: PyTeal / Algopy  
-- **Wallet Integration**: Pera Wallet  
-- **Backend (optional)**: OTP verification & APIs  
+```
+Gigo/
+├── projects/
+│   ├── frontend/     # React + TypeScript + Tailwind CSS
+│   ├── backend/      # Node.js + Express + Groq AI
+│   └── contracts/    # Algorand Smart Contracts (Algopy)
+```
 
----
+**Frontend:** Built with React, TypeScript, and Tailwind. Animations with Framer Motion to keep things feeling alive.
 
-## ⚙️ Smart Contract Logic
+**Backend:** A lightweight Express server handling the AI calls (fare prediction, smart routing, earnings analysis). Hosted on Render.
 
-- `create_ride()` → Initializes ride  
-- `accept_ride()` → Assigns driver  
-- `start_ride()` → Locks funds in escrow  
-- `verify_otp()` → Secures ride start  
-- `complete_ride()` → Releases payment  
+**Smart Contracts:** Written with Algopy (Python-based Algorand contract framework). Handles escrow logic, OTP verification, and payment release.
 
 ---
 
-## 🚀 Future Enhancements
+## Running It Locally
 
-- 🤖 AI-based ride matching & fare prediction  
-- 🎟 NFT-based ride passes (Weekly / Monthly)  
-- 📊 Driver analytics dashboard  
-- 🌐 Multi-chain integration  
+You'll need Node.js v18+, a Pera Wallet on Algorand Testnet, a Groq API key, and an ORS API key.
 
----
-
-## 💡 Why Algorand?
-
-- ⚡ Instant finality  
-- 💸 Near-zero transaction fees  
-- 🔐 High security  
-- 📈 Highly scalable  
-
----
-
-## 🛠 Installation & Setup
-
-### 1. Clone the repo
 ```bash
-git clone https://github.com/DKvenkatesh/gigo-dapp.git
-cd gigo-dapp
+# Clone the repo
+git clone https://github.com/KDvenkatesh/Gigo_Dapp.git
+cd Gigo_Dapp
 
-install :
+# Start the backend
+cd Gigo/projects/backend
 npm install
-
-Run :
+cp .env.example .env  # Add your API keys here
 npm run dev
 
-Deploy smart contract
-Configure Algorand testnet
-Deploy using PyTeal / Algopy.
+# Start the frontend (new terminal)
+cd Gigo/projects/frontend
+npm install
+cp .env.example .env
+npm run dev
+```
 
-📸 Demo : https://youtu.be/IwIqgCa2mk8
-🚀 Live Backend : https://gigo-dapp.onrender.com
+---
+
+## Links
+
+- 📺 **Demo Video:** [Watch on YouTube](https://youtu.be/IwIqgCa2mk8)
+- 🚀 **Live Backend API:** [gigo-dapp.onrender.com](https://gigo-dapp.onrender.com)
+
+---
+
+## A Note on Algorand
+
+I chose Algorand specifically because other chains would make this impractical — gas fees alone would eat into every transaction. Algorand's fees are fractions of a cent, finality is near-instant (under 4 seconds), and the developer tooling is solid. For a payments-heavy app like this, it was the only choice that made sense.
+
+---
+
+Made with a lot of late nights and a belief that decentralization should actually benefit the people using the app, not just the people building it.
+
+— Shaik Ishaq & K Dhanu
