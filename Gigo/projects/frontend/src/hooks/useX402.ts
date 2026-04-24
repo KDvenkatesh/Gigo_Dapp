@@ -38,6 +38,10 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
         if (!activeAddress || !signTransactions) {
           throw new Error('Wallet not connected. Please connect Pera Wallet first.');
         }
+
+        if (!recipient) {
+          throw new Error('Backend configuration error: PLATFORM_WALLET is not set on the server.');
+        }
   
         const params = await algod.getTransactionParams().do();
   
