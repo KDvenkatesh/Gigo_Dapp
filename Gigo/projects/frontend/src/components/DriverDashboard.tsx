@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, ShieldAlert, Timer, Trash2 } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, ShieldAlert, Timer, Trash2, FileText, LogOut, User, X } from 'lucide-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { BottomSheet } from './BottomSheet'
 import { EarningsTab } from './ai/EarningsTab'
@@ -9,14 +9,135 @@ import { CarFront, Banknote } from 'lucide-react'
 import { cn } from '../lib/cn'
 import { RideStatus } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGeolocation } from '../hooks/useGeolocation'
+import { useDriverContext } from '../contexts/DriverContext'
+import { useWallet } from '@txnlab/use-wallet-react'
+
+function DriverProfileDropdown() {
+  const { activeAddress, activeWallet } = useWallet()
+  const [isOpen, setIsOpen] = useState(false)
+  const [documents, setDocuments] = useState<Record<string, string>>({})
+  const [viewDoc, setViewDoc] = useState<{name: string, data: string} | null>(null)
+
+  useEffect(() => {
+    if (activeAddress) {
+      const stored = localStorage.getItem('gigo_drivers')
+      if (stored) {
+        try {
+          const drivers = JSON.parse(stored)
+          if (drivers[activeAddress]?.documents) {
+            setDocuments(drivers[activeAddress].documents)
+          }
+        } catch (e) {}
+      }
+    }
+  }, [activeAddress])
+
+  if (!activeAddress) return <WalletConnectButton />
+
+  return (
+    <div className="relative">
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden"
+      >
+        {documents['Profile Photo'] ? (
+          <img src={documents['Profile Photo']} alt="Profile" className="w-full h-full object-cover" />
+        ) : (
+          <User className="w-5 h-5 text-emerald-400" />
+        )}
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="absolute right-0 mt-3 w-72 rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-50"
+          >
+            <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
+              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center overflow-hidden">
+                {documents['Profile Photo'] ? (
+                  <img src={documents['Profile Photo']} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-4 h-4 text-emerald-400" />
+                )}
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Wallet</p>
+                <p className="text-sm font-mono truncate">{activeAddress}</p>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-xs text-white/50 uppercase tracking-wider font-semibold mb-2">Your Documents</p>
+              <div className="space-y-2">
+                {Object.keys(documents).length > 0 ? Object.keys(documents).map(doc => (
+                  <div key={doc} onClick={() => setViewDoc({name: doc, data: documents[doc]})} className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-lg cursor-pointer transition border border-transparent hover:border-white/10">
+                    <FileText className="w-4 h-4 text-emerald-400" />
+                    <span className="text-sm">{doc}</span>
+                  </div>
+                )) : (
+                  <p className="text-xs text-white/40">No documents found</p>
+                )}
+              </div>
+            </div>
+
+            <button 
+              onClick={() => activeWallet?.disconnect()}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition font-semibold text-sm"
+            >
+              <LogOut className="w-4 h-4" /> Disconnect
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {viewDoc && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            onClick={() => setViewDoc(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#0f111a] border border-white/10 p-6 rounded-3xl max-w-lg w-full"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-xl font-bold">{viewDoc.name}</h3>
+                <button onClick={() => setViewDoc(null)} className="p-2 bg-white/5 rounded-full hover:bg-white/10">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="bg-black/50 rounded-xl overflow-hidden flex items-center justify-center">
+                {viewDoc.data.startsWith('data:application/pdf') ? (
+                  <iframe src={viewDoc.data} className="w-full h-64" title={viewDoc.name} />
+                ) : (
+                  <img src={viewDoc.data} alt={viewDoc.name} className="max-w-full max-h-64 object-contain" />
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 type RideHook = ReturnType<typeof useRideContract>
 
 export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () => void }) {
   const activeRide = ride.focusedRide
   const { location: driverLocation } = useGeolocation()
+  const { active, setActive } = useDriverContext()
   const [activeTab, setActiveTab] = useState<'rides' | 'earnings'>('rides')
   const [otpOpen, setOtpOpen] = useState(false)
   const [otp, setOtp] = useState('')
@@ -72,7 +193,31 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
             </button>
           </div>
 
-          <WalletConnectButton />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5">
+              <span className="text-xs font-medium text-white/60">Status:</span>
+              <button
+                type="button"
+                onClick={() => setActive(!active)}
+                className={cn(
+                  "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none",
+                  active ? "bg-emerald-500" : "bg-white/20"
+                )}
+              >
+                <span className="sr-only">Toggle online status</span>
+                <span
+                  className={cn(
+                    "pointer-events-none absolute left-0.5 inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
+                    active ? "translate-x-4" : "translate-x-0"
+                  )}
+                />
+              </button>
+              <span className={cn("text-xs font-bold", active ? "text-emerald-400" : "text-white/40")}>
+                {active ? 'Online' : 'Offline'}
+              </span>
+            </div>
+            <DriverProfileDropdown />
+          </div>
         </div>
 
         {activeTab === 'rides' ? (
@@ -125,12 +270,19 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
               </div>
 
               <div className="mt-4 space-y-3">
-                <AnimatePresence initial={false}>
-                  {ride.driverRides.map((item) => (
-                    <motion.button
-                      key={item.rideId.toString()}
-                      type="button"
-                      layout
+                {!active ? (
+                  <div className="rounded-[28px] border border-dashed border-white/10 bg-white/[0.03] p-8 text-center">
+                    <p className="text-sm font-semibold text-white/54 mb-2">You are currently offline</p>
+                    <p className="text-xs text-white/40">Toggle your status to online in the top menu to start receiving ride requests.</p>
+                  </div>
+                ) : (
+                  <>
+                    <AnimatePresence initial={false}>
+                      {ride.driverRides.map((item) => (
+                        <motion.button
+                          key={item.rideId.toString()}
+                          type="button"
+                          layout
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
@@ -220,7 +372,9 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                     No visible rides yet. Once a customer creates a ride, it will appear here after refresh polling.
                   </div>
                 ) : null}
-              </div>
+              </>
+            )}
+          </div>
             </motion.div>
           </div>
 

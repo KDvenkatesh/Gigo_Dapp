@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, CarFront, CheckCircle2, Clock3, Gem, History, Loader2, LoaderCircle, MapPin, RefreshCw, Search, ShieldCheck, Trash2, UserRound, X, Zap } from 'lucide-react'
+import { useWallet } from '@txnlab/use-wallet-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { NFTPassCard } from './NFTPassCard'
 import { BookingMap } from './BookingMap'
@@ -10,13 +11,13 @@ import { useAlgorandAssets, type PassTier } from '../hooks/useAlgorandAssets'
 import { usePlaceSearch, reverseGeocodeLocation } from '../hooks/usePlaceSearch'
 import { calculateDistanceKm } from '../lib/location'
 import { cn } from '../lib/cn'
-import { RideStatus, type PlaceSuggestion, type RideLocation } from '../types/ride'
+import { RideStatus, type PlaceSuggestion, type RideLocation, type AppRole } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
 import { useEffect, useMemo, useState } from 'react'
 
 type RideHook = ReturnType<typeof useRideContract>
 
-export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: () => void }) {
+export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHook; onBack: () => void; onSwitchRole: (role: AppRole) => void }) {
    const { location, isLocating, locationError } = useGeolocation()
    const passData = useAlgorandAssets()
    const [tab, setTab] = useState<'book' | 'history' | 'passes'>('book')
@@ -129,7 +130,7 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                <ArrowLeft className="h-4 w-4" />
             </button>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-1">
                {([
                   { id: 'book' as const, icon: CarFront, label: 'Book' },
                   { id: 'history' as const, icon: History, label: 'My Rides', count: ride.customerRides.length },
@@ -140,14 +141,15 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                      type="button"
                      onClick={() => setTab(t.id)}
                      className={cn(
-                        'flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition',
+                        'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-[12px] font-medium transition active:scale-95',
                         tab === t.id
                            ? 'bg-white text-[#05060a]'
                            : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]',
                      )}
                   >
                      <t.icon className="h-3.5 w-3.5" />
-                     {t.label}
+                     <span className="hidden sm:inline">{t.label}</span>
+                     <span className="sm:hidden">{t.id === 'history' ? 'Rides' : t.label}</span>
                      {t.count && t.count > 0 ? (
                         <span className={cn(
                            'rounded-full px-1.5 py-0.5 text-[9px] font-semibold',
@@ -160,7 +162,9 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                ))}
             </div>
 
-            <WalletConnectButton />
+            <div className="shrink-0 flex items-center gap-3">
+               <CustomerProfileDropdown onSwitchRole={onSwitchRole} />
+            </div>
          </div>
 
          <AnimatePresence mode="wait">
@@ -175,7 +179,7 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                   className="flex flex-col flex-1 lg:grid lg:grid-cols-[1.1fr_0.9fr] overflow-hidden"
                >
                   {/* Map */}
-                  <div className="relative h-[320px] lg:h-full lg:border-r lg:border-white/[0.06] sm:m-4 sm:rounded-[50px] lg:m-0 lg:rounded-[50px] overflow-hidden">
+                  <div className="relative h-[280px] sm:h-[400px] lg:h-full lg:border-r lg:border-white/[0.06] overflow-hidden">
                      <BookingMap
                         pickup={pickupLocation}
                         drop={destinationLocation}
@@ -362,22 +366,22 @@ export function CustomerDashboard({ ride, onBack }: { ride: RideHook; onBack: ()
                               </div>
 
                               {/* Trip summary */}
-                              <div className="grid grid-cols-3 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.04]">
-                                 <div className="bg-[#05060a] p-3.5">
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.04]">
+                                 <div className="bg-[#05060a] p-3.5 flex justify-between sm:block">
                                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30">Distance</p>
                                     <p className="mt-1 text-sm font-semibold text-white">{distanceKm.toFixed(1)} km</p>
                                  </div>
-                                 <div className="bg-[#05060a] p-3.5">
+                                 <div className="bg-[#05060a] p-3.5 border-t border-white/[0.04] sm:border-t-0 flex justify-between sm:block">
                                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30">ETA</p>
                                     <p className="mt-1 flex items-center gap-1 text-sm font-semibold text-white">
                                        <Clock3 className="h-3.5 w-3.5 text-white/35" />
                                        {Math.max(4, Math.round(distanceKm * 2.4))}m
                                     </p>
                                  </div>
-                                 <div className="bg-[#05060a] p-3.5">
+                                 <div className="bg-[#05060a] p-3.5 border-t border-white/[0.04] sm:border-t-0 flex justify-between sm:block">
                                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30">Fare</p>
                                     {hasActivePass && discountedFare < estimatedFare ? (
-                                       <div className="mt-1">
+                                       <div className="mt-1 text-right sm:text-left">
                                           <p className="text-sm font-semibold text-white">{ride.formatAlgoAmount(discountedFare)}</p>
                                           <p className="text-[10px] text-white/25 line-through">{ride.formatAlgoAmount(estimatedFare)}</p>
                                           <p className="mt-1 text-[9px] font-bold text-emerald-400 uppercase tracking-widest">{passData.activePass!.discount}% Pass applied</p>
@@ -662,5 +666,91 @@ function PassesTabContent() {
             )}
          </div>
       </motion.div>
+   )
+}
+
+function CustomerProfileDropdown({ onSwitchRole }: { onSwitchRole: (role: AppRole) => void }) {
+   const { activeAddress, activeWallet } = useWallet()
+   const [isOpen, setIsOpen] = useState(false)
+   const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
+
+   useEffect(() => {
+      if (activeAddress) {
+         const stored = localStorage.getItem('gigo_drivers')
+         if (stored) {
+            try {
+               const drivers = JSON.parse(stored)
+               if (drivers[activeAddress]?.documents?.['Profile Photo']) {
+                  setProfilePhoto(drivers[activeAddress].documents['Profile Photo'])
+               }
+            } catch (e) {}
+         }
+      }
+   }, [activeAddress])
+
+   if (!activeAddress) return <WalletConnectButton />
+
+   return (
+      <div className="relative">
+         <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden"
+         >
+            {profilePhoto ? (
+               <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+               <UserRound className="w-5 h-5 text-white/70" />
+            )}
+         </button>
+
+         <AnimatePresence>
+            {isOpen && (
+               <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute right-0 mt-3 w-64 rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-50"
+               >
+                  <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
+                     <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
+                        {profilePhoto ? (
+                           <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                           <UserRound className="w-4 h-4 text-white/70" />
+                        )}
+                     </div>
+                     <div className="overflow-hidden">
+                        <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Wallet</p>
+                        <p className="text-sm font-mono truncate">{activeAddress}</p>
+                     </div>
+                  </div>
+
+                  <div className="space-y-2 mb-4">
+                     <button 
+                        onClick={() => { setIsOpen(false); onSwitchRole('driver') }}
+                        className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
+                     >
+                        <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                        <span className="text-sm font-medium">Driver Dashboard</span>
+                     </button>
+                     <button 
+                        onClick={() => { setIsOpen(false); onSwitchRole('admin') }}
+                        className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
+                     >
+                        <ShieldCheck className="w-4 h-4 text-blue-400" />
+                        <span className="text-sm font-medium">Admin Dashboard</span>
+                     </button>
+                  </div>
+
+                  <button 
+                     onClick={() => activeWallet?.disconnect()}
+                     className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition font-semibold text-sm"
+                  >
+                     Disconnect
+                  </button>
+               </motion.div>
+            )}
+         </AnimatePresence>
+      </div>
    )
 }

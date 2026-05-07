@@ -10,7 +10,7 @@ export const RideStatus = {
 } as const
 
 export type RideStatus = (typeof RideStatus)[keyof typeof RideStatus]
-export type AppRole = 'customer' | 'driver'
+export type AppRole = 'customer' | 'driver' | 'admin'
 
 export interface RideLocation {
   label: string
