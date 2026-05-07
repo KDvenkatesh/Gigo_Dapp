@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, CarFront, CheckCircle2, Clock3, Gem, History, Loader2, LoaderCircle, MapPin, RefreshCw, Search, ShieldCheck, Trash2, UserRound, X, Zap } from 'lucide-react'
+import { ArrowLeft, Camera, CarFront, CheckCircle2, Clock3, Gem, History, Loader2, LoaderCircle, MapPin, RefreshCw, Search, ShieldCheck, Trash2, UserRound, X, Zap } from 'lucide-react'
 import { useWallet } from '@txnlab/use-wallet-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { NFTPassCard } from './NFTPassCard'
@@ -691,10 +691,23 @@ function CustomerProfileDropdown({
 
    useEffect(() => {
       if (activeAddress) {
-         const stored = localStorage.getItem('gigo_drivers')
-         if (stored) {
+         // Try to get from unified profiles first
+         const profilesStored = localStorage.getItem('gigo_profiles')
+         if (profilesStored) {
             try {
-               const drivers = JSON.parse(stored)
+               const profiles = JSON.parse(profilesStored)
+               if (profiles[activeAddress]?.avatar) {
+                  setProfilePhoto(profiles[activeAddress].avatar)
+                  return
+               }
+            } catch (e) {}
+         }
+
+         // Fallback to driver documents if available
+         const driversStored = localStorage.getItem('gigo_drivers')
+         if (driversStored) {
+            try {
+               const drivers = JSON.parse(driversStored)
                if (drivers[activeAddress]?.documents?.['Profile Photo']) {
                   setProfilePhoto(drivers[activeAddress].documents['Profile Photo'])
                }
@@ -702,6 +715,31 @@ function CustomerProfileDropdown({
          }
       }
    }, [activeAddress])
+
+   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+
+      if (file.size > 100 * 1024) {
+         alert('File size must be under 100KB')
+         return
+      }
+
+      const reader = new FileReader()
+      reader.onloadend = () => {
+         const base64 = reader.result as string
+         setProfilePhoto(base64)
+         
+         // Persist to unified profiles
+         if (activeAddress) {
+            const profilesStored = localStorage.getItem('gigo_profiles')
+            const profiles = profilesStored ? JSON.parse(profilesStored) : {}
+            profiles[activeAddress] = { ...profiles[activeAddress], avatar: base64 }
+            localStorage.setItem('gigo_profiles', JSON.stringify(profiles))
+         }
+      }
+      reader.readAsDataURL(file)
+   }
 
    if (!activeAddress) return <WalletConnectButton />
 
@@ -726,18 +764,38 @@ function CustomerProfileDropdown({
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   className="absolute right-0 top-full mt-3 w-[280px] sm:w-64 origin-top-right rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-[100]"
                >
-                  <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
-                     <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
+                  <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl group relative">
+                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden shrink-0 border border-white/10">
                         {profilePhoto ? (
                            <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
-                           <UserRound className="w-4 h-4 text-white/70" />
+                           <UserRound className="w-5 h-5 text-white/70" />
                         )}
                      </div>
-                     <div className="overflow-hidden">
-                        <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Wallet</p>
-                        <p className="text-sm font-mono truncate">{activeAddress}</p>
+                     <div className="overflow-hidden flex-1">
+                        <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Account</p>
+                        <p className="text-sm font-mono truncate text-white/90">{activeAddress}</p>
                      </div>
+                     <label className="absolute -left-1 -top-1 bg-emerald-500 rounded-full p-1.5 cursor-pointer shadow-lg opacity-0 group-hover:opacity-100 transition-opacity scale-75 hover:scale-90">
+                        <Camera className="w-3.5 h-3.5 text-black" />
+                        <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                     </label>
+                  </div>
+
+                  <div className="mb-4">
+                     <button 
+                        onClick={() => document.getElementById('profile-upload')?.click()}
+                        className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left group"
+                     >
+                        <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20">
+                           <Camera className="w-4 h-4" />
+                        </div>
+                        <div>
+                           <span className="text-sm font-medium block">Update Photo</span>
+                           <span className="text-[10px] text-white/30">Max 100KB</span>
+                        </div>
+                        <input id="profile-upload" type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                     </button>
                   </div>
 
                    {/* Mobile Tabs */}
