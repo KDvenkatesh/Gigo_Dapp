@@ -9,6 +9,8 @@ const MODEL = 'llama-3.3-70b-versatile';
 
 /* ── Type definitions ── */
 export interface SurgeFarePrediction {
+  current_time_analysis: string;
+  traffic_details: string;
   current_fare: number;
   fare_10min: number;
   fare_30min: number;
@@ -48,6 +50,12 @@ function safeParseJSON<T>(raw: string): T {
     cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '');
   }
 
+  // If the model still returned extra text, extract the first JSON object
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    cleaned = jsonMatch[0];
+  }
+
   return JSON.parse(cleaned) as T;
 }
 
@@ -68,6 +76,8 @@ export async function predictSurgeFare(
 
 Return this exact JSON shape:
 {
+  "current_time_analysis": "<short analysis of the given time/day>",
+  "traffic_details": "<short estimate of current traffic conditions between pickup and destination>",
   "current_fare": <MUST equal the provided Base Fare exactly>,
   "fare_10min": <number>,
   "fare_30min": <number>,
@@ -87,12 +97,27 @@ Return this exact JSON shape:
     });
 
     const content = completion.choices[0]?.message?.content ?? '';
-    return safeParseJSON<SurgeFarePrediction>(content);
+    const parsed = safeParseJSON<SurgeFarePrediction>(content);
+
+    // Guarantee the two new fields are always present
+    return {
+      current_time_analysis: parsed.current_time_analysis || `Analyzing time context for ${time}`,
+      traffic_details: parsed.traffic_details || 'Traffic estimate unavailable',
+      current_fare: parsed.current_fare ?? baseFare,
+      fare_10min: parsed.fare_10min ?? baseFare,
+      fare_30min: parsed.fare_30min ?? baseFare,
+      surge_multiplier: parsed.surge_multiplier ?? 1.0,
+      recommendation: parsed.recommendation ?? 'NEUTRAL',
+      reason: parsed.reason ?? '',
+      confidence: parsed.confidence ?? 0,
+    };
   } catch (error: unknown) {
     console.error('[groqAI] predictSurgeFare error:', error);
 
     // Graceful fallback so the frontend always gets valid data
     return {
+      current_time_analysis: 'Unable to analyze time.',
+      traffic_details: 'Unable to analyze traffic.',
       current_fare: baseFare,
       fare_10min: baseFare,
       fare_30min: baseFare,

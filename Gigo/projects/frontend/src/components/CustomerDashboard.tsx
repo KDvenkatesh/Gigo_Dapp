@@ -4,6 +4,8 @@ import { useWallet } from '@txnlab/use-wallet-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { NFTPassCard } from './NFTPassCard'
 import { BookingMap } from './BookingMap'
+import { PWAInstallFooter } from './PWAInstallFooter'
+import { ThemeToggle } from './ThemeToggle'
 
 import { PricePrediction } from './ai/PricePrediction'
 import { useGeolocation } from '../hooks/useGeolocation'
@@ -121,7 +123,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
       <div className="absolute inset-0 z-30 flex flex-col overflow-hidden bg-[#05060a]">
 
          {/* ── Top nav bar ── */}
-         <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/[0.06] bg-[#05060a]/90 px-4 py-3 backdrop-blur-xl sm:px-6">
+         <div className="relative z-[1000] flex shrink-0 items-center justify-between gap-3 border-b border-white/[0.06] bg-[#05060a]/90 px-4 py-3 backdrop-blur-xl sm:px-6">
             <button
                type="button"
                onClick={onBack}
@@ -130,7 +132,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                <ArrowLeft className="h-4 w-4" />
             </button>
 
-            <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-1">
+            <div className="hidden lg:flex min-w-0 flex-1 items-center gap-1 overflow-x-auto no-scrollbar py-1">
                {([
                   { id: 'book' as const, icon: CarFront, label: 'Book' },
                   { id: 'history' as const, icon: History, label: 'My Rides', count: ride.customerRides.length },
@@ -162,8 +164,9 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                ))}
             </div>
 
-            <div className="shrink-0 flex items-center gap-3">
-               <CustomerProfileDropdown onSwitchRole={onSwitchRole} />
+            <div className="shrink-0 flex items-center gap-2">
+               <ThemeToggle />
+               <CustomerProfileDropdown onSwitchRole={onSwitchRole} currentTab={tab} onTabChange={setTab} rideCount={ride.customerRides.length} />
             </div>
          </div>
 
@@ -179,7 +182,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                   className="flex flex-col flex-1 lg:grid lg:grid-cols-[1.1fr_0.9fr] overflow-hidden"
                >
                   {/* Map */}
-                  <div className="relative h-[280px] sm:h-[400px] lg:h-full lg:border-r lg:border-white/[0.06] overflow-hidden">
+                  <div className="map-container relative h-[320px] sm:h-[420px] lg:h-full overflow-hidden">
                      <BookingMap
                         pickup={pickupLocation}
                         drop={destinationLocation}
@@ -567,6 +570,8 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                </motion.div>
             )}
          </AnimatePresence>
+
+         <PWAInstallFooter />
       </div>
    )
 }
@@ -669,7 +674,17 @@ function PassesTabContent() {
    )
 }
 
-function CustomerProfileDropdown({ onSwitchRole }: { onSwitchRole: (role: AppRole) => void }) {
+function CustomerProfileDropdown({ 
+   onSwitchRole, 
+   currentTab, 
+   onTabChange, 
+   rideCount 
+}: { 
+   onSwitchRole: (role: AppRole) => void, 
+   currentTab?: string, 
+   onTabChange?: (tab: 'book' | 'history' | 'passes') => void,
+   rideCount?: number
+}) {
    const { activeAddress, activeWallet } = useWallet()
    const [isOpen, setIsOpen] = useState(false)
    const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
@@ -706,10 +721,10 @@ function CustomerProfileDropdown({ onSwitchRole }: { onSwitchRole: (role: AppRol
          <AnimatePresence>
             {isOpen && (
                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-3 w-64 rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-50"
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute right-0 top-full mt-3 w-[280px] sm:w-64 origin-top-right rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-[100]"
                >
                   <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
                      <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
@@ -725,7 +740,29 @@ function CustomerProfileDropdown({ onSwitchRole }: { onSwitchRole: (role: AppRol
                      </div>
                   </div>
 
-                  <div className="space-y-2 mb-4">
+                   {/* Mobile Tabs */}
+                   {onTabChange && (
+                      <div className="lg:hidden space-y-1 mb-4 border-b border-white/10 pb-4">
+                         <p className="text-[10px] uppercase tracking-wider font-semibold text-white/40 mb-2 px-1">Navigation</p>
+                         <button onClick={() => { setIsOpen(false); onTabChange('book') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'book' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                            <CarFront className="w-4 h-4" />
+                            <span className="text-sm font-medium">Book</span>
+                         </button>
+                         <button onClick={() => { setIsOpen(false); onTabChange('history') }} className={cn("w-full flex items-center justify-between gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'history' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                            <div className="flex items-center gap-3">
+                               <History className="w-4 h-4" />
+                               <span className="text-sm font-medium">My Rides</span>
+                            </div>
+                            {rideCount ? <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{rideCount}</span> : null}
+                         </button>
+                         <button onClick={() => { setIsOpen(false); onTabChange('passes') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'passes' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                            <Gem className="w-4 h-4" />
+                            <span className="text-sm font-medium">Your Passes</span>
+                         </button>
+                      </div>
+                   )}
+
+                   <div className="space-y-2 mb-4">
                      <button 
                         onClick={() => { setIsOpen(false); onSwitchRole('driver') }}
                         className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"

@@ -1,41 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Download, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePWAInstall } from '../hooks/usePWAInstall';
 
-export function PWAInstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showPrompt, setShowPrompt] = useState(false);
+export function PWAInstallPrompt({ isMainPage = false }: { isMainPage?: boolean }) {
+  const { canInstall, install } = usePWAInstall();
+  const [showPrompt, setShowPrompt] = useState(true);
 
-  useEffect(() => {
-    const handler = (e: any) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      setDeferredPrompt(e);
-      // Show the prompt
-      setShowPrompt(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handler);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handler);
-    };
-  }, []);
-
-  const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    // Show the install prompt
-    deferredPrompt.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response to the install prompt: ${outcome}`);
-    // We've used the prompt, and can't use it again, throw it away
-    setDeferredPrompt(null);
-    setShowPrompt(false);
-  };
-
-  if (!showPrompt) return null;
+  if (!canInstall || !showPrompt || !isMainPage) return null;
 
   return (
     <AnimatePresence>
@@ -43,7 +15,7 @@ export function PWAInstallPrompt() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
-        className="fixed bottom-6 left-4 right-4 z-[100] sm:left-auto sm:right-6 sm:w-80"
+        className="fixed bottom-6 left-4 right-4 z-[100] sm:left-auto sm:right-6 sm:w-80 lg:hidden"
       >
         <div className="glass-panel overflow-hidden rounded-2xl border border-white/10 bg-black/80 p-4 shadow-2xl backdrop-blur-2xl">
           <div className="flex items-start justify-between">
@@ -62,7 +34,7 @@ export function PWAInstallPrompt() {
           </div>
           <div className="mt-4 flex gap-2">
             <button
-              onClick={handleInstall}
+              onClick={install}
               className="flex-1 rounded-lg bg-white px-3 py-2 text-xs font-bold text-black hover:bg-white/90 transition"
             >
               Install Now

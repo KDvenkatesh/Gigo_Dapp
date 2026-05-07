@@ -6,6 +6,8 @@ import { EarningsTab } from './ai/EarningsTab'
 import { SmartMap } from './ai/SmartMap'
 import { OTPModal } from './OTPModal'
 import { CarFront, Banknote } from 'lucide-react'
+import { PWAInstallFooter } from './PWAInstallFooter'
+import { ThemeToggle } from './ThemeToggle'
 import { cn } from '../lib/cn'
 import { RideStatus } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
@@ -14,7 +16,13 @@ import { useGeolocation } from '../hooks/useGeolocation'
 import { useDriverContext } from '../contexts/DriverContext'
 import { useWallet } from '@txnlab/use-wallet-react'
 
-function DriverProfileDropdown() {
+function DriverProfileDropdown({
+   currentTab,
+   onTabChange
+}: {
+   currentTab?: string,
+   onTabChange?: (tab: 'rides' | 'earnings') => void
+}) {
   const { activeAddress, activeWallet } = useWallet()
   const [isOpen, setIsOpen] = useState(false)
   const [documents, setDocuments] = useState<Record<string, string>>({})
@@ -52,10 +60,10 @@ function DriverProfileDropdown() {
       <AnimatePresence>
         {isOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="absolute right-0 mt-3 w-72 rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-50"
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            className="absolute right-0 top-full mt-3 w-[280px] sm:w-72 origin-top-right rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-[100]"
           >
             <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
               <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center overflow-hidden">
@@ -70,6 +78,23 @@ function DriverProfileDropdown() {
                 <p className="text-sm font-mono truncate">{activeAddress}</p>
               </div>
             </div>
+
+            {/* Mobile Tabs */}
+            {onTabChange && (
+               <div className="lg:hidden mb-4 border-b border-white/10 pb-4">
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider font-semibold mb-2 px-1">Navigation</p>
+                  <div className="space-y-1">
+                     <button onClick={() => { setIsOpen(false); onTabChange('rides') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'rides' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                        <CarFront className="w-4 h-4" />
+                        <span className="text-sm font-medium">Rides</span>
+                     </button>
+                     <button onClick={() => { setIsOpen(false); onTabChange('earnings') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'earnings' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                        <Banknote className="w-4 h-4" />
+                        <span className="text-sm font-medium">My Earnings</span>
+                     </button>
+                  </div>
+               </div>
+            )}
 
             <div className="mb-4">
               <p className="text-xs text-white/50 uppercase tracking-wider font-semibold mb-2">Your Documents</p>
@@ -161,7 +186,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
     <>
       <BottomSheet>
         {/* Top nav bar matching Customer Dashboard style */}
-        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-white/[0.06] pb-4 mb-6">
+        <div className="relative z-[1000] flex shrink-0 flex-wrap sm:flex-nowrap items-center justify-between gap-3 border-b border-white/[0.06] pb-4 mb-6">
           <button
             type="button"
             onClick={onBack}
@@ -170,7 +195,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
             <ArrowLeft className="h-4 w-4" />
           </button>
 
-          <div className="flex items-center gap-1">
+          <div className="hidden lg:flex min-w-0 flex-1 items-center gap-1 overflow-x-auto no-scrollbar py-1">
             <button
               type="button"
               onClick={() => setActiveTab('rides')}
@@ -216,7 +241,10 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                 {active ? 'Online' : 'Offline'}
               </span>
             </div>
-            <DriverProfileDropdown />
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <DriverProfileDropdown currentTab={activeTab} onTabChange={setActiveTab} />
+            </div>
           </div>
         </div>
 
@@ -517,6 +545,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
         ) : (
           <EarningsTab ride={ride} />
         )}
+        <PWAInstallFooter />
       </BottomSheet>
 
       <OTPModal
