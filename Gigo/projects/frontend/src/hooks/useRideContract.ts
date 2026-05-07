@@ -212,6 +212,8 @@ export function useRideContract() {
               const name = decodeMaybeBase64(box.name)
               const prefix = new TextDecoder().decode(name.slice(0, 3))
               const rideId = parseRideIdFromBox(name)
+              // Add a small delay between requests to avoid 429
+              await new Promise(r => setTimeout(r, 50))
               const valueResponse = await algod.getApplicationBoxByName(Number(algorandConfig.appId), toBuffer(name)).do()
               const value = decodeMaybeBase64(valueResponse.value)
               const key = rideId.toString()
@@ -613,7 +615,7 @@ export function useRideContract() {
       if (!actionState.refresh) {
         refreshRidesEvent()
       }
-    }, 15000)
+    }, 30000)
     return () => window.clearInterval(interval)
   }, [])
 
