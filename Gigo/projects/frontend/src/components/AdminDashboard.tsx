@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, Check, X, ArrowLeft, Clock, Eye, FileText } from 'lucide-react';
 import { useAdminContext } from '../contexts/AdminContext';
 import { WalletConnectButton } from './WalletConnectButton';
+import { PWAInstallFooter } from './PWAInstallFooter';
 
 export function AdminDashboard({ onBack }: { onBack: () => void }) {
   const { isAdmin, isChecking, pendingDrivers, approveDriver, rejectDriver } = useAdminContext();
@@ -118,6 +119,7 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
           </div>
         </div>
       </div>
+      <PWAInstallFooter />
 
       <AnimatePresence>
         {viewDoc && (
