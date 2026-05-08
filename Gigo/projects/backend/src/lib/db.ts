@@ -19,10 +19,17 @@ const dbPath = path.join(process.cwd(), 'data', 'db.json');
 
 export const db = {
   read(): DBStructure {
+    const defaultData: DBStructure = { drivers: {}, customers: {}, rides: {} };
     if (!fs.existsSync(dbPath)) {
-      return { drivers: {}, customers: {}, rides: {} };
+      return defaultData;
     }
-    return JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+    try {
+      const content = fs.readFileSync(dbPath, 'utf-8');
+      const data = JSON.parse(content);
+      return { ...defaultData, ...data };
+    } catch (e) {
+      return defaultData;
+    }
   },
 
   write(data: DBStructure) {

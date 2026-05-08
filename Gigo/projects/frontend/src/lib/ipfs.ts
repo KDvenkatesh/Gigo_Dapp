@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
+// Auto-fix for production deployments missing environment variables
+if (typeof window !== 'undefined' && 
+    window.location.hostname !== 'localhost' && 
+    BACKEND_URL.includes('localhost')) {
+  console.warn('Production deployment detected but VITE_BACKEND_URL is pointing to localhost. Falling back to gigo-dapp.onrender.com');
+  BACKEND_URL = 'https://gigo-dapp.onrender.com'; 
+}
 const GATEWAY_URL = 'https://gateway.pinata.cloud/ipfs/';
 
 export const ipfs = {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gigo-v2';
+const CACHE_NAME = 'gigo-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -29,12 +29,28 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests
   if (event.request.method !== 'GET') return;
+  
+  // Skip cross-origin or unsupported schemes (like chrome-extension)
+  if (!event.request.url.startsWith('http')) return;
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request).catch(() => caches.match('/index.html'));
-    })
+    fetch(event.request)
+      .then((response) => {
+        // Cache successful responses from supported schemes
+        if (response && response.status === 200 && (event.request.url.startsWith('http'))) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // Fallback to cache if network fails
+        return caches.match(event.request).then((cached) => {
+          return cached || (event.request.mode === 'navigate' ? caches.match('/index.html') : null);
+        });
+      })
   );
 });
