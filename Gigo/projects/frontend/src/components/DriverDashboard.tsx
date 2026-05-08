@@ -474,7 +474,11 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                 </div>
 
-                {rideMetadata && (
+                {isMetadataLoading ? (
+                  <div className="mt-5 flex items-center gap-2 text-xs text-white/40">
+                    <LoaderCircle className="h-3 w-3 animate-spin" /> Fetching rich data from IPFS...
+                  </div>
+                ) : rideMetadata && (
                   <div className="mt-5 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-[24px] border border-emerald-300/10 bg-emerald-300/5 p-4">
                       <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Vehicle Requested</p>
