@@ -4,6 +4,7 @@ import { ShieldCheck, Check, X, ArrowLeft, Clock, Eye, FileText } from 'lucide-r
 import { useAdminContext } from '../contexts/AdminContext';
 import { WalletConnectButton } from './WalletConnectButton';
 import { PWAInstallFooter } from './PWAInstallFooter';
+import { ipfs } from '../lib/ipfs';
 
 export function AdminDashboard({ onBack }: { onBack: () => void }) {
   const { isAdmin, isChecking, pendingDrivers, approveDriver, rejectDriver } = useAdminContext();
@@ -147,7 +148,11 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
                 {viewDoc.data.startsWith('data:application/pdf') ? (
                   <iframe src={viewDoc.data} className="w-full h-[60vh] rounded-lg" title={viewDoc.name} />
                 ) : (
-                  <img src={viewDoc.data} alt={viewDoc.name} className="max-w-full max-h-[60vh] object-contain rounded-lg" />
+                  <img 
+                    src={ipfs.getGatewayUrl(viewDoc.data)} 
+                    alt={viewDoc.name} 
+                    className="max-w-full max-h-[60vh] object-contain rounded-lg" 
+                  />
                 )}
               </div>
             </motion.div>
