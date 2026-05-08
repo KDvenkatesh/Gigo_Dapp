@@ -16,8 +16,15 @@ router.post('/upload-file', upload.single('file'), async (req, res) => {
     const result = await pinataService.pinFileToIPFS(req.file.buffer, req.file.originalname);
     res.json({ cid: result.IpfsHash });
   } catch (error: any) {
-    console.error('IPFS Upload Error:', error.response?.data || error.message);
-    res.status(500).json({ error: 'Failed to upload to IPFS' });
+    console.error('IPFS Upload Error Context:', {
+      message: error.message,
+      stack: error.stack,
+      pinataResponse: error.response?.data
+    });
+    res.status(500).json({ 
+      error: 'Failed to upload to IPFS',
+      details: error.message
+    });
   }
 });
 
@@ -27,8 +34,15 @@ router.post('/upload-json', async (req, res) => {
     const result = await pinataService.pinJSONToIPFS(req.body);
     res.json({ cid: result.IpfsHash });
   } catch (error: any) {
-    console.error('IPFS JSON Upload Error:', error.response?.data || error.message);
-    res.status(500).json({ error: 'Failed to upload JSON to IPFS' });
+    console.error('IPFS JSON Upload Error Context:', {
+      message: error.message,
+      stack: error.stack,
+      pinataResponse: error.response?.data
+    });
+    res.status(500).json({ 
+      error: 'Failed to upload JSON to IPFS',
+      details: error.message
+    });
   }
 });
 
@@ -65,9 +79,17 @@ router.post('/customer-profile', (req, res) => {
 });
 
 router.post('/get-customer-profile', (req, res) => {
-  const { walletAddress } = req.body;
-  const cid = db.getCustomerCID(walletAddress);
-  res.json({ cid });
+  try {
+    const { walletAddress } = req.body;
+    if (!walletAddress) {
+      return res.status(400).json({ error: 'walletAddress is required' });
+    }
+    const cid = db.getCustomerCID(walletAddress);
+    res.json({ cid });
+  } catch (error: any) {
+    console.error('Get Customer Profile Error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
 });
 
 // Ride Endpoints
