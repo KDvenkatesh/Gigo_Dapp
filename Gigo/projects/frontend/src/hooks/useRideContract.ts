@@ -203,18 +203,39 @@ export function useRideContract() {
         } catch { return false }
       })
 
-      const CHUNK_SIZE = 5
-      for (let i = 0; i < targetBoxes.length; i += CHUNK_SIZE) {
-        const chunk = targetBoxes.slice(i, i + CHUNK_SIZE)
+      // Group by rideId and only keep the latest 5 rides to avoid 429
+      const rideIds = Array.from(new Set(targetBoxes.map((box: any) => parseRideIdFromBox(decodeMaybeBase64(box.name))))).sort((a, b) => Number(b - a)).slice(0, 5)
+      const filteredBoxes = targetBoxes.filter((box: any) => rideIds.includes(parseRideIdFromBox(decodeMaybeBase64(box.name))))
+
+      const CHUNK_SIZE = 1
+      for (let i = 0; i < filteredBoxes.length; i += CHUNK_SIZE) {
+        const chunk = filteredBoxes.slice(i, i + CHUNK_SIZE)
         await Promise.all(
           chunk.map(async (box: any) => {
             try {
               const name = decodeMaybeBase64(box.name)
               const prefix = new TextDecoder().decode(name.slice(0, 3))
               const rideId = parseRideIdFromBox(name)
-              // Add a small delay between requests to avoid 429
-              await new Promise(r => setTimeout(r, 50))
-              const valueResponse = await algod.getApplicationBoxByName(Number(algorandConfig.appId), toBuffer(name)).do()
+              
+              // Retry logic for box fetching
+              let attempts = 0
+              let valueResponse = null
+              while (attempts < 3) {
+                try {
+                  await new Promise(r => setTimeout(r, attempts * 500 + 100))
+                  valueResponse = await algod.getApplicationBoxByName(Number(algorandConfig.appId), toBuffer(name)).do()
+                  break
+                } catch (e: any) {
+                  if (e.status === 429) {
+                    attempts++
+                    continue
+                  }
+                  throw e
+                }
+              }
+
+              if (!valueResponse) throw new Error('Max retries reached')
+
               const value = decodeMaybeBase64(valueResponse.value)
               const key = rideId.toString()
               const current = rideMap.get(key) ?? { rideId }
@@ -237,8 +258,8 @@ export function useRideContract() {
             }
           })
         )
-        if (i + CHUNK_SIZE < targetBoxes.length) {
-          await new Promise(resolve => setTimeout(resolve, 300))
+        if (i + CHUNK_SIZE < filteredBoxes.length) {
+          await new Promise(resolve => setTimeout(resolve, 2000))
         }
       }
 

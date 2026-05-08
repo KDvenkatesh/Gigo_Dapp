@@ -6,6 +6,7 @@ import cors from 'cors';
 import predictPriceRouter from './routes/predictPrice';
 import smartRouteRouter from './routes/smartRoute';
 import earningsRouter from './routes/earnings';
+import storageRouter from './routes/storage';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
@@ -24,7 +25,7 @@ app.use(
 );
 
 /* ── Body parsers ── */
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '10mb' }));
 
 /* ── Health check ── */
 app.get('/health', (_req, res) => {
@@ -40,6 +41,7 @@ app.get('/health', (_req, res) => {
 app.use('/api/predict-price', predictPriceRouter);
 app.use('/api/smart-route', smartRouteRouter);
 app.use('/api/earnings-insight', earningsRouter);
+app.use('/api/storage', storageRouter);
 
 /* ── 404 fallback ── */
 app.use((_req, res) => {

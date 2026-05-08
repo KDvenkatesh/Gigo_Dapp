@@ -16,6 +16,7 @@ import { cn } from '../lib/cn'
 import { RideStatus, type PlaceSuggestion, type RideLocation, type AppRole } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
 import { useEffect, useMemo, useState } from 'react'
+import { ipfs } from '../lib/ipfs'
 
 type RideHook = ReturnType<typeof useRideContract>
 
@@ -106,11 +107,31 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
    async function handleCreateRide() {
       try {
          const fareToCharge = hasActivePass ? discountedFare : estimatedFare
-         await ride.createRide(pickupLocation, destinationLocation, fareToCharge)
+         
+         // 1. Upload ride metadata to IPFS first
+         const metadata = {
+            pickup: pickupLocation,
+            drop: destinationLocation,
+            fareMicroAlgos: fareToCharge.toString(),
+            vehicleType: ride.selectedVehicle.name,
+            customer: ride.activeAddress,
+            createdAt: new Date().toISOString()
+         }
+         
+         const metadataCID = await ipfs.uploadJSON(metadata)
+         
+         // 2. Create ride on-chain
+         const rideId = await ride.createRide(pickupLocation, destinationLocation, fareToCharge)
+         
+         // 3. Save CID mapping on backend if we have a rideId
+         if (rideId) {
+            await ipfs.saveRideMetadata(rideId.toString(), metadataCID)
+         }
+
          setShowSuccess(true)
          setTimeout(() => setShowSuccess(false), 3000)
       } catch (err) {
-         // Error handled by hook toasts
+         console.error('Ride creation failed:', err)
       }
    }
 
@@ -688,57 +709,49 @@ function CustomerProfileDropdown({
    const { activeAddress, activeWallet } = useWallet()
    const [isOpen, setIsOpen] = useState(false)
    const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
+   const [isUploading, setIsUploading] = useState(false)
 
    useEffect(() => {
       if (activeAddress) {
-         // Try to get from unified profiles first
-         const profilesStored = localStorage.getItem('gigo_profiles')
-         if (profilesStored) {
+         const fetchProfile = async () => {
             try {
-               const profiles = JSON.parse(profilesStored)
-               if (profiles[activeAddress]?.avatar) {
-                  setProfilePhoto(profiles[activeAddress].avatar)
-                  return
+               const cid = await ipfs.getCustomerProfileCID(activeAddress);
+               if (cid) {
+                  setProfilePhoto(ipfs.getGatewayUrl(cid));
+                  return;
                }
-            } catch (e) {}
-         }
-
-         // Fallback to driver documents if available
-         const driversStored = localStorage.getItem('gigo_drivers')
-         if (driversStored) {
-            try {
-               const drivers = JSON.parse(driversStored)
-               if (drivers[activeAddress]?.documents?.['Profile Photo']) {
-                  setProfilePhoto(drivers[activeAddress].documents['Profile Photo'])
+               
+               // Fallback to driver documents if available
+               const driverCid = await ipfs.getDriverMetadataCID(activeAddress);
+               if (driverCid) {
+                  const driverData = await ipfs.getJSON(driverCid);
+                  if (driverData?.documents?.['Profile Photo']) {
+                     setProfilePhoto(ipfs.getGatewayUrl(driverData.documents['Profile Photo']));
+                  }
                }
-            } catch (e) {}
-         }
+            } catch (e) {
+               console.error('Failed to fetch customer profile from IPFS', e);
+            }
+         };
+         fetchProfile();
       }
    }, [activeAddress])
 
-   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
-      if (!file) return
+      if (!file || !activeAddress) return
 
-      if (file.size > 100 * 1024) {
-         alert('File size must be under 100KB')
-         return
+      try {
+         setIsUploading(true)
+         const cid = await ipfs.uploadFile(file)
+         await ipfs.saveCustomerProfile(activeAddress, cid)
+         setProfilePhoto(ipfs.getGatewayUrl(cid))
+      } catch (err) {
+         console.error('Profile upload failed:', err)
+         alert('Failed to upload profile photo to IPFS')
+      } finally {
+         setIsUploading(false)
       }
-
-      const reader = new FileReader()
-      reader.onloadend = () => {
-         const base64 = reader.result as string
-         setProfilePhoto(base64)
-         
-         // Persist to unified profiles
-         if (activeAddress) {
-            const profilesStored = localStorage.getItem('gigo_profiles')
-            const profiles = profilesStored ? JSON.parse(profilesStored) : {}
-            profiles[activeAddress] = { ...profiles[activeAddress], avatar: base64 }
-            localStorage.setItem('gigo_profiles', JSON.stringify(profiles))
-         }
-      }
-      reader.readAsDataURL(file)
    }
 
    if (!activeAddress) return <WalletConnectButton />
@@ -747,9 +760,12 @@ function CustomerProfileDropdown({
       <div className="relative">
          <button 
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden"
+            disabled={isUploading}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden disabled:opacity-50"
          >
-            {profilePhoto ? (
+            {isUploading ? (
+               <Loader2 className="w-5 h-5 text-emerald-400 animate-spin" />
+            ) : profilePhoto ? (
                <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
             ) : (
                <UserRound className="w-5 h-5 text-white/70" />

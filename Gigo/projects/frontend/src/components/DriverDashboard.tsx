@@ -15,6 +15,7 @@ import { useState, useEffect } from 'react'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { useDriverContext } from '../contexts/DriverContext'
 import { useWallet } from '@txnlab/use-wallet-react'
+import { ipfs } from '../lib/ipfs'
 
 function DriverProfileDropdown({
    currentTab,
@@ -30,15 +31,20 @@ function DriverProfileDropdown({
 
   useEffect(() => {
     if (activeAddress) {
-      const stored = localStorage.getItem('gigo_drivers')
-      if (stored) {
+      const fetchDocs = async () => {
         try {
-          const drivers = JSON.parse(stored)
-          if (drivers[activeAddress]?.documents) {
-            setDocuments(drivers[activeAddress].documents)
+          const cid = await ipfs.getDriverMetadataCID(activeAddress);
+          if (cid) {
+            const data = await ipfs.getJSON(cid);
+            if (data?.documents) {
+              setDocuments(data.documents);
+            }
           }
-        } catch (e) {}
-      }
+        } catch (e) {
+          console.error('Failed to fetch driver docs from IPFS', e);
+        }
+      };
+      fetchDocs();
     }
   }, [activeAddress])
 
@@ -51,7 +57,7 @@ function DriverProfileDropdown({
         className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden"
       >
         {documents['Profile Photo'] ? (
-          <img src={documents['Profile Photo']} alt="Profile" className="w-full h-full object-cover" />
+          <img src={ipfs.getGatewayUrl(documents['Profile Photo'])} alt="Profile" className="w-full h-full object-cover" />
         ) : (
           <User className="w-5 h-5 text-emerald-400" />
         )}
@@ -68,7 +74,7 @@ function DriverProfileDropdown({
             <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
               <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center overflow-hidden">
                 {documents['Profile Photo'] ? (
-                  <img src={documents['Profile Photo']} alt="Profile" className="w-full h-full object-cover" />
+                  <img src={ipfs.getGatewayUrl(documents['Profile Photo'])} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
                   <User className="w-4 h-4 text-emerald-400" />
                 )}
@@ -143,11 +149,8 @@ function DriverProfileDropdown({
                 </button>
               </div>
               <div className="bg-black/50 rounded-xl overflow-hidden flex items-center justify-center">
-                {viewDoc.data.startsWith('data:application/pdf') ? (
-                  <iframe src={viewDoc.data} className="w-full h-64" title={viewDoc.name} />
-                ) : (
-                  <img src={viewDoc.data} alt={viewDoc.name} className="max-w-full max-h-64 object-contain" />
-                )}
+                {/* Check if it's a CID or base64 (for backward compatibility if needed, but here we assume CID) */}
+                <img src={ipfs.getGatewayUrl(viewDoc.data)} alt={viewDoc.name} className="max-w-full max-h-64 object-contain" />
               </div>
             </motion.div>
           </motion.div>
@@ -166,6 +169,32 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
   const [activeTab, setActiveTab] = useState<'rides' | 'earnings'>('rides')
   const [otpOpen, setOtpOpen] = useState(false)
   const [otp, setOtp] = useState('')
+  const [rideMetadata, setRideMetadata] = useState<any>(null)
+  const [isMetadataLoading, setIsMetadataLoading] = useState(false)
+
+  useEffect(() => {
+    if (activeRide?.rideId) {
+      const fetchMetadata = async () => {
+        try {
+          setIsMetadataLoading(true)
+          const cid = await ipfs.getRideMetadataCID(activeRide.rideId.toString())
+          if (cid) {
+            const data = await ipfs.getJSON(cid)
+            setRideMetadata(data)
+          } else {
+            setRideMetadata(null)
+          }
+        } catch (e) {
+          console.error('Failed to fetch ride metadata from IPFS', e)
+        } finally {
+          setIsMetadataLoading(false)
+        }
+      }
+      fetchMetadata()
+    } else {
+      setRideMetadata(null)
+    }
+  }, [activeRide?.rideId])
 
   async function handleVerifyOtp() {
     if (!activeRide) return
@@ -444,6 +473,19 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                     <p className="mt-2 text-sm font-medium text-white">{ride.formatAlgoAmount(activeRide.fareMicroAlgos)}</p>
                   </div>
                 </div>
+
+                {rideMetadata && (
+                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                    <div className="rounded-[24px] border border-emerald-300/10 bg-emerald-300/5 p-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Vehicle Requested</p>
+                      <p className="mt-2 text-sm font-bold text-white">{rideMetadata.vehicleType}</p>
+                    </div>
+                    <div className="rounded-[24px] border border-emerald-300/10 bg-emerald-300/5 p-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Global Data (IPFS)</p>
+                      <p className="mt-2 text-[10px] font-mono text-emerald-400/80 truncate">CID: Available</p>
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-5 rounded-[28px] border border-rose-300/18 bg-rose-300/10 p-4">
                   <div className="flex items-start gap-3">
