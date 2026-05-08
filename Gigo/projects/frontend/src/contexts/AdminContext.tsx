@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { useWallet } from '@txnlab/use-wallet-react';
+import { ipfs } from '../lib/ipfs';
 
 export interface PendingDriver {
   walletAddress: string;
@@ -44,36 +45,46 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     setIsChecking(false);
   }, [activeAddress]);
 
-  const refreshDrivers = () => {
-    const storedData = localStorage.getItem('gigo_drivers');
-    if (storedData) {
-      try {
-        const drivers = JSON.parse(storedData);
-        const pending: PendingDriver[] = Object.keys(drivers)
-          .filter(key => drivers[key].status === 'pending')
-          .map(key => ({
-            walletAddress: key,
-            ...drivers[key]
-          }));
-        setPendingDrivers(pending);
-      } catch (e) {
-        console.error('Failed to parse pending drivers', e);
+  const refreshDrivers = async () => {
+    try {
+      const driverMappings = await ipfs.getAllDrivers();
+      const pending: PendingDriver[] = [];
+      
+      for (const walletAddress in driverMappings) {
+        const { metadataCID } = driverMappings[walletAddress];
+        const driverData = await ipfs.getJSON(metadataCID);
+        
+        if (driverData && driverData.status === 'pending') {
+          pending.push({
+            walletAddress,
+            ...driverData
+          });
+        }
       }
+      setPendingDrivers(pending);
+    } catch (e) {
+      console.error('Failed to fetch pending drivers from IPFS', e);
     }
   };
 
-  const updateDriverStatus = (walletAddress: string, status: string, reason?: string) => {
-    const storedData = localStorage.getItem('gigo_drivers');
-    if (storedData) {
-      const drivers = JSON.parse(storedData);
-      if (drivers[walletAddress]) {
-        drivers[walletAddress].status = status;
-        if (reason) {
-          drivers[walletAddress].rejectionReason = reason;
-        }
-        localStorage.setItem('gigo_drivers', JSON.stringify(drivers));
-        refreshDrivers();
-      }
+  const updateDriverStatus = async (walletAddress: string, status: string, reason?: string) => {
+    try {
+      const currentCid = await ipfs.getDriverMetadataCID(walletAddress);
+      if (!currentCid) return;
+      
+      const currentData = await ipfs.getJSON(currentCid);
+      const updatedData = {
+        ...currentData,
+        status,
+        ...(reason && { rejectionReason: reason }),
+        updatedAt: new Date().toISOString()
+      };
+      
+      const newCid = await ipfs.uploadJSON(updatedData);
+      await ipfs.saveDriverMetadata(walletAddress, newCid);
+      refreshDrivers();
+    } catch (e) {
+      console.error('Failed to update driver status on IPFS', e);
     }
   };
 

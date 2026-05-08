@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Upload, CarFront, Bike, Car, BatteryCharging, ShieldCheck } from 'lucide-react';
 import { useDriverContext } from '../contexts/DriverContext';
 import { WalletConnectButton } from './WalletConnectButton';
+import { ipfs } from '../lib/ipfs';
+import { Loader2 } from 'lucide-react';
 
 export function DriverOnboarding({ onBack }: { onBack: () => void }) {
   const { status, submitApplication, ride } = useDriverContext();
   const [vehicleType, setVehicleType] = useState('');
   const [uploadedDocs, setUploadedDocs] = useState<Record<string, string>>({});
+  const [uploadingDocs, setUploadingDocs] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,17 +25,19 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
     }, 1000);
   };
 
-  const handleDocUpload = (doc: string, file: File | null) => {
+  const handleDocUpload = async (doc: string, file: File | null) => {
     if (!file) return;
-    if (file.size > 100 * 1024) {
-      alert(`File ${file.name} is too large. Please upload a file below 100KB.`);
-      return;
+    
+    setUploadingDocs(prev => ({ ...prev, [doc]: true }));
+    try {
+      const cid = await ipfs.uploadFile(file);
+      setUploadedDocs(prev => ({ ...prev, [doc]: cid }));
+    } catch (error) {
+      console.error(`Failed to upload ${doc}`, error);
+      alert(`Failed to upload ${doc}. Please try again.`);
+    } finally {
+      setUploadingDocs(prev => ({ ...prev, [doc]: false }));
     }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setUploadedDocs(prev => ({ ...prev, [doc]: reader.result as string }));
-    };
-    reader.readAsDataURL(file);
   };
 
   const vehicleOptions = [
@@ -142,9 +147,15 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
                         isUploaded ? 'border-emerald-500 bg-emerald-500/10' : 'border-white/20 hover:border-white/40 hover:bg-white/[0.02]'
                       }`}
                     >
-                      {isUploaded ? <ShieldCheck className="mx-auto h-6 w-6 text-emerald-400 mb-3" /> : <Upload className="mx-auto h-6 w-6 text-white/40 mb-3" />}
+                      {uploadingDocs[doc] ? (
+                        <Loader2 className="mx-auto h-6 w-6 text-white/40 mb-3 animate-spin" />
+                      ) : isUploaded ? (
+                        <ShieldCheck className="mx-auto h-6 w-6 text-emerald-400 mb-3" />
+                      ) : (
+                        <Upload className="mx-auto h-6 w-6 text-white/40 mb-3" />
+                      )}
                       <p className={`text-sm font-medium ${isUploaded ? 'text-emerald-300' : 'text-white/80'}`}>
-                        {isUploaded ? `${doc} Uploaded` : `Upload ${doc}`}
+                        {uploadingDocs[doc] ? `Uploading ${doc}...` : isUploaded ? `${doc} Uploaded` : `Upload ${doc}`}
                       </p>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { useRideContract } from '../hooks/useRideContract';
+import { ipfs } from '../lib/ipfs';
 
 type RideContractReturn = ReturnType<typeof useRideContract>;
 
@@ -26,26 +27,29 @@ export function DriverProvider({ children }: { children: ReactNode }) {
   const [status, setStatusState] = useState<DriverStatus>('none');
   const [active, setActive] = useState(false);
 
-  // Load status from local storage when wallet changes
+  // Load status from IPFS when wallet changes
   useEffect(() => {
     if (walletAddress !== 'disconnected') {
-      const storedData = localStorage.getItem('gigo_drivers');
-      if (storedData) {
+      const fetchDriverData = async () => {
         try {
-          const drivers = JSON.parse(storedData);
-          const driverData = drivers[walletAddress];
-          if (driverData && driverData.status) {
-            setStatusState(driverData.status as DriverStatus);
+          const cid = await ipfs.getDriverMetadataCID(walletAddress);
+          if (cid) {
+            const driverData = await ipfs.getJSON(cid);
+            if (driverData && driverData.status) {
+              setStatusState(driverData.status as DriverStatus);
+            } else {
+              setStatusState('none');
+            }
           } else {
+            // Fallback for demo if no CID found on backend yet
             setStatusState('none');
           }
         } catch (e) {
-          console.error('Failed to parse driver data', e);
+          console.error('Failed to fetch driver data from IPFS', e);
           setStatusState('none');
         }
-      } else {
-        setStatusState('none');
-      }
+      };
+      fetchDriverData();
     } else {
       setStatusState('none');
     }
@@ -53,28 +57,46 @@ export function DriverProvider({ children }: { children: ReactNode }) {
     setActive(false);
   }, [walletAddress]);
 
-  const setStatus = (newStatus: DriverStatus) => {
+  const setStatus = async (newStatus: DriverStatus) => {
     setStatusState(newStatus);
     if (walletAddress !== 'disconnected') {
-      const storedData = localStorage.getItem('gigo_drivers');
-      const drivers = storedData ? JSON.parse(storedData) : {};
-      drivers[walletAddress] = { ...drivers[walletAddress], status: newStatus };
-      localStorage.setItem('gigo_drivers', JSON.stringify(drivers));
+      try {
+        const currentCid = await ipfs.getDriverMetadataCID(walletAddress);
+        let currentData: any = {};
+        if (currentCid) {
+          currentData = await ipfs.getJSON(currentCid);
+        }
+        
+        const updatedData = {
+          ...currentData,
+          status: newStatus,
+          updatedAt: new Date().toISOString()
+        };
+        
+        const newCid = await ipfs.uploadJSON(updatedData);
+        await ipfs.saveDriverMetadata(walletAddress, newCid);
+      } catch (e) {
+        console.error('Failed to update driver status on IPFS', e);
+      }
     }
   };
 
-  const submitApplication = (data: any) => {
-    setStatus('pending');
+  const submitApplication = async (data: any) => {
+    setStatusState('pending');
     if (walletAddress !== 'disconnected') {
-      const storedData = localStorage.getItem('gigo_drivers');
-      const drivers = storedData ? JSON.parse(storedData) : {};
-      drivers[walletAddress] = {
-        ...drivers[walletAddress],
-        ...data,
-        status: 'pending',
-        submittedAt: new Date().toISOString()
-      };
-      localStorage.setItem('gigo_drivers', JSON.stringify(drivers));
+      try {
+        const applicationData = {
+          ...data,
+          status: 'pending',
+          submittedAt: new Date().toISOString()
+        };
+        
+        const cid = await ipfs.uploadJSON(applicationData);
+        await ipfs.saveDriverMetadata(walletAddress, cid);
+      } catch (e) {
+        console.error('Failed to submit application to IPFS', e);
+        setStatusState('none');
+      }
     }
   };
 
