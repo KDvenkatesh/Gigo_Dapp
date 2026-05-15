@@ -90,7 +90,7 @@ This hybrid architecture gives:
 # 🛵 Built for the Boda Boda Ecosystem
 
 <p align="center">
-  <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1200&auto=format&fit=crop" width="100%" alt="African Motorcycle Taxi"/>
+ <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/2f8abda0-5eb4-4108-b947-0d062b68913f" />
 </p>
 
 Gigo prioritizes:
@@ -159,7 +159,10 @@ CID stored in backend/blockchain
 # 🏗 System Architecture
 
 <p align="center">
-  <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" width="100%" alt="System Architecture"/>
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0ef7a6d4-4141-4894-9e2b-7b80652ff1f1" />
+
+ 
+
 </p>
 
 ```text
