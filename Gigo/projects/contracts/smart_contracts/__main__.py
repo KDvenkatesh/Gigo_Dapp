@@ -11,23 +11,13 @@ from algokit_utils.config import config
 from dotenv import load_dotenv
 
 # Set trace_all to True to capture all transactions, defaults to capturing traces only on failure
-# Learn more about using AlgoKit AVM Debugger to debug your TEAL source codes and inspect various kinds of
-# Algorand transactions in atomic groups -> https://github.com/algorandfoundation/algokit-avm-vscode-debugger
 config.configure(debug=True, trace_all=False)
 
-# Set up logging and load environment variables.
+# Set up logging
 logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s %(levelname)-10s: %(message)s"
+    level=logging.INFO, format="%(asctime)s %(levelname)-10s: %(message)s"
 )
 logger = logging.getLogger(__name__)
-logger.info("Loading .env")
-load_dotenv()
-
-# Determine the root path based on this file's location.
-root_path = Path(__file__).parent
-
-# ----------------------- Contract Configuration ----------------------- #
-
 
 @dataclasses.dataclass
 class SmartContract:
@@ -35,56 +25,30 @@ class SmartContract:
     name: str
     deploy: Callable[[], None] | None = None
 
-
 def import_contract(folder: Path) -> Path:
     """Imports the contract from a folder if it exists."""
     contract_path = folder / "contract.py"
     if contract_path.exists():
         return contract_path
-    else:
-        raise Exception(f"Contract not found in {folder}")
-
+    raise Exception(f"Contract not found in {folder}")
 
 def import_deploy_if_exists(folder: Path) -> Callable[[], None] | None:
     """Imports the deploy function from a folder if it exists."""
     try:
-        module_name = f"{folder.parent.name}.{folder.name}.deploy_config"
+        module_name = f"smart_contracts.{folder.name}.deploy_config"
+        logger.debug(f"Attempting to import {module_name}")
         deploy_module = importlib.import_module(module_name)
         return deploy_module.deploy  # type: ignore[no-any-return, misc]
-    except ImportError:
+    except ImportError as e:
+        logger.debug(f"No deploy_config found for {folder.name}: {e}")
         return None
-
+    except Exception as e:
+        logger.warning(f"Error importing deploy_config for {folder.name}: {e}")
+        return None
 
 def has_contract_file(directory: Path) -> bool:
     """Checks whether the directory contains a contract.py file."""
     return (directory / "contract.py").exists()
-
-
-# Use the current directory (root_path) as the base for contract folders and exclude
-# folders that start with '_' (internal helpers).
-contracts: list[SmartContract] = [
-    SmartContract(
-        path=import_contract(folder),
-        name=folder.name,
-        deploy=import_deploy_if_exists(folder),
-    )
-    for folder in root_path.iterdir()
-    if folder.is_dir() and has_contract_file(folder) and not folder.name.startswith("_")
-]
-
-# -------------------------- Build Logic -------------------------- #
-
-deployment_extension = "py"
-
-
-def _get_output_path(output_dir: Path, deployment_extension: str) -> Path:
-    """Constructs the output path for the generated client file."""
-    return output_dir / Path(
-        "{contract_name}"
-        + ("_client" if deployment_extension == "py" else "Client")
-        + f".{deployment_extension}"
-    )
-
 
 def build(output_dir: Path, contract_path: Path) -> Path:
     """
@@ -118,20 +82,16 @@ def build(output_dir: Path, contract_path: Path) -> Path:
     if build_result.returncode:
         raise Exception(f"Could not build contract:\n{build_result.stdout}")
 
-    # Look for arc56.json files and generate the client based on them.
     app_spec_file_names: list[str] = [
         file.name for file in output_dir.glob("*.arc56.json")
     ]
 
     client_file: str | None = None
     if not app_spec_file_names:
-        logger.warning(
-            "No '*.arc56.json' file found (likely a logic signature being compiled). Skipping client generation."
-        )
+        logger.warning("No '*.arc56.json' file found. Skipping client generation.")
     else:
         for file_name in app_spec_file_names:
             client_file = file_name
-            print(file_name)
             generate_result = subprocess.run(
                 [
                     "algokit",
@@ -139,74 +99,66 @@ def build(output_dir: Path, contract_path: Path) -> Path:
                     "client",
                     str(output_dir),
                     "--output",
-                    str(_get_output_path(output_dir, deployment_extension)),
+                    str(output_dir / f"{contract_path.parent.name}_client.py"),
                 ],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
             )
-
             if generate_result.stdout:
                 print(generate_result.stdout)
-
-            if generate_result.returncode:
-                if "No such command" in generate_result.stdout:
-                    raise Exception(
-                        "Could not generate typed client, requires AlgoKit 2.0.0 or later. Please update AlgoKit"
-                    )
-                else:
-                    raise Exception(
-                        f"Could not generate typed client:\n{generate_result.stdout}"
-                    )
     if client_file:
         return output_dir / client_file
     return output_dir
 
-
-# --------------------------- Main Logic --------------------------- #
-
-
 def main(action: str, contract_name: str | None = None) -> None:
     """Main entry point to build and/or deploy smart contracts."""
+    # Load environment variables explicitly
+    env_path = Path(__file__).parent.parent / ".env"
+    logger.info(f"Loading environment variables from {env_path}")
+    load_dotenv(dotenv_path=env_path)
+    
+    root_path = Path(__file__).parent
     artifact_path = root_path / "artifacts"
-    # Filter contracts based on an optional specific contract name.
+
+    logger.info("Discovering contracts...")
+    contracts: list[SmartContract] = []
+    for folder in root_path.iterdir():
+        if folder.is_dir() and has_contract_file(folder) and not folder.name.startswith("_"):
+            logger.info(f"Found contract folder: {folder.name}")
+            contracts.append(
+                SmartContract(
+                    path=import_contract(folder),
+                    name=folder.name,
+                    deploy=import_deploy_if_exists(folder),
+                )
+            )
+    
     filtered_contracts = [
-        contract
-        for contract in contracts
-        if contract_name is None or contract.name == contract_name
+        c for c in contracts if contract_name is None or c.name == contract_name
     ]
+
+    if not filtered_contracts:
+        logger.warning(f"No contracts found matching: {contract_name}")
+        return
 
     match action:
         case "build":
             for contract in filtered_contracts:
-                logger.info(f"Building app at {contract.path}")
+                logger.info(f"Building {contract.name}...")
                 build(artifact_path / contract.name, contract.path)
         case "deploy":
             for contract in filtered_contracts:
-                output_dir = artifact_path / contract.name
-                app_spec_file_name = next(
-                    (
-                        file.name
-                        for file in output_dir.iterdir()
-                        if file.is_file() and file.suffixes == [".arc56", ".json"]
-                    ),
-                    None,
-                )
-                if app_spec_file_name is None:
-                    raise Exception("Could not deploy app, .arc56.json file not found")
+                logger.info(f"Deploying {contract.name}...")
                 if contract.deploy:
-                    logger.info(f"Deploying app {contract.name}")
                     contract.deploy()
+                else:
+                    logger.warning(f"No deploy function for {contract.name}")
         case "all":
             for contract in filtered_contracts:
-                logger.info(f"Building app at {contract.path}")
                 build(artifact_path / contract.name, contract.path)
                 if contract.deploy:
-                    logger.info(f"Deploying {contract.name}")
                     contract.deploy()
-        case _:
-            logger.error(f"Unknown action: {action}")
-
 
 if __name__ == "__main__":
     if len(sys.argv) > 2:

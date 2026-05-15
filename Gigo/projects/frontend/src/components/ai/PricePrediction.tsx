@@ -77,12 +77,20 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
 
       // Phase 3 — actual Grok call with the captured now time
       setPhase('step3');
+
+      const localTimeStr = new Date().toLocaleString('en-US', { 
+        weekday: 'long', 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        hour12: true 
+      });
+
       const data = await callX402API<{ success: boolean; prediction: SurgeFarePrediction }>(
         '/api/predict-price',
         {
           pickup,
           destination,
-          current_time: nowISO,   // always fresh current time
+          current_time: `${localTimeStr} (IST)`,   // Explicitly tell Grok the local time
           base_fare: baseFare,
         },
       );

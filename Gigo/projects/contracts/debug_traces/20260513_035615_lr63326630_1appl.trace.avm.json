@@ -1,0 +1,183 @@
+{
+  "eval-overrides": {
+    "allow-empty-signatures": true,
+    "allow-unnamed-resources": true,
+    "max-log-calls": 2048,
+    "max-log-size": 65536
+  },
+  "exec-trace-config": {
+    "enable": true,
+    "scratch-change": true,
+    "stack-change": true,
+    "state-change": true
+  },
+  "initial-states": {},
+  "last-round": 63326630,
+  "txn-groups": [
+    {
+      "app-budget-added": 700,
+      "app-budget-consumed": 15,
+      "txn-results": [
+        {
+          "app-budget-consumed": 15,
+          "exec-trace": {
+            "approval-program-hash": "DHZCxskILEdZl9tQyqm49v5Cus42Aa8tUHiKvHMiZTE=",
+            "approval-program-trace": [
+              {
+                "pc": 1
+              },
+              {
+                "pc": 7
+              },
+              {
+                "pc": 29,
+                "stack-additions": [
+                  {
+                    "type": 2
+                  }
+                ]
+              },
+              {
+                "pc": 31,
+                "stack-pop-count": 1
+              },
+              {
+                "pc": 34,
+                "stack-additions": [
+                  {
+                    "bytes": "Z2lnb19hc3NldF9pZA==",
+                    "type": 1
+                  }
+                ]
+              },
+              {
+                "pc": 35,
+                "stack-additions": [
+                  {
+                    "type": 2,
+                    "uint": 762258472
+                  }
+                ]
+              },
+              {
+                "pc": 41,
+                "stack-pop-count": 2,
+                "state-changes": [
+                  {
+                    "app-state-type": "g",
+                    "key": "Z2lnb19hc3NldF9pZA==",
+                    "new-value": {
+                      "type": 2,
+                      "uint": 762258472
+                    },
+                    "operation": "w"
+                  }
+                ]
+              },
+              {
+                "pc": 42,
+                "stack-additions": [
+                  {
+                    "type": 2
+                  }
+                ]
+              },
+              {
+                "pc": 44,
+                "stack-pop-count": 1
+              },
+              {
+                "pc": 90,
+                "stack-additions": [
+                  {
+                    "type": 2
+                  }
+                ]
+              },
+              {
+                "pc": 92,
+                "stack-additions": [
+                  {
+                    "type": 2,
+                    "uint": 1
+                  }
+                ],
+                "stack-pop-count": 1
+              },
+              {
+                "pc": 93,
+                "stack-additions": [
+                  {
+                    "type": 2
+                  }
+                ]
+              },
+              {
+                "pc": 95,
+                "stack-additions": [
+                  {
+                    "type": 2,
+                    "uint": 1
+                  }
+                ],
+                "stack-pop-count": 1
+              },
+              {
+                "pc": 96,
+                "stack-additions": [
+                  {
+                    "type": 2,
+                    "uint": 1
+                  }
+                ],
+                "stack-pop-count": 2
+              },
+              {
+                "pc": 97,
+                "stack-additions": [
+                  {
+                    "type": 2,
+                    "uint": 1
+                  }
+                ],
+                "stack-pop-count": 1
+              }
+            ]
+          },
+          "txn-result": {
+            "application-index": 762291429,
+            "global-state-delta": [
+              {
+                "key": "Z2lnb19hc3NldF9pZA==",
+                "value": {
+                  "action": 2,
+                  "uint": 762258472
+                }
+              }
+            ],
+            "pool-error": "",
+            "txn": {
+              "sig": "rdyGiE4cPK4mB/InY/3WNzi2DKDZCZc6BzlJbr2XrsTUEcD2Cjn/d7Du8AyQfd/1LQzLr7e+Wr+8WJFy2gm3BQ==",
+              "txn": {
+                "apap": "CyAEAAEECCYDDWdpZ29fYXNzZXRfaWQCY18CZl8xGEAACCiBqMi86wJnMRtBACsxGRREMRhEggQEU6dpDQRr3jD4BFIaEsIEl9O8GDYaAI4EAAkAJgBtALAAMRkUMRgUEEMxADIJEkSxIihlRDIKIrISshSyESSyECKyAbMjQzEWIwlJOBAkEkQ2GgFJFSUSRBcWKUsBUEm9RQEUREsCOBQyChJESwI4ESIoZUQSREsCOBJJRE8DOABPAky/Kk8CUEwWvyNDNhoBSRUlEkQ2GgJJFYEgEkRMFxYpSwFQSb5EMQASRCpPAlBJvkQXsSIoZURMshJPA7IUshEkshAisgGzTLxIvEgjQzYaAUkVJRJEFxYpSwFQSb5EMQBLARJEKk8DUEm+RBexIihlREyyEk8CshSyESSyECKyAbNMvEi8SCND",
+                "apgs": {
+                  "nui": 1
+                },
+                "apsu": "C4EBQw==",
+                "fee": 1000,
+                "fv": 63326607,
+                "gen": "testnet-v1.0",
+                "gh": "SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=",
+                "lv": 63327607,
+                "note": "QUxHT0tJVF9ERVBMT1lFUjpqeyJuYW1lIjogIkdpZ29SaWRlQXBwVjVfRmluYWwiLCAidmVyc2lvbiI6ICIxLjAifQ==",
+                "snd": "FDSKCI2DHPIOTFR2CXHPESMLAUA4Y66B6KKGJ2CDKDY3UX34W43QVN52NA",
+                "type": "appl"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "version": 2
+}

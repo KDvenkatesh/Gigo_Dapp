@@ -49,13 +49,13 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
           <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl">
             <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-6">
               <Clock className="h-6 w-6 text-emerald-400" />
-              <h2 className="text-xl font-semibold">Pending Drivers ({pendingDrivers.length})</h2>
+              <h2 className="text-xl font-semibold">Pending Riders ({pendingDrivers.length})</h2>
             </div>
 
             {pendingDrivers.length === 0 ? (
               <div className="text-center py-16 text-white/50">
                 <ShieldCheck className="h-16 w-16 mx-auto mb-4 text-white/20" />
-                <p className="text-lg">No pending driver applications at the moment.</p>
+                <p className="text-lg">No pending rider applications at the moment.</p>
               </div>
             ) : (
               <div className="grid gap-4">

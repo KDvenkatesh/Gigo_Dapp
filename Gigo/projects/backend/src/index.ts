@@ -7,9 +7,16 @@ import predictPriceRouter from './routes/predictPrice';
 import smartRouteRouter from './routes/smartRoute';
 import earningsRouter from './routes/earnings';
 import storageRouter from './routes/storage';
+import ridesRouter from './routes/rides';
+import mongoose from 'mongoose';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
+const MONGODB_URI = process.env.MONGODB_URI || '';
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('✅ Connected to MongoDB'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
 /* ── CORS ── */
 app.use(
@@ -18,6 +25,10 @@ app.use(
       'http://localhost:5173',
       'http://localhost:3000',
       'https://gigo-dapp.vercel.app',
+      'https://gigo-app.vercel.app',
+      'https://gigo-dapp.onrender.com',
+      /\.vercel\.app$/, // Allow all vercel subdomains
+      /\.onrender\.com$/, // Allow all render subdomains
     ],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-PAYMENT'],
@@ -42,6 +53,7 @@ app.use('/api/predict-price', predictPriceRouter);
 app.use('/api/smart-route', smartRouteRouter);
 app.use('/api/earnings-insight', earningsRouter);
 app.use('/api/storage', storageRouter);
+app.use('/api/rides', ridesRouter);
 
 /* ── 404 fallback ── */
 app.use((_req, res) => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Upload, CarFront, Bike, Car, BatteryCharging, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Upload, Bike, Car, BatteryCharging, ShieldCheck } from 'lucide-react';
 import { useDriverContext } from '../contexts/DriverContext';
 import { WalletConnectButton } from './WalletConnectButton';
 import { ipfs } from '../lib/ipfs';
@@ -34,24 +34,22 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
       setUploadedDocs(prev => ({ ...prev, [doc]: cid }));
     } catch (error) {
       console.error(`Failed to upload ${doc}`, error);
-      alert(`Failed to upload ${doc}. Please try again.`);
     } finally {
       setUploadingDocs(prev => ({ ...prev, [doc]: false }));
     }
   };
 
   const vehicleOptions = [
-    { id: 'bike', label: 'Bike', icon: Bike },
-    { id: 'auto', label: 'Auto', icon: CarFront },
+    { id: 'boda', label: 'Boda', icon: Bike },
     { id: 'car', label: 'Car', icon: Car },
-    { id: 'ev', label: 'EV', icon: BatteryCharging },
+    { id: 'ev', label: 'EV Ride', icon: BatteryCharging },
   ];
 
   if (!ride.activeAddress) {
     return (
       <div className="flex h-screen flex-col items-center justify-center p-6 text-center">
         <h2 className="text-3xl font-bold mb-4">Connect Wallet</h2>
-        <p className="text-white/60 mb-8">Please connect your wallet to apply as a driver.</p>
+        <p className="text-white/60 mb-8">Please connect your wallet to apply as a rider.</p>
         <WalletConnectButton />
         <button onClick={onBack} className="mt-8 text-white/50 hover:text-white flex items-center gap-2">
           <ArrowLeft className="h-4 w-4" /> Back to Home
@@ -68,7 +66,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
             <Upload className="h-8 w-8" />
           </div>
           <h2 className="text-2xl font-bold mb-2">Application Pending</h2>
-          <p className="text-white/60 mb-6">Your driver application is currently under review by our admin team. Please check back later.</p>
+          <p className="text-white/60 mb-6">Your rider application is currently under review by our admin team. Please check back later.</p>
           <button onClick={onBack} className="w-full rounded-2xl bg-white/10 p-4 font-semibold text-white hover:bg-white/20 transition">
             Return to Home
           </button>
@@ -83,7 +81,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
         <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-panel p-8 rounded-3xl max-w-md w-full border-red-500/20">
           <h2 className="text-2xl font-bold mb-2 text-red-400">Application Rejected</h2>
           <p className="text-white/60 mb-6">Unfortunately, your application was not approved.</p>
-          <button onClick={() => submitApplication({ vehicleType: 'bike' })} className="w-full rounded-2xl bg-white/10 p-4 font-semibold text-white hover:bg-white/20 transition mb-3">
+          <button onClick={() => submitApplication({ vehicleType: 'boda' })} className="w-full rounded-2xl bg-white/10 p-4 font-semibold text-white hover:bg-white/20 transition mb-3">
             Re-apply
           </button>
           <button onClick={onBack} className="w-full text-white/50 hover:text-white text-sm py-2">
@@ -102,8 +100,8 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
           <ArrowLeft className="h-4 w-4" /> Back
         </button>
         
-        <h1 className="text-4xl font-black tracking-tight mb-2">Become a Driver</h1>
-        <p className="text-white/60 mb-10">Join the decentralized ride-sharing revolution.</p>
+        <h1 className="text-4xl font-black tracking-tight mb-2">Become a Boda Rider</h1>
+        <p className="text-white/60 mb-10">Join the decentralized mobility revolution.</p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-4">
@@ -130,7 +128,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">2. Upload Documents</h3>
             <div className="grid gap-4 sm:grid-cols-2">
-              {['Driving License', 'Vehicle RC', 'Insurance (Optional)', 'Profile Photo'].map(doc => {
+              {['Driving License', 'National ID', 'Vehicle Registration', 'Insurance', 'Profile Photo'].map(doc => {
                 const isUploaded = !!uploadedDocs[doc];
                 return (
                   <div key={doc} className="relative">

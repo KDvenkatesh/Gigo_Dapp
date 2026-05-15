@@ -46,6 +46,13 @@ export function EarningsTab({ ride }: { ride: RideHook }) {
     setError(null)
 
     try {
+      const localTimeStr = new Date().toLocaleString('en-US', { 
+        weekday: 'long', 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        hour12: true 
+      });
+
       // Collect driver's completed rides from history
       const completedRides = completedRidesLocal.map(r => ({
         ride_id: r.rideId.toString(),
@@ -53,7 +60,7 @@ export function EarningsTab({ ride }: { ride: RideHook }) {
         drop: r.drop.label,
         fare: Number(r.fareMicroAlgos) / 1000000,
         distance_km: calculateDistanceKm(r.pickup, r.drop),
-        time: new Date().toISOString(),
+        time: `${localTimeStr} (IST)`,
         duration_minutes: 15, // Mock duration for AI
       }))
 

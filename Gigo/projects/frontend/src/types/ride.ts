@@ -41,6 +41,7 @@ export interface RideRecord {
   fareMicroAlgos: bigint
   paymentLocked: boolean
   otp?: string
+  vehicleType?: string
 }
 
 export interface ToastMessage {

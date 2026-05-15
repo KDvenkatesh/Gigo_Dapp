@@ -3,32 +3,32 @@
 
 // algopy.arc4.ARC4Contract.approval_program() -> uint64:
 main:
-    intcblock 1 0 8 2
-    bytecblock "st_" "ri_" "next_ride_id" 0x "fa_" 0x52494445525f41535349474e4544 "cu_" 0x524551554553544544 "oh_" 0x524944455f53544152544544 0x524944455f434f4d504c45544544
+    intcblock 0 1 4 8
+    bytecblock "gigo_asset_id" "c_" "f_"
     txn ApplicationID
     bnz main_after_if_else@2
-    // smart_contracts/hello_world/contract.py:24
-    // self.next_ride_id = GlobalState(UInt64(0))
-    bytec_2 // "next_ride_id"
-    intc_1 // 0
+    // smart_contracts/hello_world/contract.py:21
+    // self.gigo_asset_id = GlobalState(UInt64(762258472))
+    bytec_0 // "gigo_asset_id"
+    pushint 762258472
     app_global_put
 
 main_after_if_else@2:
-    // smart_contracts/hello_world/contract.py:17
+    // smart_contracts/hello_world/contract.py:15
     // class RideContract(ARC4Contract):
     txn NumAppArgs
-    bz main___algopy_default_create@15
+    bz main___algopy_default_create@13
     txn OnCompletion
     !
     assert
     txn ApplicationID
     assert
-    pushbytess 0xeb9a05f6 0xac1accab 0x5442a44e 0x2d1aeed8 0x1f1a0192 0x7e8c93d0 // method "createRide(byte[],byte[],uint64)uint64", method "acceptRide(uint64)void", method "storeOTP(uint64,byte[])void", method "verifyOTPAndStartRide(uint64,byte[])void", method "endRide(uint64)void", method "releasePayment(uint64)void"
+    pushbytess 0x53a7690d 0x6bde30f8 0x521a12c2 0x97d3bc18 // method "opt_in_to_asa()void", method "init_escrow(axfer,uint64)void", method "payout(uint64,address)void", method "cancel_and_refund(uint64)void"
     txna ApplicationArgs 0
-    match createRide acceptRide storeOTP verifyOTPAndStartRide endRide releasePayment
+    match opt_in_to_asa init_escrow payout cancel_and_refund
     err
 
-main___algopy_default_create@15:
+main___algopy_default_create@13:
     txn OnCompletion
     !
     txn ApplicationID
@@ -37,580 +37,316 @@ main___algopy_default_create@15:
     return
 
 
-// smart_contracts.hello_world.contract.RideContract.createRide[routing]() -> void:
-createRide:
-    // smart_contracts/hello_world/contract.py:35
-    // @arc4.abimethod
-    txna ApplicationArgs 1
-    dup
-    intc_1 // 0
-    extract_uint16 // on error: invalid array length header
-    intc_3 // 2
-    +
-    dig 1
-    len
-    ==
-    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
-    extract 2 0
-    txna ApplicationArgs 2
-    dup
-    intc_1 // 0
-    extract_uint16 // on error: invalid array length header
-    intc_3 // 2
-    +
-    dig 1
-    len
-    ==
-    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
-    extract 2 0
-    txna ApplicationArgs 3
-    dup
-    len
-    intc_2 // 8
-    ==
-    assert // invalid number of bytes for arc4.uint64
-    // smart_contracts/hello_world/contract.py:42
-    // assert pickup_location_hash != Bytes(b""), "pickup location required"
-    dig 2
-    bytec_3 // 0x
-    !=
-    assert // pickup location required
-    // smart_contracts/hello_world/contract.py:43
-    // assert drop_location_hash != Bytes(b""), "drop location required"
-    dig 1
-    bytec_3 // 0x
-    !=
-    assert // drop location required
-    // smart_contracts/hello_world/contract.py:44
-    // assert fare_price.native > UInt64(0), "fare must be greater than zero"
-    btoi
-    dup
-    assert // fare must be greater than zero
-    // smart_contracts/hello_world/contract.py:46
-    // ride_id = self.next_ride_id.value
-    intc_1 // 0
-    bytec_2 // "next_ride_id"
-    app_global_get_ex
-    assert // check self.next_ride_id exists
-    // smart_contracts/hello_world/contract.py:47
-    // self.next_ride_id.value = ride_id + UInt64(1)
-    dup
-    intc_0 // 1
-    +
-    bytec_2 // "next_ride_id"
-    swap
-    app_global_put
-    // smart_contracts/hello_world/contract.py:49
-    // self.ride_customer[ride_id] = Txn.sender
+// smart_contracts.hello_world.contract.RideContract.opt_in_to_asa[routing]() -> void:
+opt_in_to_asa:
+    // smart_contracts/hello_world/contract.py:27
+    // assert Txn.sender == Global.creator_address, "only creator"
     txn Sender
-    swap
-    itob
-    bytec 6 // "cu_"
-    dig 1
-    concat
-    uncover 2
-    box_put
-    // smart_contracts/hello_world/contract.py:50
-    // self.ride_pickup[ride_id] = pickup_location_hash
-    pushbytes "pu_"
-    dig 1
-    concat
-    dup
-    box_del
-    pop
-    uncover 4
-    box_put
-    // smart_contracts/hello_world/contract.py:51
-    // self.ride_drop[ride_id] = drop_location_hash
-    pushbytes "dr_"
-    dig 1
-    concat
-    dup
-    box_del
-    pop
-    uncover 3
-    box_put
-    // smart_contracts/hello_world/contract.py:52
-    // self.ride_fare[ride_id] = fare_price.native
-    bytec 4 // "fa_"
-    dig 1
-    concat
-    uncover 2
-    itob
-    box_put
-    // smart_contracts/hello_world/contract.py:53
-    // self.ride_status[ride_id] = Bytes(b"REQUESTED")
-    bytec_0 // "st_"
-    dig 1
-    concat
-    dup
-    box_del
-    pop
-    bytec 7 // 0x524551554553544544
-    box_put
-    // smart_contracts/hello_world/contract.py:35
+    global CreatorAddress
+    ==
+    assert // only creator
+    // smart_contracts/hello_world/contract.py:28-33
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.gigo_asset_id.value,
+    //     asset_receiver=Global.current_application_address,
+    //     asset_amount=0,
+    //     fee=0
+    // ).submit()
+    itxn_begin
+    // smart_contracts/hello_world/contract.py:29
+    // xfer_asset=self.gigo_asset_id.value,
+    intc_0 // 0
+    bytec_0 // "gigo_asset_id"
+    app_global_get_ex
+    assert // check self.gigo_asset_id exists
+    // smart_contracts/hello_world/contract.py:30
+    // asset_receiver=Global.current_application_address,
+    global CurrentApplicationAddress
+    // smart_contracts/hello_world/contract.py:31
+    // asset_amount=0,
+    intc_0 // 0
+    itxn_field AssetAmount
+    itxn_field AssetReceiver
+    itxn_field XferAsset
+    // smart_contracts/hello_world/contract.py:28
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    // smart_contracts/hello_world/contract.py:32
+    // fee=0
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/hello_world/contract.py:28-33
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.gigo_asset_id.value,
+    //     asset_receiver=Global.current_application_address,
+    //     asset_amount=0,
+    //     fee=0
+    // ).submit()
+    itxn_submit
+    // smart_contracts/hello_world/contract.py:25
     // @arc4.abimethod
-    pushbytes 0x151f7c75
-    swap
-    concat
-    log
-    intc_0 // 1
+    intc_1 // 1
     return
 
 
-// smart_contracts.hello_world.contract.RideContract.acceptRide[routing]() -> void:
-acceptRide:
-    // smart_contracts/hello_world/contract.py:57
+// smart_contracts.hello_world.contract.RideContract.init_escrow[routing]() -> void:
+init_escrow:
+    // smart_contracts/hello_world/contract.py:35
     // @arc4.abimethod
+    txn GroupIndex
+    intc_1 // 1
+    -
+    dup
+    gtxns TypeEnum
+    intc_2 // axfer
+    ==
+    assert // transaction type is axfer
     txna ApplicationArgs 1
     dup
     len
-    intc_2 // 8
+    intc_3 // 8
     ==
     assert // invalid number of bytes for arc4.uint64
-    // smart_contracts/hello_world/contract.py:62
+    // smart_contracts/hello_world/contract.py:41
     // rid = ride_id.native
     btoi
-    // smart_contracts/hello_world/contract.py:64
-    // status, exists = self.ride_status.maybe(rid)
+    // smart_contracts/hello_world/contract.py:42
+    // assert not self.escrow_customer.maybe(rid)[1], "ride_id already exists"
     itob
-    bytec_0 // "st_"
+    bytec_1 // "c_"
     dig 1
-    concat
-    dup
-    box_get
-    // smart_contracts/hello_world/contract.py:65
-    // assert exists, "ride does not exist"
-    assert // ride does not exist
-    // smart_contracts/hello_world/contract.py:66
-    // assert status == Bytes(b"REQUESTED"), "ride is not in REQUESTED state"
-    bytec 7 // 0x524551554553544544
-    ==
-    assert // ride is not in REQUESTED state
-    // smart_contracts/hello_world/contract.py:68-69
-    // # FIX: Properly unpack the (value, exists) tuple from maybe()
-    // rider_value, rider_already_exists = self.ride_rider.maybe(rid)
-    bytec_1 // "ri_"
-    uncover 2
     concat
     dup
     box_len
     bury 1
-    // smart_contracts/hello_world/contract.py:70
-    // assert not rider_already_exists, "ride already has a rider"
     !
-    assert // ride already has a rider
-    // smart_contracts/hello_world/contract.py:72
-    // self.ride_rider[rid] = Txn.sender
-    txn Sender
-    box_put
-    // smart_contracts/hello_world/contract.py:73
-    // self.ride_status[rid] = Bytes(b"RIDER_ASSIGNED")
-    dup
-    box_del
-    pop
-    bytec 5 // 0x52494445525f41535349474e4544
-    box_put
-    // smart_contracts/hello_world/contract.py:57
-    // @arc4.abimethod
-    intc_0 // 1
-    return
-
-
-// smart_contracts.hello_world.contract.RideContract.storeOTP[routing]() -> void:
-storeOTP:
-    // smart_contracts/hello_world/contract.py:75
-    // @arc4.abimethod
-    txna ApplicationArgs 1
-    dup
-    len
-    intc_2 // 8
-    ==
-    assert // invalid number of bytes for arc4.uint64
-    txna ApplicationArgs 2
-    dup
-    intc_1 // 0
-    extract_uint16 // on error: invalid array length header
-    intc_3 // 2
-    +
-    dig 1
-    len
-    ==
-    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
-    extract 2 0
-    // smart_contracts/hello_world/contract.py:81
-    // rid = ride_id.native
-    swap
-    btoi
-    // smart_contracts/hello_world/contract.py:83
-    // status, exists = self.ride_status.maybe(rid)
-    itob
-    bytec_0 // "st_"
-    dig 1
-    concat
-    box_get
-    // smart_contracts/hello_world/contract.py:84
-    // assert exists, "ride does not exist"
-    assert // ride does not exist
-    // smart_contracts/hello_world/contract.py:85
-    // assert status == Bytes(b"RIDER_ASSIGNED"), "ride must be in RIDER_ASSIGNED state"
-    bytec 5 // 0x52494445525f41535349474e4544
-    ==
-    assert // ride must be in RIDER_ASSIGNED state
-    // smart_contracts/hello_world/contract.py:87
-    // assert otp != Bytes(b""), "OTP cannot be empty"
-    dig 1
-    bytec_3 // 0x
-    !=
-    assert // OTP cannot be empty
-    // smart_contracts/hello_world/contract.py:89
-    // self.ride_otp_hash[rid] = otp
-    bytec 8 // "oh_"
-    swap
-    concat
-    dup
-    box_del
-    pop
-    swap
-    box_put
-    // smart_contracts/hello_world/contract.py:75
-    // @arc4.abimethod
-    intc_0 // 1
-    return
-
-
-// smart_contracts.hello_world.contract.RideContract.verifyOTPAndStartRide[routing]() -> void:
-verifyOTPAndStartRide:
-    // smart_contracts/hello_world/contract.py:92
-    // @arc4.abimethod
-    txna ApplicationArgs 1
-    dup
-    len
-    intc_2 // 8
-    ==
-    assert // invalid number of bytes for arc4.uint64
-    txna ApplicationArgs 2
-    dup
-    intc_1 // 0
-    extract_uint16 // on error: invalid array length header
-    intc_3 // 2
-    +
-    dig 1
-    len
-    ==
-    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
-    extract 2 0
-    // smart_contracts/hello_world/contract.py:102
-    // rid = ride_id.native
-    swap
-    btoi
-    // smart_contracts/hello_world/contract.py:104
-    // status, exists = self.ride_status.maybe(rid)
-    itob
-    dup
-    cover 2
-    bytec_0 // "st_"
-    dig 1
-    concat
-    dup
-    cover 3
-    box_get
-    // smart_contracts/hello_world/contract.py:105
-    // assert exists, "ride does not exist"
-    assert // ride does not exist
-    // smart_contracts/hello_world/contract.py:106
-    // assert status == Bytes(b"RIDER_ASSIGNED"), "ride must be in RIDER_ASSIGNED state"
-    bytec 5 // 0x52494445525f41535349474e4544
-    ==
-    assert // ride must be in RIDER_ASSIGNED state
-    // smart_contracts/hello_world/contract.py:108
-    // rider, rider_exists = self.ride_rider.maybe(rid)
-    bytec_1 // "ri_"
-    dig 1
-    concat
-    box_get
-    // smart_contracts/hello_world/contract.py:109
-    // assert rider_exists, "no rider assigned"
-    assert // no rider assigned
-    // smart_contracts/hello_world/contract.py:110
-    // assert Txn.sender == rider, "only the assigned rider can start the ride"
-    txn Sender
-    ==
-    assert // only the assigned rider can start the ride
-    // smart_contracts/hello_world/contract.py:112
-    // stored_otp, otp_exists = self.ride_otp_hash.maybe(rid)
-    bytec 8 // "oh_"
-    dig 1
-    concat
-    box_get
-    // smart_contracts/hello_world/contract.py:113
-    // assert otp_exists, "OTP not set"
-    assert // OTP not set
-    // smart_contracts/hello_world/contract.py:114
-    // assert otp_input == stored_otp, "OTP verification failed"
-    uncover 2
-    ==
-    assert // OTP verification failed
-    // smart_contracts/hello_world/contract.py:116
-    // fare, f_exists = self.ride_fare.maybe(rid)
-    bytec 4 // "fa_"
-    swap
-    concat
-    box_get
-    swap
-    btoi
-    swap
-    // smart_contracts/hello_world/contract.py:117
-    // assert f_exists and fare > UInt64(0), "fare not set"
-    bz verifyOTPAndStartRide_bool_false@4
-    dup
-    bz verifyOTPAndStartRide_bool_false@4
-    intc_0 // 1
-
-verifyOTPAndStartRide_bool_merge@5:
-    // smart_contracts/hello_world/contract.py:117
-    // assert f_exists and fare > UInt64(0), "fare not set"
-    assert // fare not set
-    // smart_contracts/hello_world/contract.py:119
-    // customer, c_exists = self.ride_customer.maybe(rid)
-    bytec 6 // "cu_"
-    dig 3
-    dup
-    cover 2
-    concat
-    box_get
-    // smart_contracts/hello_world/contract.py:120
-    // assert c_exists, "customer not found"
-    assert // customer not found
-    // smart_contracts/hello_world/contract.py:122
-    // assert Txn.group_index > UInt64(0), "payment transaction missing from group"
-    txn GroupIndex
-    assert // payment transaction missing from group
-    // smart_contracts/hello_world/contract.py:123
-    // pay_txn = gtxn.PaymentTransaction(Txn.group_index - UInt64(1))
-    txn GroupIndex
-    intc_0 // 1
-    -
-    dup
-    gtxns TypeEnum
-    intc_0 // pay
-    ==
-    assert // transaction type is pay
-    // smart_contracts/hello_world/contract.py:125
-    // assert pay_txn.sender == customer, "payment must come from the customer"
-    dup
-    gtxns Sender
-    uncover 2
-    ==
-    assert // payment must come from the customer
-    // smart_contracts/hello_world/contract.py:126
-    // assert pay_txn.receiver == Global.current_application_address, "payment must go to contract escrow"
-    dup
-    gtxns Receiver
+    assert // ride_id already exists
+    // smart_contracts/hello_world/contract.py:44-45
+    // # Verify the payment transaction using explicit argument checking
+    // assert pay_txn.asset_receiver == Global.current_application_address, "wrong receiver"
+    dig 2
+    gtxns AssetReceiver
     global CurrentApplicationAddress
     ==
-    assert // payment must go to contract escrow
-    // smart_contracts/hello_world/contract.py:127
-    // assert pay_txn.amount == fare, "payment amount must match the fare"
-    gtxns Amount
+    assert // wrong receiver
+    // smart_contracts/hello_world/contract.py:46
+    // assert pay_txn.xfer_asset.id == self.gigo_asset_id.value, "wrong asset"
     dig 2
+    gtxns XferAsset
+    intc_0 // 0
+    bytec_0 // "gigo_asset_id"
+    app_global_get_ex
+    assert // check self.gigo_asset_id exists
     ==
-    assert // payment amount must match the fare
-    // smart_contracts/hello_world/contract.py:129
-    // self.payment_locked[rid] = Bytes(b"LOCKED")
-    pushbytes "pl_"
+    assert // wrong asset
+    // smart_contracts/hello_world/contract.py:47
+    // assert pay_txn.asset_amount > UInt64(0), "amount must be > 0"
+    dig 2
+    gtxns AssetAmount
+    dup
+    assert // amount must be > 0
+    // smart_contracts/hello_world/contract.py:49-50
+    // # Record escrow details
+    // self.escrow_customer[rid] = pay_txn.sender
+    uncover 3
+    gtxns Sender
+    uncover 2
     swap
+    box_put
+    // smart_contracts/hello_world/contract.py:51
+    // self.escrow_fare[rid] = pay_txn.asset_amount
+    bytec_2 // "f_"
+    uncover 2
     concat
-    dup
-    box_del
-    pop
-    pushbytes 0x4c4f434b4544
+    swap
+    itob
     box_put
-    // smart_contracts/hello_world/contract.py:130
-    // self.ride_status[rid] = Bytes(b"RIDE_STARTED")
-    dig 1
-    dup
-    box_del
-    pop
-    bytec 9 // 0x524944455f53544152544544
-    box_put
-    // smart_contracts/hello_world/contract.py:92
+    // smart_contracts/hello_world/contract.py:35
     // @arc4.abimethod
-    intc_0 // 1
+    intc_1 // 1
     return
 
-verifyOTPAndStartRide_bool_false@4:
-    intc_1 // 0
-    b verifyOTPAndStartRide_bool_merge@5
 
-
-// smart_contracts.hello_world.contract.RideContract.endRide[routing]() -> void:
-endRide:
-    // smart_contracts/hello_world/contract.py:132
+// smart_contracts.hello_world.contract.RideContract.payout[routing]() -> void:
+payout:
+    // smart_contracts/hello_world/contract.py:53
     // @arc4.abimethod
     txna ApplicationArgs 1
     dup
     len
-    intc_2 // 8
+    intc_3 // 8
     ==
     assert // invalid number of bytes for arc4.uint64
-    // smart_contracts/hello_world/contract.py:134
+    txna ApplicationArgs 2
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    // smart_contracts/hello_world/contract.py:55
     // rid = ride_id.native
+    swap
     btoi
-    // smart_contracts/hello_world/contract.py:136
-    // status, exists = self.ride_status.maybe(rid)
+    // smart_contracts/hello_world/contract.py:56
+    // customer, exists = self.escrow_customer.maybe(rid)
     itob
-    bytec_0 // "st_"
+    bytec_1 // "c_"
     dig 1
     concat
     dup
-    cover 2
     box_get
-    // smart_contracts/hello_world/contract.py:137
-    // assert exists, "ride does not exist"
-    assert // ride does not exist
-    // smart_contracts/hello_world/contract.py:138
-    // assert status == Bytes(b"RIDE_STARTED"), "ride must be in RIDE_STARTED state"
-    bytec 9 // 0x524944455f53544152544544
+    // smart_contracts/hello_world/contract.py:57
+    // assert exists, "escrow not found"
+    assert // escrow not found
+    // smart_contracts/hello_world/contract.py:58
+    // assert Txn.sender == customer, "only customer can release payment"
+    txn Sender
     ==
-    assert // ride must be in RIDE_STARTED state
-    // smart_contracts/hello_world/contract.py:140
-    // rider, rider_exists = self.ride_rider.maybe(rid)
-    bytec_1 // "ri_"
-    swap
+    assert // only customer can release payment
+    // smart_contracts/hello_world/contract.py:60
+    // fare = self.escrow_fare[rid]
+    bytec_2 // "f_"
+    uncover 2
     concat
+    dup
     box_get
-    // smart_contracts/hello_world/contract.py:141
-    // assert rider_exists and Txn.sender == rider, "only the assigned rider can end the ride"
-    bz endRide_bool_false@4
+    assert // check self.escrow_fare entry exists
+    btoi
+    // smart_contracts/hello_world/contract.py:62-67
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.gigo_asset_id.value,
+    //     asset_receiver=rider,
+    //     asset_amount=fare,
+    //     fee=0
+    // ).submit()
+    itxn_begin
+    // smart_contracts/hello_world/contract.py:63
+    // xfer_asset=self.gigo_asset_id.value,
+    intc_0 // 0
+    bytec_0 // "gigo_asset_id"
+    app_global_get_ex
+    assert // check self.gigo_asset_id exists
+    swap
+    itxn_field AssetAmount
+    uncover 3
+    itxn_field AssetReceiver
+    itxn_field XferAsset
+    // smart_contracts/hello_world/contract.py:62
+    // itxn.AssetTransfer(
+    intc_2 // axfer
+    itxn_field TypeEnum
+    // smart_contracts/hello_world/contract.py:66
+    // fee=0
+    intc_0 // 0
+    itxn_field Fee
+    // smart_contracts/hello_world/contract.py:62-67
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.gigo_asset_id.value,
+    //     asset_receiver=rider,
+    //     asset_amount=fare,
+    //     fee=0
+    // ).submit()
+    itxn_submit
+    // smart_contracts/hello_world/contract.py:69
+    // del self.escrow_customer[rid]
+    swap
+    box_del
+    pop
+    // smart_contracts/hello_world/contract.py:70
+    // del self.escrow_fare[rid]
+    box_del
+    pop
+    // smart_contracts/hello_world/contract.py:53
+    // @arc4.abimethod
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.RideContract.cancel_and_refund[routing]() -> void:
+cancel_and_refund:
+    // smart_contracts/hello_world/contract.py:72
+    // @arc4.abimethod
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    // smart_contracts/hello_world/contract.py:74
+    // rid = ride_id.native
+    btoi
+    // smart_contracts/hello_world/contract.py:75
+    // customer, exists = self.escrow_customer.maybe(rid)
+    itob
+    bytec_1 // "c_"
+    dig 1
+    concat
+    dup
+    box_get
+    // smart_contracts/hello_world/contract.py:76
+    // assert exists, "escrow not found"
+    assert // escrow not found
+    // smart_contracts/hello_world/contract.py:77
+    // assert Txn.sender == customer, "only customer can refund"
     txn Sender
     dig 1
     ==
-    bz endRide_bool_false@4
-    intc_0 // 1
-
-endRide_bool_merge@5:
-    // smart_contracts/hello_world/contract.py:141
-    // assert rider_exists and Txn.sender == rider, "only the assigned rider can end the ride"
-    assert // only the assigned rider can end the ride
-    // smart_contracts/hello_world/contract.py:143
-    // self.ride_status[rid] = Bytes(b"RIDE_COMPLETED")
-    dig 1
+    assert // only customer can refund
+    // smart_contracts/hello_world/contract.py:79
+    // fare = self.escrow_fare[rid]
+    bytec_2 // "f_"
+    uncover 3
+    concat
     dup
-    box_del
-    pop
-    bytec 10 // 0x524944455f434f4d504c45544544
-    box_put
-    // smart_contracts/hello_world/contract.py:132
-    // @arc4.abimethod
-    intc_0 // 1
-    return
-
-endRide_bool_false@4:
-    intc_1 // 0
-    b endRide_bool_merge@5
-
-
-// smart_contracts.hello_world.contract.RideContract.releasePayment[routing]() -> void:
-releasePayment:
-    // smart_contracts/hello_world/contract.py:145
-    // @arc4.abimethod
-    txna ApplicationArgs 1
-    dup
-    len
-    intc_2 // 8
-    ==
-    assert // invalid number of bytes for arc4.uint64
-    // smart_contracts/hello_world/contract.py:147
-    // rid = ride_id.native
+    box_get
+    assert // check self.escrow_fare entry exists
     btoi
-    // smart_contracts/hello_world/contract.py:149
-    // status, exists = self.ride_status.maybe(rid)
-    itob
-    bytec_0 // "st_"
-    dig 1
-    concat
-    dup
-    cover 2
-    box_get
-    // smart_contracts/hello_world/contract.py:150
-    // assert exists, "ride does not exist"
-    assert // ride does not exist
-    // smart_contracts/hello_world/contract.py:151
-    // assert status == Bytes(b"RIDE_COMPLETED"), "ride must be in RIDE_COMPLETED state"
-    bytec 10 // 0x524944455f434f4d504c45544544
-    ==
-    assert // ride must be in RIDE_COMPLETED state
-    // smart_contracts/hello_world/contract.py:153
-    // rider, rider_exists = self.ride_rider.maybe(rid)
-    bytec_1 // "ri_"
-    dig 1
-    concat
-    box_get
-    swap
-    cover 2
-    // smart_contracts/hello_world/contract.py:154
-    // assert rider_exists, "rider not found"
-    assert // rider not found
-    // smart_contracts/hello_world/contract.py:156
-    // fare, f_exists = self.ride_fare.maybe(rid)
-    bytec 4 // "fa_"
-    swap
-    concat
-    box_get
-    swap
-    btoi
-    swap
-    // smart_contracts/hello_world/contract.py:157
-    // assert f_exists and fare > UInt64(0), "fare not set"
-    bz releasePayment_bool_false@4
-    dup
-    bz releasePayment_bool_false@4
-    intc_0 // 1
-
-releasePayment_bool_merge@5:
-    // smart_contracts/hello_world/contract.py:157
-    // assert f_exists and fare > UInt64(0), "fare not set"
-    assert // fare not set
-    // smart_contracts/hello_world/contract.py:159-163
-    // itxn.Payment(
-    //     receiver=rider,
-    //     amount=fare,
-    //     fee=0,
+    // smart_contracts/hello_world/contract.py:81-86
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.gigo_asset_id.value,
+    //     asset_receiver=customer,
+    //     asset_amount=fare,
+    //     fee=0
     // ).submit()
     itxn_begin
-    dup
-    itxn_field Amount
-    dig 1
-    itxn_field Receiver
-    // smart_contracts/hello_world/contract.py:159
-    // itxn.Payment(
-    intc_0 // pay
+    // smart_contracts/hello_world/contract.py:82
+    // xfer_asset=self.gigo_asset_id.value,
+    intc_0 // 0
+    bytec_0 // "gigo_asset_id"
+    app_global_get_ex
+    assert // check self.gigo_asset_id exists
+    swap
+    itxn_field AssetAmount
+    uncover 2
+    itxn_field AssetReceiver
+    itxn_field XferAsset
+    // smart_contracts/hello_world/contract.py:81
+    // itxn.AssetTransfer(
+    intc_2 // axfer
     itxn_field TypeEnum
-    // smart_contracts/hello_world/contract.py:162
-    // fee=0,
-    intc_1 // 0
+    // smart_contracts/hello_world/contract.py:85
+    // fee=0
+    intc_0 // 0
     itxn_field Fee
-    // smart_contracts/hello_world/contract.py:159-163
-    // itxn.Payment(
-    //     receiver=rider,
-    //     amount=fare,
-    //     fee=0,
+    // smart_contracts/hello_world/contract.py:81-86
+    // itxn.AssetTransfer(
+    //     xfer_asset=self.gigo_asset_id.value,
+    //     asset_receiver=customer,
+    //     asset_amount=fare,
+    //     fee=0
     // ).submit()
     itxn_submit
-    // smart_contracts/hello_world/contract.py:165
-    // self.ride_status[rid] = Bytes(b"PAID")
-    dig 2
-    dup
+    // smart_contracts/hello_world/contract.py:88
+    // del self.escrow_customer[rid]
+    swap
     box_del
     pop
-    pushbytes 0x50414944
-    box_put
-    // smart_contracts/hello_world/contract.py:145
+    // smart_contracts/hello_world/contract.py:89
+    // del self.escrow_fare[rid]
+    box_del
+    pop
+    // smart_contracts/hello_world/contract.py:72
     // @arc4.abimethod
-    intc_0 // 1
+    intc_1 // 1
     return
-
-releasePayment_bool_false@4:
-    intc_1 // 0
-    b releasePayment_bool_merge@5

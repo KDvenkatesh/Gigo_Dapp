@@ -100,13 +100,18 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
       }
 
       // 402 — extract payment requirements and pay
-      const { paymentRequirements } = (await firstResponse.json()) as {
-        paymentRequirements: {
+      const data = (await firstResponse.json()) as {
+        paymentRequirements?: {
           amount: string;
           recipient: string;
         };
       };
 
+      if (!data.paymentRequirements) {
+        throw new Error('Server returned 402 but missing payment requirements.');
+      }
+
+      const { paymentRequirements } = data;
       const paymentAmount = parseFloat(paymentRequirements.amount);
       const signedTxBase64 = await makeX402Payment(paymentAmount, paymentRequirements.recipient);
 

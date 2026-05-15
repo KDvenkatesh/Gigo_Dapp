@@ -22,8 +22,8 @@ export function decodeRideLocation(value: Uint8Array): RideLocation {
 
   return {
     label: decoder.decode(value) || 'Unknown location',
-    lat: 12.9716,
-    lng: 77.5946,
+    lat: 0.3476,
+    lng: 32.5825,
   }
 }
 
@@ -32,7 +32,7 @@ export function toUtf8Bytes(value: string) {
 }
 
 export function formatAlgoAmount(microAlgos: bigint) {
-  return `${(Number(microAlgos) / 1_000_000).toFixed(3)} ALGO`
+  return `${(Number(microAlgos) / 1_000_000).toFixed(3)} GIGC`
 }
 
 export function calculateDistanceKm(from: RideLocation, to: RideLocation) {
@@ -68,7 +68,7 @@ export function deriveLocationFromLabel(label: string): RideLocation {
 
   return {
     label: normalized,
-    lat: 12.9716 + latOffset,
-    lng: 77.5946 + lngOffset,
+    lat: 0.3476 + latOffset,
+    lng: 32.5825 + lngOffset,
   }
 }

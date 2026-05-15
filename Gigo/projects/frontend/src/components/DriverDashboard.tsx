@@ -169,38 +169,23 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
   const [activeTab, setActiveTab] = useState<'rides' | 'earnings'>('rides')
   const [otpOpen, setOtpOpen] = useState(false)
   const [otp, setOtp] = useState('')
-  const [rideMetadata, setRideMetadata] = useState<any>(null)
-  const [isMetadataLoading, setIsMetadataLoading] = useState(false)
-
-  useEffect(() => {
-    if (activeRide?.rideId) {
-      const fetchMetadata = async () => {
-        try {
-          setIsMetadataLoading(true)
-          const cid = await ipfs.getRideMetadataCID(activeRide.rideId.toString())
-          if (cid) {
-            const data = await ipfs.getJSON(cid)
-            setRideMetadata(data)
-          } else {
-            setRideMetadata(null)
-          }
-        } catch (e) {
-          console.error('Failed to fetch ride metadata from IPFS', e)
-        } finally {
-          setIsMetadataLoading(false)
-        }
-      }
-      fetchMetadata()
-    } else {
-      setRideMetadata(null)
-    }
-  }, [activeRide?.rideId])
+  const [otpError, setOtpError] = useState('')
+  // Metadata is now fetched automatically via MongoDB in useRideContract
 
   async function handleVerifyOtp() {
     if (!activeRide) return
-    const result = await ride.startRideWithOtp(activeRide, otp)
-    if (result?.canExecute) {
-      setOtpOpen(false)
+    setOtpError('')
+    
+    try {
+      const result = await ride.startRideWithOtp(activeRide, otp)
+      if (result?.canExecute) {
+        setOtpOpen(false)
+        setOtp('')
+      } else {
+        setOtpError(result?.reason || 'Invalid OTP. Please try again.')
+      }
+    } catch (e: any) {
+      setOtpError(e?.message || 'Verification failed');
     }
   }
 
@@ -286,26 +271,18 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                 className="glass-panel rounded-[32px] border border-white/10 p-4 sm:p-5"
               >
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/38">Driver dashboard</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/38">Rider dashboard</p>
                   <h2 className="mt-2 text-2xl font-black tracking-[-0.05em] text-white sm:text-3xl">
                     Accept rides and track pickup.
                   </h2>
                 </div>
 
-              <div className="mt-5 rounded-[28px] border border-amber-300/18 bg-amber-300/10 p-4">
-                <div className="flex items-start gap-3">
-                  <ride.driverNotice.icon className="mt-0.5 h-5 w-5 text-amber-100" />
-                  <div>
-                    <p className="text-sm font-semibold text-white">{ride.driverNotice.title}</p>
-                    <p className="mt-1 text-sm leading-6 text-white/58">{ride.driverNotice.description}</p>
-                  </div>
-                </div>
-              </div>
+
 
               <div className="mt-5 flex items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-white">Available and accepted rides</p>
-                  <p className="text-xs text-white/45">Open feed comes from app boxes and refresh polling.</p>
+                  <p className="text-xs text-white/45">Find new ride requests here.</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -336,21 +313,22 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   <>
                     <AnimatePresence initial={false}>
                       {ride.driverRides.map((item) => (
-                        <motion.button
+                        <motion.div
                           key={item.rideId.toString()}
-                          type="button"
                           layout
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      onClick={() => ride.setFocusedRideId(item.rideId)}
-                      className={cn(
-                        'w-full rounded-[28px] border p-4 text-left transition hover:scale-[1.01]',
-                        ride.focusedRideId === item.rideId
-                          ? 'border-white/20 bg-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.25)]'
-                          : 'border-white/8 bg-white/[0.04] hover:bg-white/[0.06]',
-                      )}
-                    >
+                          role="button"
+                          tabIndex={0}
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          onClick={() => ride.setFocusedRideId(item.rideId)}
+                          className={cn(
+                            'w-full rounded-[28px] border p-4 text-left transition hover:scale-[1.01] cursor-pointer',
+                            ride.focusedRideId === item.rideId
+                              ? 'border-white/20 bg-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.25)]'
+                              : 'border-white/8 bg-white/[0.04] hover:bg-white/[0.06]',
+                          )}
+                        >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-white">Ride #{item.rideId.toString()}</p>
@@ -367,12 +345,13 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             type="button"
                             onClick={(event) => {
                               event.stopPropagation()
+                              ride.setFocusedRideId(item.rideId)
                               void ride.acceptRide(item.rideId)
                             }}
-                            disabled={!ride.activeAddress || ride.actionState.acceptRide}
+                            disabled={!ride.activeAddress || ride.actionState.acceptRide || ride.actionState.optIn}
                             className="rounded-[22px] bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-400 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
                           >
-                            {ride.actionState.acceptRide ? 'Accepting' : 'Accept ride'}
+                            {ride.actionState.optIn ? 'Opting in...' : ride.actionState.acceptRide ? 'Accepting' : 'Accept ride'}
                           </button>
                         ) : null}
 
@@ -382,8 +361,10 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                               type="button"
                               onClick={(event) => {
                                 event.stopPropagation()
+                                ride.setFocusedRideId(item.rideId)
                                 setOtpOpen(true)
                                 setOtp('')
+                                setOtpError('')
                               }}
                               className="rounded-[22px] bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-400 px-4 py-3 text-sm font-black text-slate-950"
                             >
@@ -397,6 +378,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             type="button"
                             onClick={(event) => {
                               event.stopPropagation()
+                              ride.setFocusedRideId(item.rideId)
                               void ride.endRide(item.rideId)
                             }}
                             disabled={ride.actionState.endRide}
@@ -411,16 +393,17 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             type="button"
                             onClick={(event) => {
                               event.stopPropagation()
-                              void ride.releasePayment(item.rideId)
+                              ride.setFocusedRideId(item.rideId)
+                              void ride.releasePayment(item.rideId, item.rider || ride.activeAddress || '')
                             }}
-                            disabled={ride.actionState.releasePayment}
+                            disabled={ride.actionState.payout}
                             className="rounded-[22px] bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
                           >
-                            {ride.actionState.releasePayment ? 'Releasing payment' : 'Release payment'}
+                            {ride.actionState.payout ? 'Releasing payment' : 'Release payment'}
                           </button>
                         ) : null}
                       </div>
-                    </motion.button>
+                    </motion.div>
                   ))}
                 </AnimatePresence>
 
@@ -474,33 +457,20 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                 </div>
 
-                {isMetadataLoading ? (
-                  <div className="mt-5 flex items-center gap-2 text-xs text-white/40">
-                    <LoaderCircle className="h-3 w-3 animate-spin" /> Fetching rich data from IPFS...
-                  </div>
-                ) : rideMetadata && (
+                {activeRide.vehicleType && (
                   <div className="mt-5 grid gap-3 sm:grid-cols-2">
                     <div className="rounded-[24px] border border-emerald-300/10 bg-emerald-300/5 p-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Vehicle Requested</p>
-                      <p className="mt-2 text-sm font-bold text-white">{rideMetadata.vehicleType}</p>
+                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Pickup Point</p>
+                      <p className="mt-2 text-xs font-bold text-white truncate">{activeRide.pickup.label}</p>
                     </div>
                     <div className="rounded-[24px] border border-emerald-300/10 bg-emerald-300/5 p-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Global Data (IPFS)</p>
-                      <p className="mt-2 text-[10px] font-mono text-emerald-400/80 truncate">CID: Available</p>
+                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Drop Point</p>
+                      <p className="mt-2 text-xs font-bold text-white truncate">{activeRide.drop.label}</p>
                     </div>
                   </div>
                 )}
 
-                <div className="mt-5 rounded-[28px] border border-rose-300/18 bg-rose-300/10 p-4">
-                  <div className="flex items-start gap-3">
-                    <ShieldAlert className="mt-0.5 h-5 w-5 text-rose-100" />
-                    <p className="text-sm leading-6 text-rose-50/92">
-                      OTP verification happens from the driver side, but escrow only locks when the customer payment and
-                      <span className="font-semibold"> verifyOTPAndStartRide </span>
-                      app call are grouped together. The UI keeps that limitation visible.
-                    </p>
-                  </div>
-                </div>
+
 
                 {activeRide.status === RideStatus.RIDER_ASSIGNED ? (
                   <div className="mt-5 rounded-[28px] border border-emerald-300/18 bg-emerald-300/10 p-4">
@@ -523,15 +493,15 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                       <div>
                         <p className="text-sm font-semibold text-white">Destination reached</p>
                         <p className="mt-1 text-sm leading-6 text-white/62">
-                          Development mode assumes both customer and driver are at the destination, so payment release is now available from the driver dashboard.
+                          Ride is complete! You can now request the payout from the escrow.
                         </p>
                         <button
                           type="button"
-                          onClick={() => void ride.releasePayment(activeRide.rideId)}
-                          disabled={ride.actionState.releasePayment}
+                          onClick={() => void ride.releasePayment(activeRide.rideId, activeRide.rider || ride.activeAddress || '')}
+                          disabled={ride.actionState.payout}
                           className="mt-3 rounded-[20px] bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
                         >
-                          {ride.actionState.releasePayment ? 'Releasing payment' : 'Release payment to driver'}
+                          {ride.actionState.payout ? 'Releasing payment' : 'Release payment to rider'}
                         </button>
                       </div>
                     </div>
@@ -543,7 +513,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                     <Timer className="h-5 w-5 text-white/54" />
                     <p className="mt-3 text-xs uppercase tracking-[0.24em] text-white/35">Pickup status</p>
                     <p className="mt-2 text-sm font-medium text-white">
-                      {activeRide.status === RideStatus.REQUESTED ? 'Awaiting driver' : 'Driver assigned'}
+                      {activeRide.status === RideStatus.REQUESTED ? 'Awaiting rider' : 'Rider assigned'}
                     </p>
                   </div>
                   <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
@@ -555,7 +525,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                   <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
                     <CheckCircle2 className="h-5 w-5 text-white/54" />
-                    <p className="mt-3 text-xs uppercase tracking-[0.24em] text-white/35">Driver ownership</p>
+                    <p className="mt-3 text-xs uppercase tracking-[0.24em] text-white/35">Rider ownership</p>
                     <p className="mt-2 text-sm font-medium text-white">
                       {activeRide.rider === ride.activeAddress ? 'Assigned to you' : activeRide.rider ? 'Assigned to another wallet' : 'Open ride'}
                     </p>
@@ -598,7 +568,11 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
         isOpen={otpOpen}
         isLoading={ride.actionState.startRide}
         otp={otp}
-        onOtpChange={setOtp}
+        error={otpError}
+        onOtpChange={(val) => {
+           setOtp(val)
+           if (otpError) setOtpError('')
+        }}
         onClose={() => setOtpOpen(false)}
         onVerify={() => void handleVerifyOtp()}
       />

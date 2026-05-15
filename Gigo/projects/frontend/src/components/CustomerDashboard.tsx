@@ -104,36 +104,23 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
       await ride.storeOtp(rideId, nextOtp)
    }
 
-   async function handleCreateRide() {
-      try {
-         const fareToCharge = hasActivePass ? discountedFare : estimatedFare
-         
-         // 1. Upload ride metadata to IPFS first
-         const metadata = {
-            pickup: pickupLocation,
-            drop: destinationLocation,
-            fareMicroAlgos: fareToCharge.toString(),
-            vehicleType: ride.selectedVehicle.name,
-            customer: ride.activeAddress,
-            createdAt: new Date().toISOString()
-         }
-         
-         const metadataCID = await ipfs.uploadJSON(metadata)
-         
-         // 2. Create ride on-chain
-         const rideId = await ride.createRide(pickupLocation, destinationLocation, fareToCharge)
-         
-         // 3. Save CID mapping on backend if we have a rideId
-         if (rideId) {
-            await ipfs.saveRideMetadata(rideId.toString(), metadataCID)
-         }
+    async function handleCreateRide() {
+       try {
+          const fareToCharge = hasActivePass ? discountedFare : estimatedFare
+          
+          // 1. Trigger the on-chain Escrow IMMEDIATELY (Faster UX)
+          const rideId = await ride.createRide(pickupLocation, destinationLocation, fareToCharge)
+          
+          if (rideId) {
+             setShowSuccess(true)
+             setTimeout(() => setShowSuccess(false), 3000)
 
-         setShowSuccess(true)
-         setTimeout(() => setShowSuccess(false), 3000)
-      } catch (err) {
-         console.error('Ride creation failed:', err)
-      }
-   }
+             // 2. Metadata is now synced immediately inside createRide via MongoDB!
+          }
+       } catch (err) {
+          console.error('Ride creation failed:', err)
+       }
+    }
 
    const showSuggestions = activeInput !== null && (
       (activeInput === 'pickup' && (pickupSuggestions.length > 0 || pickupSearchLoading)) ||
@@ -419,21 +406,23 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                               {/* Book CTA */}
                               <button
                                  type="button"
-                                 disabled={!ride.activeAddress || ride.actionState.createRide || isLocating}
+                                 disabled={!ride.activeAddress || ride.actionState.createRide || ride.actionState.optIn || isLocating}
                                  onClick={() => void handleCreateRide()}
                                  className={cn(
                                     'flex w-full items-center justify-center gap-2.5 rounded-xl px-5 py-3.5 text-[15px] font-semibold transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100',
                                     'bg-white text-[#05060a]',
                                  )}
                               >
-                                 {ride.actionState.createRide ? (
+                                 {ride.actionState.createRide || ride.actionState.optIn ? (
                                     <LoaderCircle className="h-4.5 w-4.5 animate-spin" />
                                  ) : (
                                     <CarFront className="h-4.5 w-4.5" />
                                  )}
-                                 {ride.actionState.createRide
-                                    ? 'Creating ride\u2026'
-                                    : `Book ${ride.selectedVehicle.name}`
+                                 {ride.actionState.optIn
+                                    ? 'Opting into GIGC\u2026'
+                                    : ride.actionState.createRide
+                                       ? 'Creating ride\u2026'
+                                       : `Book ${ride.selectedVehicle.name}`
                                  }
                               </button>
                            </>
@@ -546,10 +535,10 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                  </div>
                               )}
                               {item.status === RideStatus.RIDE_COMPLETED && (
-                                 <button type="button" onClick={(e) => { e.stopPropagation(); void ride.releasePayment(item.rideId) }}
-                                    disabled={ride.actionState.releasePayment}
+                                 <button type="button" onClick={(e) => { e.stopPropagation(); void ride.releasePayment(item.rideId, item.rider || 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HQC7V') }}
+                                    disabled={ride.actionState.payout || !item.rider}
                                     className="mt-3 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-[#05060a] disabled:opacity-45">
-                                    Release payment
+                                    {ride.actionState.payout ? 'Paying...' : 'Release payment'}
                                  </button>
                               )}
                            </motion.div>
@@ -586,7 +575,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                   </motion.h2>
                   <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
                      className="mt-2 text-white/50">
-                     Waiting for a driver to accept...
+                     Waiting for a rider to accept...
                   </motion.p>
                </motion.div>
             )}
@@ -721,7 +710,7 @@ function CustomerProfileDropdown({
                   return;
                }
                
-               // Fallback to driver documents if available
+               // Fallback to rider documents if available
                const driverCid = await ipfs.getDriverMetadataCID(activeAddress);
                if (driverCid) {
                   const driverData = await ipfs.getJSON(driverCid);
@@ -748,7 +737,6 @@ function CustomerProfileDropdown({
          setProfilePhoto(ipfs.getGatewayUrl(cid))
       } catch (err) {
          console.error('Profile upload failed:', err)
-         alert('Failed to upload profile photo to IPFS')
       } finally {
          setIsUploading(false)
       }

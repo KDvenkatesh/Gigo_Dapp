@@ -1,91 +1,57 @@
-# Gigo — Ride-Sharing on the Blockchain
+# 🚖 Gigo DApp — Decentralized Ride-Sharing
 
-Hey there 👋 — welcome to Gigo, my take on what ride-sharing should actually look like. No middlemen, no delayed payouts, no black-box algorithms deciding what drivers earn. Just riders, drivers, and a smart contract keeping everyone honest.
+Gigo is a premium, decentralized ride-sharing platform built on the **Algorand Blockchain**. This repository contains the frontend and backend infrastructure for a high-performance Web3 transportation network.
 
----
+## 🚀 Recent Architecture Upgrades
 
-## Why I Built This
+We have transitioned from a local-client storage model to a **Hybrid Decentralized Architecture**:
 
-I got tired of seeing how traditional ride-sharing platforms work. Drivers wait days for earnings. Riders have no idea where their money actually goes. A faceless company sits in the middle taking a massive cut and calling it "service fees."
+### 1. IPFS Integration (Pinata)
+All critical media and metadata are now stored on **IPFS** via Pinata, ensuring that driver documents and customer profiles are globally available and immutable.
+- **Driver Documents**: Licenses, insurance, and profile photos are pinned to IPFS.
+- **Customer Profiles**: Profile photos are now decentralized and linked to wallet addresses.
+- **Ride Metadata**: Rich ride data (pickup/drop labels, vehicle types) are stored as JSON on IPFS, making them globally accessible to riders.
 
-Gigo is my answer to that. It runs on **Algorand** — a blockchain that's genuinely fast and cheap enough for everyday transactions — and puts the financial relationship directly between the rider and the driver.
+### 2. Smart Backend Indexing
+A dedicated Express backend serves as a high-speed indexing layer for IPFS CIDs.
+- **Wallet-to-CID Mapping**: Securely maps user wallets to their latest metadata on IPFS.
+- **Real-time Synchronization**: Ensures ride data is synced across different devices and sessions.
+- **Rate Limit Optimization**: Implements chunked fetching and retry logic for Algorand application boxes to maintain UI stability.
 
----
+### 3. PWA (Progressive Web App)
+Gigo is fully PWA-compatible, allowing users to install it on their mobile devices for a native app-like experience.
+- **Network-First Strategy**: Updated Service Worker logic to ensure users always see the latest version while maintaining offline resilience.
+- **Automated Prompts**: Intelligent installation triggers for a seamless onboarding flow.
 
-## What It Can Do
+## 🛠 Technology Stack
 
-### Core Ride Flow
-A rider opens the app, picks a pickup and drop location, and books a ride. Their payment locks into a **smart contract escrow** — the driver doesn't get it, the app doesn't get it, it just sits there safely until the ride is done. The driver accepts, picks up the rider (after a quick OTP verification), completes the trip, and the funds release automatically. That's it.
+- **Frontend**: React + Vite + Tailwind CSS + Framer Motion
+- **Blockchain**: Algorand (using `algokit` and `use-wallet`)
+- **Storage**: IPFS (Pinata)
+- **Backend**: Node.js + Express
+- **Payments**: x402 (Standardized AI/API micro-payments)
 
-### AI Features
-I added an AI layer (powered by **Groq**) that actually makes the experience smarter:
+## 📦 Project Structure
 
-- **Fare Prediction** — Before booking, the app analyzes current demand, distance, and vehicle type to suggest a fair price.
-- **Smart Routing** — The driver's map uses AI + OpenRouteService to find traffic-aware routes, not just the shortest line on a map.
-- **Earnings Insights** — Drivers get a personal breakdown of their week: total earned, distance covered, best-performing areas, and strategy tips.
+- `projects/frontend`: React application containing the Driver, Customer, and Admin dashboards.
+- `projects/backend`: Express API for AI fare prediction, route optimization, and IPFS indexing.
 
-### NFT Ride Passes
-Regular riders can subscribe to a pass (Silver, Gold, or Platinum). These are actual NFTs on Algorand, not just loyalty points. Hold one and you unlock:
-- Daily free rides (1 to 3, depending on tier)
-- Fare discounts up to 40%, applied automatically at checkout
+## 🔧 Environment Setup
 
----
-
-## How It's Built
-
+### Frontend (.env)
+```env
+VITE_BACKEND_URL=https://your-backend.onrender.com
+VITE_RIDE_APP_ID=your_algorand_app_id
 ```
-Gigo/
-├── projects/
-│   ├── frontend/     # React + TypeScript + Tailwind CSS
-│   ├── backend/      # Node.js + Express + Groq AI
-│   └── contracts/    # Algorand Smart Contracts (Algopy)
-```
 
-**Frontend:** Built with React, TypeScript, and Tailwind. Animations with Framer Motion to keep things feeling alive.
-
-**Backend:** A lightweight Express server handling the AI calls (fare prediction, smart routing, earnings analysis). Hosted on Render.
-
-**Smart Contracts:** Written with Algopy (Python-based Algorand contract framework). Handles escrow logic, OTP verification, and payment release.
-
----
-
-## Running It Locally
-
-You'll need Node.js v18+, a Pera Wallet on Algorand Testnet, a Groq API key, and an ORS API key.
-
-```bash
-# Clone the repo
-git clone https://github.com/KDvenkatesh/Gigo_Dapp.git
-cd Gigo_Dapp
-
-# Start the backend
-cd Gigo/projects/backend
-npm install
-cp .env.example .env  # Add your API keys here
-npm run dev
-
-# Start the frontend (new terminal)
-cd Gigo/projects/frontend
-npm install
-cp .env.example .env
-npm run dev
+### Backend (.env)
+```env
+PINATA_JWT=your_pinata_jwt
+GROQ_API_KEY=your_ai_key
+ALGO_SERVER=https://testnet-api.algonode.cloud
+ALGO_PORT=443
 ```
 
 ---
-
-## Links
-
-- 📺 **Demo Video:** [Watch on YouTube](https://youtu.be/IwIqgCa2mk8)
-- 🚀 **Live Backend API:** [gigo-dapp.onrender.com](https://gigo-dapp.onrender.com)
-
----
-
-## A Note on Algorand
-
-I chose Algorand specifically because other chains would make this impractical — gas fees alone would eat into every transaction. Algorand's fees are fractions of a cent, finality is near-instant (under 4 seconds), and the developer tooling is solid. For a payments-heavy app like this, it was the only choice that made sense.
-
----
-
-Made with a lot of late nights and a belief that decentralization should actually benefit the people using the app, not just the people building it.
 
 — Shaik Ishaq & K Dhanu

@@ -53,7 +53,7 @@ function WalletGate({
             {role === 'customer'
               ? 'Customer booking opens only after wallet connection so ride creation can be securely signed on-chain.'
               : role === 'driver'
-              ? 'Driver features require wallet connection to manage your profile and accept rides.'
+              ? 'Rider features require wallet connection to manage your profile and accept rides.'
               : 'Admin access is restricted to authorized wallets.'}
           </p>
           <div className="mt-8">
@@ -102,7 +102,7 @@ function RideApp() {
             className="group flex items-center gap-2.5 rounded-full border border-white/20 bg-black/60 px-6 py-3 text-[13px] font-bold tracking-tight text-white transition-all hover:bg-white hover:text-black hover:border-white shadow-[0_8px_30px_rgb(0,0,0,0.4)] backdrop-blur-xl"
           >
             <ShieldCheck className="h-4 w-4" />
-            Become a Driver
+            Become a Rider
           </motion.button>
           <motion.button 
             initial={{ opacity: 0, x: 20 }}

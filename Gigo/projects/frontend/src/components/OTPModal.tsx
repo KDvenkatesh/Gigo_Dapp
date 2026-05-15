@@ -5,6 +5,7 @@ interface OTPModalProps {
   isOpen: boolean
   isLoading: boolean
   otp: string
+  error?: string
   onOtpChange: (value: string) => void
   onClose: () => void
   onVerify: () => void
@@ -14,6 +15,7 @@ export function OTPModal({
   isOpen,
   isLoading,
   otp,
+  error,
   onOtpChange,
   onClose,
   onVerify,
@@ -61,8 +63,13 @@ export function OTPModal({
                 placeholder="0000"
                 className="w-full bg-transparent text-center text-4xl font-semibold tracking-[0.45em] text-white outline-none"
               />
-
             </div>
+
+            {error && (
+              <p className="mt-3 text-center text-sm font-medium text-red-400">
+                {error}
+              </p>
+            )}
 
             <button
               type="button"
