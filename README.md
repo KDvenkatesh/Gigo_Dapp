@@ -1,57 +1,78 @@
 # 🚖 Gigo DApp — Decentralized Ride-Sharing
 
-Gigo is a premium, decentralized ride-sharing platform built on the **Algorand Blockchain**. This repository contains the frontend and backend infrastructure for a high-performance Web3 transportation network.
+Gigo is a premium, decentralized ride-sharing platform built on the **Algorand Blockchain**. It combines high-speed Web3 infrastructure with AI-powered insights to provide a seamless, secure, and modern transportation experience.
 
-## 🚀 Recent Architecture Upgrades
+---
 
-We have transitioned from a local-client storage model to a **Hybrid Decentralized Architecture**:
+## 🚀 Core Features
 
-### 1. IPFS Integration (Pinata)
-All critical media and metadata are now stored on **IPFS** via Pinata, ensuring that driver documents and customer profiles are globally available and immutable.
-- **Driver Documents**: Licenses, insurance, and profile photos are pinned to IPFS.
-- **Customer Profiles**: Profile photos are now decentralized and linked to wallet addresses.
-- **Ride Metadata**: Rich ride data (pickup/drop labels, vehicle types) are stored as JSON on IPFS, making them globally accessible to riders.
+### 1. Hybrid "Lean On-Chain" Architecture
+Gigo uses a sophisticated hybrid model to ensure the best performance for mobile users:
+- **Blockchain (Algorand)**: Handles immutable financial transactions, GIGC (ASA) escrows, and ride state validation.
+- **Off-Chain (MongoDB + Express)**: Handles real-time ride synchronization, live driver feeds, and metadata indexing for ultra-fast UI updates.
+- **IPFS (Pinata)**: Decentralized storage for driver documents, customer profile photos, and rich ride metadata.
 
-### 2. Smart Backend Indexing
-A dedicated Express backend serves as a high-speed indexing layer for IPFS CIDs.
-- **Wallet-to-CID Mapping**: Securely maps user wallets to their latest metadata on IPFS.
-- **Real-time Synchronization**: Ensures ride data is synced across different devices and sessions.
-- **Rate Limit Optimization**: Implements chunked fetching and retry logic for Algorand application boxes to maintain UI stability.
+### 2. AI-Powered Intelligence (Grok 3.0)
+Integrated with **Grok AI (via Groq Cloud)** to provide real-time strategic data:
+- **Price Prediction**: Analyzes local traffic, time of day (IST), and historical demand to predict fare changes.
+- **Earnings Insights**: Helps drivers optimize their routes and identify demand hotspots using algorithmic analysis.
+- **Traffic Analysis**: Real-time traffic condition estimation between pickup and destination.
 
-### 3. PWA (Progressive Web App)
-Gigo is fully PWA-compatible, allowing users to install it on their mobile devices for a native app-like experience.
-- **Network-First Strategy**: Updated Service Worker logic to ensure users always see the latest version while maintaining offline resilience.
-- **Automated Prompts**: Intelligent installation triggers for a seamless onboarding flow.
+### 3. Web3 Payments & Escrow
+- **Gigo Credit (GIGC)**: A custom Algorand Standard Asset (ASA) used for all payments.
+- **Secure Escrow**: Funds are locked the moment a ride is booked and only released when the customer confirms the destination via OTP.
+- **x402 Micropayments**: Integrated x402 standard for API-level micro-payments for AI services.
+
+---
 
 ## 🛠 Technology Stack
 
-- **Frontend**: React + Vite + Tailwind CSS + Framer Motion
-- **Blockchain**: Algorand (using `algokit` and `use-wallet`)
-- **Storage**: IPFS (Pinata)
-- **Backend**: Node.js + Express
-- **Payments**: x402 (Standardized AI/API micro-payments)
+- **Frontend**: React 18, Vite, Tailwind CSS, Framer Motion (Animations), Lucide (Icons).
+- **Blockchain**: Algorand (PyTeal/Puya Smart Contracts, use-wallet-react).
+- **Backend**: Node.js, Express, Mongoose (MongoDB), Groq SDK.
+- **Storage**: IPFS (Pinata SDK) for decentralized document management.
+- **PWA**: Fully installable mobile experience with custom Service Worker logic.
 
-## 📦 Project Structure
+---
 
-- `projects/frontend`: React application containing the Driver, Customer, and Admin dashboards.
-- `projects/backend`: Express API for AI fare prediction, route optimization, and IPFS indexing.
+## 📂 Project Structure
 
-## 🔧 Environment Setup
-
-### Frontend (.env)
-```env
-VITE_BACKEND_URL=https://your-backend.onrender.com
-VITE_RIDE_APP_ID=your_algorand_app_id
-```
-
-### Backend (.env)
-```env
-PINATA_JWT=your_pinata_jwt
-GROQ_API_KEY=your_ai_key
-ALGO_SERVER=https://testnet-api.algonode.cloud
-ALGO_PORT=443
+```bash
+├── projects/
+│   ├── frontend/        # React PWA (Driver & Customer Dashboards)
+│   ├── backend/         # Express API (AI, MongoDB Sync, x402 Middleware)
+│   └── contracts/       # Algorand Smart Contracts (RideContract)
 ```
 
 ---
 
-— Shaik Ishaq & K Dhanu
+## 🔧 Environment Configuration
+
+To run Gigo locally or in production, you need to configure the following environment variables:
+
+### Frontend (`projects/frontend/.env`)
+- `VITE_BACKEND_URL`: URL of your running backend (e.g., `https://gigo-backend.onrender.com`).
+- `VITE_RIDE_APP_ID`: The ID of the deployed Algorand RideContract.
+
+### Backend (`projects/backend/.env`)
+- `MONGODB_URI`: Your MongoDB connection string.
+- `GROQ_API_KEY`: Your Groq Cloud API Key (Llama 3.3 / Grok).
+- `PINATA_JWT`: Your Pinata IPFS access token.
+- `ALGO_SERVER`: `https://testnet-api.algonode.cloud`
+
+---
+
+## 🌐 Production Deployment
+
+- **Frontend**: Optimized for **Vercel**. Ensure the environment variables are set in the Vercel dashboard.
+- **Backend**: Optimized for **Render**. Ensure the backend's CORS settings allow your Vercel domain.
+- **Database**: Use **MongoDB Atlas** for a managed production database.
+
+> [!NOTE]
+> **Time Analysis Correction (v1.2)**
+> We recently resolved an issue where the AI analysis (Grok) misidentified evening hours as lunch breaks. The system now explicitly passes human-readable Indian Standard Time (IST) strings to the AI models to ensure accurate context analysis regardless of server timezone.
+
+---
+
+## 👥 Authors
+Developed with ❤️ by **Shaik Ishaq** & **K Dhanu**.
