@@ -1,60 +1,309 @@
-# 🚖 Gigo — Decentralized Ride-Sharing
+# 🚖 Gigo — Decentralized Boda Mobility Infrastructure
 
-Gigo is our take on a modern, decentralized ride-sharing platform. We built it on the **Algorand Blockchain** to fix the trust and payment issues in traditional ride apps, while keeping the speed and feel of a premium mobile experience.
+<p align="center">
+  <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1200&auto=format&fit=crop" width="100%" alt="Boda Boda Ride"/>
+</p>
 
----
-
-## ⚡ What makes Gigo different?
-
-- **Real-time Sync**: We use a hybrid model where Algorand handles the money and MongoDB handles the live ride feed. This means zero lag for drivers and total security for customers.
-- **Smart Payouts (GIGC)**: We created our own currency (GIGC) so payments are instant and low-fee. Money is locked in escrow as soon as you book and only moves when the ride is actually done.
-- **AI at the Core**: We've integrated Grok AI to help you out. It predicts price changes (so you know when to book) and gives drivers hotspots to find more passengers.
-- **Decentralized Profiles**: Your documents and photos aren't stored on a private server—they're pinned to **IPFS**, meaning you truly own your data.
+<p align="center">
+  <strong>Building the future of trusted mobility for boda boda ecosystems using Algorand Blockchain.</strong>
+</p>
 
 ---
 
-## 🛠 What's under the hood?
+# 🌍 What is Gigo?
 
-- **Frontend**: A slick, fast PWA built with React and Framer Motion. It works like a native app on your phone.
-- **Backend**: A Node.js API that acts as the "brain," connecting the AI models, MongoDB, and the blockchain.
-- **Smart Contracts**: Secure Puya-based contracts that manage the escrow and payment releases.
+Gigo is a decentralized ride-sharing and mobility infrastructure platform designed for **boda boda ecosystems** and informal transportation networks in emerging markets like **Uganda**, **Kenya**, and **East Africa**.
 
----
+Traditional transport systems in these regions often face:
 
-## 📂 How it's organized
+* ❌ Unverified riders
+* ❌ Unsafe ride experiences
+* ❌ Cash disputes
+* ❌ No digital identity
+* ❌ No payment transparency
 
-- `/projects/frontend`: Everything you see on screen (Driver & Customer dashboards).
-- `/projects/backend`: The logic layer (AI, Sync, and Data).
-- `/projects/contracts`: The "bank" layer (Blockchain security).
+Gigo solves these problems using:
 
----
-
-## ⚙️ Quick Setup
-
-If you're running this yourself, you'll need a few things in your `.env` files:
-
-### For the Web App (`/frontend/.env`)
-- `VITE_BACKEND_URL`: Your backend address (Render/Local).
-- `VITE_RIDE_APP_ID`: The ID of our smart contract.
-
-### For the Brain (`/backend/.env`)
-- `MONGODB_URI`: Your database link.
-- `GROQ_API_KEY`: For the Grok AI predictions.
-- `PINATA_JWT`: To talk to IPFS.
+* ⚡ Algorand Smart Contracts
+* 🪙 ASA-based ride credits (GIGC)
+* 📦 IPFS decentralized storage
+* 🤖 AI-powered mobility insights
+* 📱 Progressive Web App (PWA)
 
 ---
 
-## 🌍 Where to find us
+# ✨ Core Features
 
-- **Frontend**: Usually hosted on Vercel.
-- **Backend**: Usually running on Render.
-- **Blockchain**: Running on Algorand TestNet.
+## 🪙 GIGC Ride Credit System
 
-> [!TIP]
-> **A quick note on the AI**: We've updated the Grok analysis to use Indian Standard Time (IST). It now correctly identifies "Evening Rush" vs "Lunch Break" regardless of where the server is hosted.
+Gigo uses a native Algorand ASA token called **GIGC**.
+
+### What GIGC does:
+
+* Ride escrow payments
+* Instant rider payouts
+* Rewards & incentives
+* Membership benefits
+* Low-fee transactions
+
+### Ride Flow
+
+```text
+Passenger books ride
+↓
+GIGC locked in escrow
+↓
+Ride completed
+↓
+Smart contract releases payout
+```
 
 ---
 
-### Built by
-**Shaik Ishaq** & **K Dhanu** 
-*Pushing the limits of Web3 mobility.*
+## 🔐 Smart Contract Escrow
+
+All payments are secured through Algorand smart contracts.
+
+### On-chain:
+
+* Ride escrow creation
+* GIGC payment locking
+* Escrow release
+* NFT/ASA verification
+
+### Off-chain:
+
+* GPS tracking
+* Ride matching
+* Notifications
+* Analytics
+* Weather surge logic
+
+This hybrid architecture gives:
+
+* ⚡ Fast UX
+* 🔒 Secure payments
+* 📱 Smooth mobile experience
+
+---
+
+# 🛵 Built for the Boda Boda Ecosystem
+
+<p align="center">
+  <img src="https://images.unsplash.com/photo-1529429617124-aee711a5ac1c?q=80&w=1200&auto=format&fit=crop" width="100%" alt="African Motorcycle Taxi"/>
+</p>
+
+Gigo prioritizes:
+
+* 🛵 Boda rides
+* 🚗 Car rides
+* ⚡ EV rides
+
+### Rider Verification Includes:
+
+* Driving License
+* National ID
+* Vehicle Registration
+* Insurance
+* Rider Profile Photo
+
+Only approved riders can receive bookings.
+
+---
+
+# 🤖 AI-Powered Mobility Intelligence
+
+Gigo integrates AI to improve transportation efficiency.
+
+### AI Features:
+
+* 📈 Demand prediction
+* 🌦 Weather-based surge analysis
+* 📍 Rider hotspot suggestions
+* ⛽ Fuel/range alerts
+* 🎙 Voice booking automation
+
+Example:
+
+> “High ride demand expected near Makerere University during evening rush hour.”
+
+---
+
+# 📦 Decentralized Storage with IPFS
+
+We use Pinata IPFS for decentralized asset storage.
+
+Stored on IPFS:
+
+* Rider verification documents
+* NFT metadata
+* Ride receipts
+* Uploaded assets
+
+### Architecture
+
+```text
+Frontend
+↓
+Backend API
+↓
+Pinata IPFS
+↓
+CID Generated
+↓
+CID stored in backend/blockchain
+```
+
+---
+
+# 🏗 System Architecture
+
+<p align="center">
+  <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop" width="100%" alt="System Architecture"/>
+</p>
+
+```text
+                    ┌────────────────────┐
+                    │    Passenger App   │
+                    └─────────┬──────────┘
+                              │
+                              ▼
+                  ┌─────────────────────┐
+                  │   React PWA Frontend│
+                  └─────────┬───────────┘
+                            │
+          ┌─────────────────┼─────────────────┐
+          ▼                                   ▼
+┌────────────────────┐             ┌────────────────────┐
+│   Node.js Backend  │             │ Algorand Blockchain│
+│ MongoDB + AI Layer │             │ Smart Contracts    │
+└─────────┬──────────┘             └─────────┬──────────┘
+          │                                  │
+          ▼                                  ▼
+┌────────────────────┐             ┌────────────────────┐
+│  Pinata IPFS       │             │ GIGC ASA Payments  │
+│ Document Storage   │             │ Escrow + Payouts   │
+└────────────────────┘             └────────────────────┘
+```
+
+---
+
+# ⚙️ Tech Stack
+
+| Layer           | Technology                       |
+| --------------- | -------------------------------- |
+| Frontend        | React + Framer Motion + Tailwind |
+| Backend         | Node.js + Express                |
+| Blockchain      | Algorand                         |
+| Smart Contracts | Algopy                           |
+| Storage         | IPFS + Pinata                    |
+| Database        | MongoDB                          |
+| Wallet          | Pera Wallet                      |
+| AI              | Groq AI + OpenRoute              |
+| Deployment      |Vercel + Render + Algorand testnet|
+
+---
+
+# 📂 Project Structure
+
+```bash
+/projects/frontend   # Passenger & Rider dashboards
+/projects/backend    # AI, APIs, Realtime Logic
+/projects/contracts  # Algorand Smart Contracts
+```
+
+---
+
+# 🚀 Quick Setup
+
+## 1️⃣ Frontend Environment
+
+`/frontend/.env`
+
+```env
+VITE_BACKEND_URL=
+VITE_RIDE_APP_ID=
+VITE_GIGC_ASA_ID=762258472
+```
+
+---
+
+## 2️⃣ Backend Environment
+
+`/backend/.env`
+
+```env
+MONGODB_URI=
+GROQ_API_KEY=
+PINATA_JWT=
+```
+
+---
+
+# 🪙 GIGC ASA Information
+
+| Property   | Value       |
+| ---------- | ----------- |
+| Asset Name | Gigo Credit |
+| Ticker     | GIGC        |
+| ASA ID     | 762258472   |
+
+---
+
+# 📱 Progressive Web App (PWA)
+
+Gigo works like a native mobile app.
+
+### Features:
+
+* Installable on Android
+* Offline-friendly UI
+* Mobile-first design
+* Lightweight performance
+
+---
+
+# 🔥 Why Gigo Matters
+
+Gigo is not just another ride-sharing app.
+
+It is:
+
+> “A decentralized mobility infrastructure platform for informal transportation ecosystems.”
+
+Our mission is to modernize boda boda transportation with:
+
+* trust
+* verification
+* secure payments
+* decentralized ownership
+
+---
+
+# 🌍 Future Vision
+
+* 🌎 Expansion across East Africa
+* 🧠 Smarter AI mobility optimization
+* 🪪 Decentralized rider identity
+* 📡 Offline-first ride infrastructure
+* ⚡ Mainnet deployment
+
+---
+
+# 👨‍💻 Built By
+
+### Shaik Ishaq
+
+### K Dhanu
+
+> Pushing the limits of Web3 mobility infrastructure.
+
+---
+
+# ⭐ Powered By
+
+* Algorand Blockchain
+* Pera Wallet
+* Pinata IPFS
+* Groq AI
+* React Ecosystem
