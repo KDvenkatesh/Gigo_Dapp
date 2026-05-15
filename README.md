@@ -1,78 +1,60 @@
-# 🚖 Gigo DApp — Decentralized Ride-Sharing
+# 🚖 Gigo — Decentralized Ride-Sharing
 
-Gigo is a premium, decentralized ride-sharing platform built on the **Algorand Blockchain**. It combines high-speed Web3 infrastructure with AI-powered insights to provide a seamless, secure, and modern transportation experience.
-
----
-
-## 🚀 Core Features
-
-### 1. Hybrid "Lean On-Chain" Architecture
-Gigo uses a sophisticated hybrid model to ensure the best performance for mobile users:
-- **Blockchain (Algorand)**: Handles immutable financial transactions, GIGC (ASA) escrows, and ride state validation.
-- **Off-Chain (MongoDB + Express)**: Handles real-time ride synchronization, live driver feeds, and metadata indexing for ultra-fast UI updates.
-- **IPFS (Pinata)**: Decentralized storage for driver documents, customer profile photos, and rich ride metadata.
-
-### 2. AI-Powered Intelligence (Grok 3.0)
-Integrated with **Grok AI (via Groq Cloud)** to provide real-time strategic data:
-- **Price Prediction**: Analyzes local traffic, time of day (IST), and historical demand to predict fare changes.
-- **Earnings Insights**: Helps drivers optimize their routes and identify demand hotspots using algorithmic analysis.
-- **Traffic Analysis**: Real-time traffic condition estimation between pickup and destination.
-
-### 3. Web3 Payments & Escrow
-- **Gigo Credit (GIGC)**: A custom Algorand Standard Asset (ASA) used for all payments.
-- **Secure Escrow**: Funds are locked the moment a ride is booked and only released when the customer confirms the destination via OTP.
-- **x402 Micropayments**: Integrated x402 standard for API-level micro-payments for AI services.
+Gigo is our take on a modern, decentralized ride-sharing platform. We built it on the **Algorand Blockchain** to fix the trust and payment issues in traditional ride apps, while keeping the speed and feel of a premium mobile experience.
 
 ---
 
-## 🛠 Technology Stack
+## ⚡ What makes Gigo different?
 
-- **Frontend**: React 18, Vite, Tailwind CSS, Framer Motion (Animations), Lucide (Icons).
-- **Blockchain**: Algorand (PyTeal/Puya Smart Contracts, use-wallet-react).
-- **Backend**: Node.js, Express, Mongoose (MongoDB), Groq SDK.
-- **Storage**: IPFS (Pinata SDK) for decentralized document management.
-- **PWA**: Fully installable mobile experience with custom Service Worker logic.
-
----
-
-## 📂 Project Structure
-
-```bash
-├── projects/
-│   ├── frontend/        # React PWA (Driver & Customer Dashboards)
-│   ├── backend/         # Express API (AI, MongoDB Sync, x402 Middleware)
-│   └── contracts/       # Algorand Smart Contracts (RideContract)
-```
+- **Real-time Sync**: We use a hybrid model where Algorand handles the money and MongoDB handles the live ride feed. This means zero lag for drivers and total security for customers.
+- **Smart Payouts (GIGC)**: We created our own currency (GIGC) so payments are instant and low-fee. Money is locked in escrow as soon as you book and only moves when the ride is actually done.
+- **AI at the Core**: We've integrated Grok AI to help you out. It predicts price changes (so you know when to book) and gives drivers hotspots to find more passengers.
+- **Decentralized Profiles**: Your documents and photos aren't stored on a private server—they're pinned to **IPFS**, meaning you truly own your data.
 
 ---
 
-## 🔧 Environment Configuration
+## 🛠 What's under the hood?
 
-To run Gigo locally or in production, you need to configure the following environment variables:
-
-### Frontend (`projects/frontend/.env`)
-- `VITE_BACKEND_URL`: URL of your running backend (e.g., `https://gigo-backend.onrender.com`).
-- `VITE_RIDE_APP_ID`: The ID of the deployed Algorand RideContract.
-
-### Backend (`projects/backend/.env`)
-- `MONGODB_URI`: Your MongoDB connection string.
-- `GROQ_API_KEY`: Your Groq Cloud API Key (Llama 3.3 / Grok).
-- `PINATA_JWT`: Your Pinata IPFS access token.
-- `ALGO_SERVER`: `https://testnet-api.algonode.cloud`
+- **Frontend**: A slick, fast PWA built with React and Framer Motion. It works like a native app on your phone.
+- **Backend**: A Node.js API that acts as the "brain," connecting the AI models, MongoDB, and the blockchain.
+- **Smart Contracts**: Secure Puya-based contracts that manage the escrow and payment releases.
 
 ---
 
-## 🌐 Production Deployment
+## 📂 How it's organized
 
-- **Frontend**: Optimized for **Vercel**. Ensure the environment variables are set in the Vercel dashboard.
-- **Backend**: Optimized for **Render**. Ensure the backend's CORS settings allow your Vercel domain.
-- **Database**: Use **MongoDB Atlas** for a managed production database.
-
-> [!NOTE]
-> **Time Analysis Correction (v1.2)**
-> We recently resolved an issue where the AI analysis (Grok) misidentified evening hours as lunch breaks. The system now explicitly passes human-readable Indian Standard Time (IST) strings to the AI models to ensure accurate context analysis regardless of server timezone.
+- `/projects/frontend`: Everything you see on screen (Driver & Customer dashboards).
+- `/projects/backend`: The logic layer (AI, Sync, and Data).
+- `/projects/contracts`: The "bank" layer (Blockchain security).
 
 ---
 
-## 👥 Authors
-Developed with ❤️ by **Shaik Ishaq** & **K Dhanu**.
+## ⚙️ Quick Setup
+
+If you're running this yourself, you'll need a few things in your `.env` files:
+
+### For the Web App (`/frontend/.env`)
+- `VITE_BACKEND_URL`: Your backend address (Render/Local).
+- `VITE_RIDE_APP_ID`: The ID of our smart contract.
+
+### For the Brain (`/backend/.env`)
+- `MONGODB_URI`: Your database link.
+- `GROQ_API_KEY`: For the Grok AI predictions.
+- `PINATA_JWT`: To talk to IPFS.
+
+---
+
+## 🌍 Where to find us
+
+- **Frontend**: Usually hosted on Vercel.
+- **Backend**: Usually running on Render.
+- **Blockchain**: Running on Algorand TestNet.
+
+> [!TIP]
+> **A quick note on the AI**: We've updated the Grok analysis to use Indian Standard Time (IST). It now correctly identifies "Evening Rush" vs "Lunch Break" regardless of where the server is hosted.
+
+---
+
+### Built by
+**Shaik Ishaq** & **K Dhanu** 
+*Pushing the limits of Web3 mobility.*
