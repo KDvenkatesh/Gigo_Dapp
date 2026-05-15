@@ -1,7 +1,7 @@
 # 🚖 Gigo — Decentralized Boda Mobility Infrastructure
 
 <p align="center">
-  <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1200&auto=format&fit=crop" width="100%" alt="Boda Boda Ride"/>
+  <img src="https://chatgpt.com/s/m_6a071c0f6c9881918f5454d88a0f96eb?q=80&w=1200&auto=format&fit=crop" width="100%" alt="Boda Boda Ride"/>
 </p>
 
 <p align="center">
