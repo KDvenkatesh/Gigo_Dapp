@@ -12,7 +12,7 @@ import mongoose from 'mongoose';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI?.trim();
 
 if (!MONGODB_URI) {
   console.error('❌ CRITICAL: MONGODB_URI environment variable is not defined!');
