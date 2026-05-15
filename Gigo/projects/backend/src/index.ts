@@ -12,11 +12,20 @@ import mongoose from 'mongoose';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
-const MONGODB_URI = process.env.MONGODB_URI || '';
+const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('✅ Connected to MongoDB'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+if (!MONGODB_URI) {
+  console.error('❌ CRITICAL: MONGODB_URI environment variable is not defined!');
+} else {
+  mongoose.connect(MONGODB_URI)
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch((err) => {
+      console.error('❌ MongoDB connection error:', err);
+      if (err.name === 'MongoParseError') {
+        console.error('👉 TIP: Check if your MONGODB_URI starts with "mongodb://" or "mongodb+srv://" in your environment variables.');
+      }
+    });
+}
 
 /* ── CORS ── */
 app.use(
