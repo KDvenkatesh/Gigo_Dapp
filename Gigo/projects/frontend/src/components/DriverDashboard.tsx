@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, ShieldAlert, Timer, Trash2, FileText, LogOut, User, X } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, Timer, Trash2, FileText, LogOut, User, X } from 'lucide-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { BottomSheet } from './BottomSheet'
 import { EarningsTab } from './ai/EarningsTab'
