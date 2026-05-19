@@ -161,6 +161,11 @@ CID stored in backend/blockchain
 <p align="center">
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0ef7a6d4-4141-4894-9e2b-7b80652ff1f1" />
 
+
+<p align="center">
+  <img width="1536" height="1024" alt="GigGo Updated Architecture" src="./assets/giggo-architecture.png" />
+</p>
+
  
 
 </p>
