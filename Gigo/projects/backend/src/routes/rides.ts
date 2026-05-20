@@ -10,6 +10,7 @@ const algodClient = new algosdk.Algodv2('', ALGORAND_NODE, '');
 
 const TREASURY_MNEMONIC = process.env.TREASURY_MNEMONIC || '';
 const APP_ID = Number(process.env.RIDE_APP_ID || '762339765');
+const GIGC_ASSET_ID = Number(process.env.GIGC_ASSET_ID || '762258472');
 
 // Haversine formula: returns distance in km between two GPS coordinates
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -22,6 +23,14 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
       Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLon / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// Helper to generate the 10-byte box key (2-byte prefix + 8-byte big-endian uint64 ride ID)
+function getBoxKey(prefix: string, rideId: bigint): Uint8Array {
+  const prefixBytes = Buffer.from(prefix);
+  const rideIdBytes = Buffer.alloc(8);
+  rideIdBytes.writeBigUInt64BE(rideId);
+  return new Uint8Array(Buffer.concat([prefixBytes, rideIdBytes]));
 }
 
 // Get all active rides
@@ -161,6 +170,12 @@ router.post('/check-timeout', async (req, res) => {
         sender: treasuryAccount.addr,
         suggestedParams: { ...suggestedParams, fee: 2000, flatFee: true },
         signer: algosdk.makeBasicAccountTransactionSigner(treasuryAccount),
+        boxes: [
+          { appIndex: APP_ID, name: getBoxKey('c_', BigInt(rideId)) },
+          { appIndex: APP_ID, name: getBoxKey('f_', BigInt(rideId)) }
+        ],
+        appAccounts: [ride.customer],
+        appForeignAssets: [GIGC_ASSET_ID]
       });
 
       const result = await atc.execute(algodClient, 4);
@@ -268,6 +283,12 @@ router.post('/end-ride', async (req, res) => {
         sender: treasuryAccount.addr,
         suggestedParams: { ...suggestedParams, fee: 2000, flatFee: true },
         signer: algosdk.makeBasicAccountTransactionSigner(treasuryAccount),
+        boxes: [
+          { appIndex: APP_ID, name: getBoxKey('c_', BigInt(rideId)) },
+          { appIndex: APP_ID, name: getBoxKey('f_', BigInt(rideId)) }
+        ],
+        appAccounts: [driverAddress],
+        appForeignAssets: [GIGC_ASSET_ID]
       });
 
       const result = await atc.execute(algodClient, 4);
