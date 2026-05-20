@@ -169,7 +169,7 @@ UPDATED ARCHITECTURE
 </p>
 
 ```text
-                                                          ┌──────────────────────────┐
+                                      ┌──────────────────────────┐
                                       │      GigGo Users         │
                                       │ Passengers • Drivers     │
                                       │ Merchants • Admins       │
@@ -204,9 +204,9 @@ UPDATED ARCHITECTURE
 
 ┌──────────────────┐  ┌──────────────────┐   ┌────────────────────┐
 │ GIGC ASA Token   │  │ Self-Service     │   │ MongoDB Database   │
-│ Payments          │  │ ASA Top-Up System│   │ Users • Rides      │
-│ Rewards • Payouts │  │ Auto Verification│   │ Wallet Records     │
-└─────────┬────────┘  │ Treasury Transfer │   │ Transactions       │
+│ Payments         │  │ASA Top-Up System │   │ Users • Rides      │
+│ Rewards • Payouts│  │Auto Verification │   │ Wallet Records     │
+└─────────┬────────┘  │ Treasury Transfer│   │Transactions        │
           │           └──────────────────┘   └────────────────────┘
           │
           ▼
