@@ -8,8 +8,8 @@ const router = express.Router();
 const ALGORAND_NODE = process.env.ALGORAND_NODE || 'https://testnet-api.algonode.cloud';
 const algodClient = new algosdk.Algodv2('', ALGORAND_NODE, '');
 
-const TREASURY_MNEMONIC = process.env.TREASURY_MNEMONIC || '';
-const APP_ID = Number(process.env.RIDE_APP_ID || '762339765');
+const TREASURY_MNEMONIC = process.env.TREASURY_MNEMONIC || 'magic mushroom lazy turtle erode matter aspect morning butter join where inherit step guitar skull skill sentence family unveil fortune true bless collect able hazard';
+const APP_ID = Number(process.env.RIDE_APP_ID || '762925572');
 const GIGC_ASSET_ID = Number(process.env.GIGC_ASSET_ID || '762258472');
 
 // Haversine formula: returns distance in km between two GPS coordinates
