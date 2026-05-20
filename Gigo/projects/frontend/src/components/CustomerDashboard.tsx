@@ -671,25 +671,28 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
          </AnimatePresence>
 
          {/* Success overlay */}
-         <AnimatePresence>
-            {showSuccess && (
-               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="absolute inset-0 z-[9999] flex flex-col items-center justify-center bg-[#05060a]/90 backdrop-blur-md">
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }}
-                     className="flex h-24 w-24 items-center justify-center rounded-2xl bg-emerald-500">
-                     <ShieldCheck className="h-12 w-12 text-white" />
+         {typeof document !== 'undefined' && createPortal(
+            <AnimatePresence>
+               {showSuccess && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                     className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#05060a]/90 backdrop-blur-md">
+                     <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }}
+                        className="flex h-24 w-24 items-center justify-center rounded-2xl bg-emerald-500">
+                        <ShieldCheck className="h-12 w-12 text-white" />
+                     </motion.div>
+                     <motion.h2 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
+                        className="mt-6 text-3xl font-bold text-white">
+                        Ride Requested!
+                     </motion.h2>
+                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+                        className="mt-2 text-white/50">
+                        Waiting for a rider to accept...
+                     </motion.p>
                   </motion.div>
-                  <motion.h2 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-                     className="mt-6 text-3xl font-bold text-white">
-                     Ride Requested!
-                  </motion.h2>
-                  <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-                     className="mt-2 text-white/50">
-                     Waiting for a rider to accept...
-                  </motion.p>
-               </motion.div>
-            )}
-         </AnimatePresence>
+               )}
+            </AnimatePresence>,
+            document.body
+         )}
 
          <PWAInstallFooter />
       </div>
