@@ -312,4 +312,70 @@ router.post('/end-ride', async (req, res) => {
   }
 });
 
+// Background Auto-Scanner to refund timed out rides automatically
+async function performAutomaticTimeoutScan() {
+  try {
+    const activeRides = await Ride.find({ status: 'RIDE_STARTED' });
+    if (!activeRides || activeRides.length === 0) return;
+
+    for (const ride of activeRides) {
+      const startedAt = ride.rideStartedAt;
+      if (!startedAt) continue;
+
+      const elapsedMs = Date.now() - new Date(startedAt).getTime();
+      const elapsedMins = elapsedMs / 60000;
+
+      // 10 minutes timeout limit
+      if (elapsedMins >= 10) {
+        console.log(`⏰ [Auto-Scanner] Ride ${ride.rideId} timed out after ${elapsedMins.toFixed(1)} mins. Executing automatic refund...`);
+        
+        if (!TREASURY_MNEMONIC) {
+          console.error('❌ [Auto-Scanner] TREASURY_MNEMONIC not configured — skipping refund');
+          continue;
+        }
+
+        try {
+          const treasuryAccount = algosdk.mnemonicToSecretKey(TREASURY_MNEMONIC.trim());
+          const suggestedParams = await algodClient.getTransactionParams().do();
+          const refundMethodSig = 'cancel_and_refund(uint64)void';
+          const abiMethod = new ABIMethod(ABIMethod.fromSignature(refundMethodSig).toJSON());
+
+          const atc = new algosdk.AtomicTransactionComposer();
+          atc.addMethodCall({
+            appID: APP_ID,
+            method: abiMethod,
+            methodArgs: [BigInt(ride.rideId)],
+            sender: treasuryAccount.addr,
+            suggestedParams: { ...suggestedParams, fee: 2000, flatFee: true },
+            signer: algosdk.makeBasicAccountTransactionSigner(treasuryAccount),
+            boxes: [
+              { appIndex: APP_ID, name: getBoxKey('c_', BigInt(ride.rideId)) },
+              { appIndex: APP_ID, name: getBoxKey('f_', BigInt(ride.rideId)) }
+            ],
+            appAccounts: [ride.customer],
+            appForeignAssets: [GIGC_ASSET_ID]
+          });
+
+          const result = await atc.execute(algodClient, 4);
+          const refundTxId = result.txIDs[0];
+
+          await Ride.findOneAndUpdate(
+            { rideId: ride.rideId },
+            { status: 'CANCELLED', paymentLocked: false }
+          );
+
+          console.log(`💸 [Auto-Scanner] Automatically refunded ride ${ride.rideId} to customer ${ride.customer} — TxID: ${refundTxId}`);
+        } catch (chainErr: any) {
+          console.error(`❌ [Auto-Scanner] Automatic refund failed for ride ${ride.rideId}:`, chainErr?.message);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('❌ [Auto-Scanner] Error performing background timeout scan:', err);
+  }
+}
+
+// Start background auto-scanner task every 30 seconds
+setInterval(performAutomaticTimeoutScan, 30000);
+
 export default router;
