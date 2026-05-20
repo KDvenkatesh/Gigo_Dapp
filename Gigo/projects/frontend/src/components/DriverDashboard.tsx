@@ -389,18 +389,9 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                         ) : null}
 
                         {item.status === RideStatus.RIDE_COMPLETED && item.rider === ride.activeAddress ? (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              ride.setFocusedRideId(item.rideId)
-                              void ride.releasePayment(item.rideId, item.rider || ride.activeAddress || '')
-                            }}
-                            disabled={ride.actionState.payout}
-                            className="rounded-[22px] bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
-                          >
-                            {ride.actionState.payout ? 'Releasing payment' : 'Release payment'}
-                          </button>
+                          <div className="rounded-[22px] bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-400 border border-amber-500/20">
+                            Waiting for customer to release payment
+                          </div>
                         ) : null}
                       </div>
                     </motion.div>
@@ -491,18 +482,10 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="mt-0.5 h-5 w-5 text-amber-100" />
                       <div>
-                        <p className="text-sm font-semibold text-white">Destination reached</p>
+                        <p className="text-sm font-semibold text-white">Ride Completed</p>
                         <p className="mt-1 text-sm leading-6 text-white/62">
-                          Ride is complete! You can now request the payout from the escrow.
+                          You have successfully completed the ride! Please wait for the customer to release the GIGC payment from the escrow on their dashboard.
                         </p>
-                        <button
-                          type="button"
-                          onClick={() => void ride.releasePayment(activeRide.rideId, activeRide.rider || ride.activeAddress || '')}
-                          disabled={ride.actionState.payout}
-                          className="mt-3 rounded-[20px] bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
-                        >
-                          {ride.actionState.payout ? 'Releasing payment' : 'Release payment to rider'}
-                        </button>
                       </div>
                     </div>
                   </div>
