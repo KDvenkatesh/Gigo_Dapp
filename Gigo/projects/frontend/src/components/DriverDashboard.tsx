@@ -162,14 +162,26 @@ function DriverProfileDropdown({
 
 type RideHook = ReturnType<typeof useRideContract>
 
+// Haversine distance in km between two lat/lng points
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371
+  const dLat = ((lat2 - lat1) * Math.PI) / 180
+  const dLon = ((lon2 - lon1) * Math.PI) / 180
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
 export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () => void }) {
   const activeRide = ride.focusedRide
-  const { location: driverLocation } = useGeolocation()
+  const { location: driverLocation, locationError: gpsError } = useGeolocation()
   const { active, setActive } = useDriverContext()
   const [activeTab, setActiveTab] = useState<'rides' | 'earnings'>('rides')
   const [otpOpen, setOtpOpen] = useState(false)
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState('')
+  const [endRideError, setEndRideError] = useState<string | null>(null)
   // Metadata is now fetched automatically via MongoDB in useRideContract
 
   async function handleVerifyOtp() {
@@ -376,15 +388,21 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                         {item.status === RideStatus.RIDE_STARTED && item.rider === ride.activeAddress ? (
                           <button
                             type="button"
-                            onClick={(event) => {
+                            onClick={async (event) => {
                               event.stopPropagation()
                               ride.setFocusedRideId(item.rideId)
-                              void ride.endRide(item.rideId, driverLocation ?? undefined)
+                              setEndRideError(null)
+                              try {
+                                await ride.endRide(item.rideId, driverLocation ?? undefined)
+                              } catch (e: any) {
+                                const msg = e?.response?.data?.error || e?.message || 'Failed to end ride'
+                                setEndRideError(msg)
+                              }
                             }}
                             disabled={ride.actionState.endRide}
                             className="rounded-[22px] bg-gradient-to-r from-white via-white to-slate-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
                           >
-                            {ride.actionState.endRide ? 'Processing payout...' : 'End ride & claim payment'}
+                            {ride.actionState.endRide ? '⏳ Processing...' : '📍 End ride & claim payment'}
                           </button>
                         ) : null}
 
@@ -477,27 +495,95 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                 ) : null}
 
-                {activeRide.status === RideStatus.RIDE_STARTED && activeRide.rider === ride.activeAddress ? (
-                  <div className="mt-5 rounded-[28px] border border-blue-300/18 bg-blue-300/10 p-4">
-                    <div className="flex items-start gap-3">
-                      <MapPinned className="mt-0.5 h-5 w-5 text-blue-300" />
-                      <div>
-                        <p className="text-sm font-semibold text-white">Ride in Progress</p>
-                        <p className="mt-1 text-sm leading-6 text-white/62">
-                          Navigate to the drop point. Once you arrive (within 0.5 km), click <strong>"End ride &amp; claim payment"</strong> — GPS will be verified and your GIGC fare will be sent automatically!
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => void ride.endRide(activeRide.rideId, driverLocation ?? undefined)}
-                          disabled={ride.actionState.endRide}
-                          className="mt-3 rounded-[20px] bg-gradient-to-r from-white via-white to-slate-300 px-5 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
-                        >
-                          {ride.actionState.endRide ? '⏳ Processing payout...' : '📍 End ride & claim payment'}
-                        </button>
+                {activeRide.status === RideStatus.RIDE_STARTED && activeRide.rider === ride.activeAddress ? (() => {
+                  const dropLat = activeRide.drop?.lat
+                  const dropLng = activeRide.drop?.lng
+                  const distKm = (dropLat != null && dropLng != null && driverLocation)
+                    ? haversineKm(driverLocation.lat, driverLocation.lng, dropLat, dropLng)
+                    : null
+                  const isNear = distKm !== null && distKm <= 0.5
+
+                  return (
+                    <div className="mt-5 rounded-[28px] border border-blue-300/18 bg-blue-300/10 p-4">
+                      <div className="flex items-start gap-3">
+                        <MapPinned className="mt-0.5 h-5 w-5 text-blue-300 shrink-0" />
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-white">Ride in Progress</p>
+
+                          {/* Live GPS distance indicator */}
+                          {distKm !== null ? (
+                            <div className={`mt-2 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold border ${
+                              isNear
+                                ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+                                : 'bg-red-500/20 border-red-500/30 text-red-400'
+                            }`}>
+                              {isNear ? '✅' : '📍'} {distKm < 1 ? `${(distKm * 1000).toFixed(0)} m` : `${distKm.toFixed(2)} km`} from drop point
+                              {isNear ? ' — You have arrived!' : ' remaining'}
+                            </div>
+                          ) : (
+                            <div className="mt-2 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold border bg-amber-500/20 border-amber-500/30 text-amber-400">
+                              📡 Acquiring GPS...
+                            </div>
+                          )}
+
+                          {/* GPS unavailable warning */}
+                          {gpsError && (
+                            <p className="mt-2 text-xs text-amber-400">⚠️ {gpsError}</p>
+                          )}
+
+                          {/* Not near drop — show clear warning BEFORE button */}
+                          {distKm !== null && !isNear && (
+                            <div className="mt-3 rounded-[16px] border border-red-500/30 bg-red-500/10 px-4 py-3">
+                              <p className="text-sm font-bold text-red-400">🚫 Not at drop location yet!</p>
+                              <p className="mt-1 text-xs text-red-300/80">
+                                You are <strong>{distKm < 1 ? `${(distKm * 1000).toFixed(0)} meters` : `${distKm.toFixed(2)} km`}</strong> away from the customer's drop point.<br />
+                                Please drive to <strong>{activeRide.drop?.label}</strong> and get within 500 meters before ending the ride.
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Backend / network error display */}
+                          {endRideError && (
+                            <div className="mt-3 rounded-[16px] border border-red-500/30 bg-red-500/10 px-4 py-3">
+                              <p className="text-sm font-bold text-red-400">❌ Could not end ride</p>
+                              <p className="mt-1 text-xs text-red-300/80">{endRideError}</p>
+                              <button
+                                type="button"
+                                onClick={() => setEndRideError(null)}
+                                className="mt-2 text-xs text-red-400 underline"
+                              >Dismiss</button>
+                            </div>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={async () => {
+                              setEndRideError(null)
+                              try {
+                                await ride.endRide(activeRide.rideId, driverLocation ?? undefined)
+                              } catch (e: any) {
+                                const msg = e?.response?.data?.error || e?.message || 'Failed to end ride'
+                                setEndRideError(msg)
+                              }
+                            }}
+                            disabled={ride.actionState.endRide}
+                            className={`mt-4 w-full rounded-[20px] px-5 py-3 text-sm font-black text-slate-950 disabled:opacity-45 transition ${
+                              isNear
+                                ? 'bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-400 shadow-[0_4px_24px_rgba(52,211,153,0.35)]'
+                                : 'bg-gradient-to-r from-white via-white to-slate-300 opacity-60'
+                            }`}
+                          >
+                            {ride.actionState.endRide ? '⏳ Processing payout...' : isNear ? '✅ End ride & claim payment' : '📍 End ride & claim payment'}
+                          </button>
+
+                          {!isNear && distKm !== null && (
+                            <p className="mt-2 text-center text-xs text-white/40">Button is enabled but payment will be rejected until you reach the drop point</p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : null}
+                  )
+                })() : null}
 
                 {activeRide.status === RideStatus.RIDE_COMPLETED && activeRide.rider === ride.activeAddress ? (
                   <div className="mt-5 rounded-[28px] border border-emerald-300/18 bg-emerald-300/10 p-4">
