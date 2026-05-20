@@ -1,11 +1,14 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, Camera, CarFront, CheckCircle2, Clock3, Gem, History, Loader2, LoaderCircle, MapPin, RefreshCw, Search, ShieldCheck, Trash2, UserRound, X, Zap } from 'lucide-react'
+import { ArrowLeft, Camera, CarFront, CheckCircle2, Clock3, Gem, History, Loader2, LoaderCircle, MapPin, RefreshCw, Search, ShieldCheck, Trash2, UserRound, X, Zap, Coins, Wallet } from 'lucide-react'
 import { useWallet } from '@txnlab/use-wallet-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { NFTPassCard } from './NFTPassCard'
 import { BookingMap } from './BookingMap'
 import { PWAInstallFooter } from './PWAInstallFooter'
 import { ThemeToggle } from './ThemeToggle'
+import algosdk from 'algosdk'
+import axios from 'axios'
+import { algorandConfig } from '../config/algorand'
 
 import { PricePrediction } from './ai/PricePrediction'
 import { useGeolocation } from '../hooks/useGeolocation'
@@ -15,8 +18,10 @@ import { calculateDistanceKm } from '../lib/location'
 import { cn } from '../lib/cn'
 import { RideStatus, type PlaceSuggestion, type RideLocation, type AppRole } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { ipfs } from '../lib/ipfs'
+
 
 type RideHook = ReturnType<typeof useRideContract>
 
@@ -174,7 +179,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
 
             <div className="shrink-0 flex items-center gap-2">
                <ThemeToggle />
-               <CustomerProfileDropdown onSwitchRole={onSwitchRole} currentTab={tab} onTabChange={setTab} rideCount={ride.customerRides.length} />
+               <CustomerProfileDropdown ride={ride} onSwitchRole={onSwitchRole} currentTab={tab} onTabChange={setTab} rideCount={ride.customerRides.length} />
             </div>
          </div>
 
@@ -685,11 +690,13 @@ function PassesTabContent() {
 }
 
 function CustomerProfileDropdown({ 
+   ride,
    onSwitchRole, 
    currentTab, 
    onTabChange, 
    rideCount 
 }: { 
+   ride: RideHook,
    onSwitchRole: (role: AppRole) => void, 
    currentTab?: string, 
    onTabChange?: (tab: 'book' | 'history' | 'passes') => void,
@@ -699,6 +706,32 @@ function CustomerProfileDropdown({
    const [isOpen, setIsOpen] = useState(false)
    const [profilePhoto, setProfilePhoto] = useState<string | null>(null)
    const [isUploading, setIsUploading] = useState(false)
+
+   const [gigcBalance, setGigcBalance] = useState<number | null>(null)
+   const [isOptedIn, setIsOptedIn] = useState<boolean>(true)
+   const [isFetchingBalance, setIsFetchingBalance] = useState(false)
+   const [isTopUpOpen, setIsTopUpOpen] = useState(false)
+
+   const fetchGigcBalance = useCallback(async () => {
+      if (!activeAddress) return;
+      setIsFetchingBalance(true);
+      try {
+         const { optedIn, balance } = await ride.checkAsaBalance(activeAddress);
+         setIsOptedIn(optedIn);
+         setGigcBalance(Number(balance) / 1000000);
+      } catch (err) {
+         console.error('Error fetching GIGC balance:', err);
+      } finally {
+         setIsFetchingBalance(false);
+      }
+   }, [activeAddress, ride]);
+
+   useEffect(() => {
+      if (activeAddress) {
+         fetchGigcBalance();
+      }
+   }, [activeAddress, fetchGigcBalance]);
+
 
    useEffect(() => {
       if (activeAddress) {
@@ -841,15 +874,369 @@ function CustomerProfileDropdown({
                      </button>
                   </div>
 
+                  <div className="mb-4 p-3.5 rounded-2xl border border-white/5 bg-white/[0.03] backdrop-blur-xl">
+                      <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-white/40 mb-2 font-bold">
+                         <span>Status</span>
+                         <span className="font-semibold text-emerald-400 flex items-center gap-1.5 normal-case font-mono">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            Connected
+                         </span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs font-semibold">
+                         <span className="text-white/60">Your GIGC Balance</span>
+                         <span className="font-bold text-white flex items-center gap-1">
+                            {isFetchingBalance ? (
+                               <Loader2 className="w-3.5 h-3.5 animate-spin text-white/40" />
+                            ) : (
+                               `${gigcBalance !== null ? gigcBalance.toLocaleString() : '0'} GIGC`
+                            )}
+                         </span>
+                      </div>
+                   </div>
+
+                   <button 
+                      onClick={() => { setIsOpen(false); setIsTopUpOpen(true) }}
+                      className="w-full flex items-center justify-center gap-2 py-3 mb-2.5 rounded-xl bg-white text-black hover:bg-white/90 active:scale-[0.98] transition font-bold text-sm shadow-lg shadow-black/20"
+                   >
+                      <Coins className="w-4 h-4" />
+                      Top-Up GIGC
+                   </button>
+
                   <button 
                      onClick={() => activeWallet?.disconnect()}
-                     className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition font-semibold text-sm"
+                     className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 active:scale-[0.98] transition font-semibold text-sm"
                   >
-                     Disconnect
+                     Disconnect Wallet
                   </button>
                </motion.div>
             )}
          </AnimatePresence>
+
+         {typeof document !== 'undefined' && createPortal(
+            <AnimatePresence>
+               {isTopUpOpen && (
+                  <TopUpModal 
+                     ride={ride}
+                     activeAddress={activeAddress}
+                     isOptedIn={isOptedIn}
+                     onClose={() => setIsTopUpOpen(false)}
+                     onSuccess={() => {
+                        fetchGigcBalance();
+                        setIsTopUpOpen(false);
+                     }}
+                  />
+               )}
+            </AnimatePresence>,
+            document.body
+         )}
+      </div>
+   )
+}
+
+// ── Premium Top-Up Modal Component ──
+interface TopUpModalProps {
+   ride: RideHook;
+   activeAddress: string;
+   isOptedIn: boolean;
+   onClose: () => void;
+   onSuccess: () => void;
+}
+
+function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopUpModalProps) {
+   const [gigcAmount, setGigcAmount] = useState<string>('100')
+   const [status, setStatus] = useState<'idle' | 'awaiting-sig' | 'processing' | 'success' | 'error'>('idle')
+   const [errorMsg, setErrorMsg] = useState<string>('')
+   const [optInLoading, setOptInLoading] = useState(false)
+   const [localIsOptedIn, setLocalIsOptedIn] = useState(isOptedIn)
+   const { transactionSigner } = useWallet()
+
+   let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
+   if (typeof window !== 'undefined') {
+      if (window.location.hostname === 'localhost') {
+         BACKEND_URL = 'http://localhost:3001'
+      } else if (BACKEND_URL.includes('localhost')) {
+         BACKEND_URL = 'https://gigo-dapp.onrender.com'
+      }
+   }
+
+   const conversionRatio = 100 // 100 GIGC = 1 ALGO
+   const gigcNum = parseFloat(gigcAmount) || 0
+   const algoAmount = gigcNum / conversionRatio
+
+   useEffect(() => {
+      let isMounted = true
+      const checkOptIn = async () => {
+         try {
+            const { optedIn } = await ride.checkAsaBalance(activeAddress)
+            if (isMounted) setLocalIsOptedIn(optedIn)
+         } catch (err) {
+            console.error('Failed to check opt in:', err)
+         }
+      }
+      checkOptIn()
+      return () => { isMounted = false }
+   }, [activeAddress, ride])
+
+   const parseTransactionError = (err: any, fallbackMessage: string): string => {
+      const msg = err?.message || err?.response?.data?.error || '';
+      if (!msg) return fallbackMessage;
+
+      const lower = msg.toLowerCase();
+      if (lower.includes('below min') || lower.includes('minimum balance') || lower.includes('below minimum balance')) {
+         return 'Insufficient ALGO in your wallet. Algorand requires a minimum balance of 0.1 ALGO base, plus 0.1 ALGO for each asset you opt into (total 0.2 ALGO for GIGC). Please get more ALGO first.';
+      }
+      if (lower.includes('overspend') || lower.includes('insufficient funds')) {
+         return 'Insufficient ALGO balance to cover the payment amount and transaction fees.';
+      }
+      return msg;
+   };
+
+   const handleOptIn = async () => {
+      setOptInLoading(true)
+      setErrorMsg('')
+      try {
+         const success = await ride.optInToAsa()
+         if (success) {
+            setLocalIsOptedIn(true)
+         } else {
+            setErrorMsg('Opt-in transaction was not signed or failed.')
+         }
+      } catch (err: any) {
+         setErrorMsg(parseTransactionError(err, 'Opt-in failed. Please try again.'))
+      } finally {
+         setOptInLoading(false)
+      }
+   }
+
+   const handleConfirm = async () => {
+      if (gigcNum <= 0) {
+         setErrorMsg('Please enter a valid GIGC amount.')
+         return
+      }
+
+      setStatus('awaiting-sig')
+      setErrorMsg('')
+
+      try {
+         const algod = new algosdk.Algodv2(algorandConfig.algodToken, algorandConfig.algodServer, algorandConfig.algodPort)
+         const suggestedParams = await algod.getTransactionParams().do()
+         const microAlgos = Math.round(algoAmount * 1000000)
+
+         // 1. User signs ALGO payment transaction to treasury wallet
+         const paymentTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+            sender: activeAddress,
+            receiver: 'FDSKCI2DHPIOTFR2CXHPESMLAUA4Y66B6KKGJ2CDKDY3UX34W43QVN52NA',
+            amount: microAlgos,
+            suggestedParams,
+         })
+
+         const atc = new algosdk.AtomicTransactionComposer()
+         atc.addTransaction({ txn: paymentTxn, signer: transactionSigner })
+         
+         const result = await atc.execute(algod, 4)
+         const txId = result.txIDs[0]
+
+         setStatus('processing')
+
+         // 2. Call backend to verify and release GIGC
+         const response = await axios.post(`${BACKEND_URL}/api/topup`, {
+            txId,
+            gigcAmount: gigcNum,
+            sender: activeAddress
+         })
+
+         if (response.data.success) {
+            setStatus('success')
+            setTimeout(() => {
+               onSuccess()
+             }, 2000)
+          } else {
+             throw new Error(response.data.error || 'Failed to verify transaction on the backend.')
+          }
+       } catch (err: any) {
+          console.error('Top-up failed:', err)
+          setErrorMsg(parseTransactionError(err, 'Top-Up failed.'))
+          setStatus('error')
+       }
+    }
+
+   return (
+      <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md overflow-y-auto">
+         <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="w-full max-w-md overflow-y-auto max-h-[90vh] rounded-[32px] border border-white/10 bg-[#0f111a]/95 shadow-2xl backdrop-blur-2xl"
+         >
+            <div className="p-6 relative">
+               <button
+                  onClick={onClose}
+                  className="absolute right-4 top-4 rounded-full border border-white/5 bg-white/[0.02] p-2 text-white/55 transition hover:bg-white/[0.08] hover:text-white"
+               >
+                  <X className="w-4 h-4" />
+               </button>
+
+               <div className="flex items-center gap-3 mb-6">
+                  <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400">
+                     <Coins className="w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                     <h3 className="text-xl font-bold text-white">Top-Up GIGC</h3>
+                     <p className="text-xs text-white/40">Purchase ride credits using ALGO</p>
+                  </div>
+               </div>
+
+               {status === 'idle' && (
+                  <div className="space-y-5 text-left">
+                     {!localIsOptedIn ? (
+                        <div className="rounded-2xl border border-amber-500/15 bg-amber-500/[0.04] p-4 text-sm text-amber-200/80">
+                           <div className="flex items-start gap-2.5">
+                              <Wallet className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                              <div>
+                                 <p className="font-semibold text-white">Opt-In Required</p>
+                                 <p className="mt-1 text-xs text-white/50 leading-relaxed">
+                                    To hold and receive GIGC ride credits (ASA), you must opt-in your account first. This requires a small on-chain transaction.
+                                 </p>
+                               </div>
+                           </div>
+                           <button
+                              onClick={handleOptIn}
+                              disabled={optInLoading}
+                              className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black py-2.5 font-bold text-xs uppercase tracking-wider transition"
+                           >
+                              {optInLoading ? (
+                                 <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                 'Opt-In to GIGC ASA'
+                              )}
+                           </button>
+                        </div>
+                     ) : (
+                        <>
+                           <div>
+                              <label className="block text-xs font-semibold text-white/40 uppercase tracking-widest mb-2">
+                                 Enter GIGC Amount
+                              </label>
+                              <div className="relative">
+                                 <input
+                                    type="number"
+                                    min="1"
+                                    step="1"
+                                    value={gigcAmount}
+                                    onChange={(e) => {
+                                       setGigcAmount(e.target.value)
+                                       setErrorMsg('')
+                                    }}
+                                    placeholder="e.g. 100"
+                                    className="w-full rounded-2xl border border-white/10 bg-white/[0.02] py-4 pl-5 pr-16 text-lg font-bold text-white placeholder-white/20 outline-none focus:border-emerald-500/50 transition"
+                                 />
+                                 <span className="absolute right-5 top-1/2 -translate-y-1/2 font-bold text-sm text-white/40">
+                                    GIGC
+                                 </span>
+                              </div>
+                           </div>
+
+                           <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 space-y-2">
+                              <div className="flex items-center justify-between text-xs text-white/40">
+                                 <span>Exchange Rate</span>
+                                 <span className="font-medium text-white/80">100 GIGC = 1 ALGO</span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm">
+                                 <span className="font-semibold text-white/70">Payment Amount</span>
+                                 <span className="font-black text-emerald-400">
+                                    {algoAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ALGO
+                                 </span>
+                              </div>
+                           </div>
+                        </>
+                     )}
+
+                     {errorMsg && (
+                        <div className="rounded-xl border border-red-500/15 bg-red-500/[0.05] p-3 text-xs text-red-400">
+                           {errorMsg}
+                        </div>
+                     )}
+
+                     {localIsOptedIn && (
+                        <div className="flex gap-3">
+                           <button
+                              onClick={onClose}
+                              className="flex-1 rounded-xl border border-white/10 bg-white/[0.02] py-3 text-sm font-semibold text-white hover:bg-white/[0.06] transition"
+                           >
+                              Cancel
+                           </button>
+                           <button
+                              onClick={handleConfirm}
+                              disabled={gigcNum <= 0}
+                              className="flex-1 rounded-xl bg-emerald-500 py-3 text-sm font-bold text-black hover:bg-emerald-400 disabled:opacity-40 transition"
+                           >
+                              Confirm Purchase
+                           </button>
+                        </div>
+                     )}
+                  </div>
+               )}
+
+               {status === 'awaiting-sig' && (
+                  <div className="flex flex-col items-center justify-center py-10 text-center">
+                     <Loader2 className="w-12 h-12 text-emerald-400 animate-spin mb-4" />
+                     <h4 className="text-lg font-bold text-white font-mono">Awaiting Wallet Signature</h4>
+                     <p className="mt-2 text-xs text-white/40 max-w-xs leading-relaxed">
+                        Please open Pera Wallet on your device and sign the ALGO payment transaction to proceed.
+                     </p>
+                  </div>
+               )}
+
+               {status === 'processing' && (
+                  <div className="flex flex-col items-center justify-center py-10 text-center">
+                     <Loader2 className="w-12 h-12 text-emerald-400 animate-spin mb-4" />
+                     <h4 className="text-lg font-bold text-white font-mono">Processing Payment</h4>
+                     <p className="mt-2 text-xs text-white/40 max-w-xs leading-relaxed">
+                        Verifying payment transaction on the blockchain and transferring GIGC ASA tokens to your wallet.
+                     </p>
+                  </div>
+               )}
+
+               {status === 'success' && (
+                  <div className="flex flex-col items-center justify-center py-10 text-center">
+                     <div className="w-14 h-14 rounded-2xl bg-emerald-500 flex items-center justify-center text-black mb-4">
+                        <CheckCircle2 className="w-8 h-8" />
+                     </div>
+                     <h4 className="text-xl font-black text-white font-mono">Purchase Successful!</h4>
+                     <p className="mt-2 text-xs text-white/40 max-w-xs leading-relaxed font-mono">
+                        Your payment was verified. GIGC ride credits have been transferred to your wallet.
+                     </p>
+                  </div>
+               )}
+
+               {status === 'error' && (
+                  <div className="space-y-4 text-left">
+                     <div className="flex flex-col items-center justify-center py-6 text-center">
+                        <div className="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center mb-3">
+                           <X className="w-6 h-6" />
+                        </div>
+                        <h4 className="text-lg font-bold text-white font-mono">Purchase Failed</h4>
+                        <p className="mt-1 text-xs text-white/40 max-w-xs leading-relaxed">
+                           An error occurred while processing your top-up.
+                        </p>
+                     </div>
+                     
+                     {errorMsg && (
+                        <div className="rounded-xl border border-red-500/15 bg-red-500/[0.05] p-3 text-xs text-red-400 text-center font-mono">
+                           {errorMsg}
+                        </div>
+                     )}
+
+                     <button
+                        onClick={() => setStatus('idle')}
+                        className="w-full rounded-xl bg-white/10 hover:bg-white/20 py-3 text-sm font-semibold text-white transition"
+                     >
+                        Try Again
+                     </button>
+                  </div>
+               )}
+            </div>
+         </motion.div>
       </div>
    )
 }
