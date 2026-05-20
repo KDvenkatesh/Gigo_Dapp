@@ -169,27 +169,53 @@ UPDATED ARCHITECTURE
 </p>
 
 ```text
-                    ┌────────────────────┐
-                    │    Passenger App   │
-                    └─────────┬──────────┘
-                              │
-                              ▼
-                  ┌─────────────────────┐
-                  │   React PWA Frontend│
-                  └─────────┬───────────┘
-                            │
-          ┌─────────────────┼─────────────────┐
-          ▼                                   ▼
-┌────────────────────┐             ┌────────────────────┐
-│   Node.js Backend  │             │ Algorand Blockchain│
-│ MongoDB + AI Layer │             │ Smart Contracts    │
-└─────────┬──────────┘             └─────────┬──────────┘
-          │                                  │
-          ▼                                  ▼
-┌────────────────────┐             ┌────────────────────┐
-│  Pinata IPFS       │             │ GIGC ASA Payments  │
-│ Document Storage   │             │ Escrow + Payouts   │
-└────────────────────┘             └────────────────────┘
+                                                          ┌──────────────────────────┐
+                                      │      GigGo Users         │
+                                      │ Passengers • Drivers     │
+                                      │ Merchants • Admins       │
+                                      └────────────┬─────────────┘
+                                                   │
+                                                   ▼
+                           ┌──────────────────────────────────────┐
+                           │        React PWA Frontend            │
+                           │ Customer Dashboard • Driver Panel    │
+                           │ Wallet Connect • Booking UI          │
+                           │ GIGC Top-Up • Merchant Features      │
+                           └────────────────┬─────────────────────┘
+                                            │
+                 ┌──────────────────────────┼──────────────────────────┐
+                 ▼                          ▼                          ▼
+
+      ┌───────────────────┐     ┌────────────────────┐     ┌────────────────────┐
+      │ Wallet Integration│     │  Node.js Backend   │     │ AI Recommendation  │
+      │ Pera • Defly      │     │ Express + MongoDB  │     │ & Automation Layer │
+      │ WalletConnect     │     │ Authentication API │     │ Smart Matching     │
+      └─────────┬─────────┘     └─────────┬──────────┘     └────────────────────┘
+                │                         │
+                ▼                         ▼
+     ┌────────────────────┐    ┌──────────────────────────┐
+     │ Algorand Blockchain│    │   Transaction Services   │
+     │ ASA Infrastructure │    │ Booking • Ride Status    │
+     │ Smart Contracts    │    │ Notifications • Escrow   │
+     └─────────┬──────────┘    └──────────┬───────────────┘
+               │                          │
+      ┌────────┼─────────┐                │
+      ▼                  ▼                ▼
+
+┌──────────────────┐  ┌──────────────────┐   ┌────────────────────┐
+│ GIGC ASA Token   │  │ Self-Service     │   │ MongoDB Database   │
+│ Payments          │  │ ASA Top-Up System│   │ Users • Rides      │
+│ Rewards • Payouts │  │ Auto Verification│   │ Wallet Records     │
+└─────────┬────────┘  │ Treasury Transfer │   │ Transactions       │
+          │           └──────────────────┘   └────────────────────┘
+          │
+          ▼
+┌────────────────────┐
+│ Pinata IPFS Storage│
+│ KYC • Documents    │
+│ Ride Proofs        │
+│ Metadata Storage   │
+└────────────────────┘
 ```
 
 ---
