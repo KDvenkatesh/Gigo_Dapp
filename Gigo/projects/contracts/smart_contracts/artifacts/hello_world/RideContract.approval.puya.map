@@ -3,7 +3,7 @@
   "sources": [
     "../../hello_world/contract.py"
   ],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAoBQ;AAAiC;;;;;;AAAjC;AANR;;AAAA;;;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;;;AAAA;;;;;;;;;AAYe;;AAAc;;AAAd;AAAP;AACA;AACe;AAAA;AAAA;AAAA;AACI;;AACF;;;;;;;AAHjB;;;AAIQ;;;AAJR;AAHH;AAAA;AAUA;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAMS;AACgC;AAA3B;AAAA;;AAAA;AAAA;AAAA;AAAA;;AAAJ;AAAP;AAGO;;AAAA;;AAA0B;;AAA1B;AAAP;AACO;;AAAA;;AAAyB;AAAA;AAAA;AAAA;AAAzB;AAAP;AACO;;AAAA;;AAAP;AAAA;AAG4B;;AAAA;;AAA5B;;AAAA;AAAA;AACA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAhBH;AAAA;AAkBA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;;AAAA;AAAA;AAES;AAAA;AACwC;AAA3B;AAAA;;AAAA;AAAA;AAAA;AACnB;AACO;;AAAA;AAAP;AAEO;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEP;AACe;AAAA;AAAA;AAAA;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOA;AAAA;;AACA;;AAjBH;AAAA;AAmBA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAES;AACwC;AAA3B;AAAA;;AAAA;AAAA;AAAA;AACnB;AACO;;AAAA;;AAAA;AAAP;AAEO;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEP;AACe;AAAA;AAAA;AAAA;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOA;AAAA;;AACA;;AAjBH;AAAA",
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAoBQ;AAAiC;;;;;;AAAjC;AANR;;AAAA;;;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;;;AAAA;;;;;;;;;AAYe;;AAAc;;AAAd;AAAP;AACA;AACe;AAAA;AAAA;AAAA;AACI;;AACF;;;;;;;AAHjB;;;AAIQ;;;AAJR;AAHH;AAAA;AAUA;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAMS;AACgC;AAA3B;AAAA;;AAAA;AAAA;AAAA;AAAA;;AAAJ;AAAP;AAGO;;AAAA;;AAA0B;;AAA1B;AAAP;AACO;;AAAA;;AAAyB;AAAA;AAAA;AAAA;AAAzB;AAAP;AACO;;AAAA;;AAAP;AAAA;AAG4B;;AAAA;;AAA5B;;AAAA;AAAA;AACA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAhBH;AAAA;AAkBA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAES;AACwC;AAAA;AAA3B;AAAA;AAAA;AAAA;AAAA;AACnB;AAGQ;;AAAA;AAAD;;;AAA6B;;AAAc;;AAAd;AAA7B;;;;AAAP;AAEO;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEP;AACe;AAAA;AAAA;AAAA;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOA;;AAAA;;AACA;;AAnBH;AAAA;;;;;AAqBA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAES;AACwC;AAA3B;AAAA;;AAAA;AAAA;AAAA;AACnB;AACO;;AAAA;;AAAA;AAAP;AAEO;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEP;AACe;AAAA;AAAA;AAAA;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOA;AAAA;;AACA;;AAjBH;AAAA",
   "op_pc_offset": 0,
   "pc_events": {
     "1": {
@@ -1049,30 +1049,33 @@
       ]
     },
     "206": {
-      "op": "txna ApplicationArgs 2",
-      "defined_out": [
-        "ride_id#0",
-        "rider#0"
-      ],
-      "stack_out": [
-        "ride_id#0",
-        "rider#0"
-      ]
+      "op": "txna ApplicationArgs 2"
     },
     "209": {
       "op": "dup",
       "defined_out": [
         "ride_id#0",
-        "rider#0",
-        "rider#0 (copy)"
+        "rider#0"
       ],
       "stack_out": [
         "ride_id#0",
         "rider#0",
-        "rider#0 (copy)"
+        "rider#0"
       ]
     },
     "210": {
+      "op": "cover 2",
+      "defined_out": [
+        "ride_id#0",
+        "rider#0"
+      ],
+      "stack_out": [
+        "rider#0",
+        "ride_id#0",
+        "rider#0"
+      ]
+    },
+    "212": {
       "op": "len",
       "defined_out": [
         "len%1#0",
@@ -1080,12 +1083,12 @@
         "rider#0"
       ],
       "stack_out": [
-        "ride_id#0",
         "rider#0",
+        "ride_id#0",
         "len%1#0"
       ]
     },
-    "211": {
+    "213": {
       "op": "pushint 32",
       "defined_out": [
         "32",
@@ -1094,13 +1097,13 @@
         "rider#0"
       ],
       "stack_out": [
-        "ride_id#0",
         "rider#0",
+        "ride_id#0",
         "len%1#0",
         "32"
       ]
     },
-    "213": {
+    "215": {
       "op": "==",
       "defined_out": [
         "eq%1#0",
@@ -1108,27 +1111,20 @@
         "rider#0"
       ],
       "stack_out": [
-        "ride_id#0",
         "rider#0",
+        "ride_id#0",
         "eq%1#0"
       ]
     },
-    "214": {
+    "216": {
       "error": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
       "op": "assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
-      "stack_out": [
-        "ride_id#0",
-        "rider#0"
-      ]
-    },
-    "215": {
-      "op": "swap",
       "stack_out": [
         "rider#0",
         "ride_id#0"
       ]
     },
-    "216": {
+    "217": {
       "op": "btoi",
       "defined_out": [
         "rid#0",
@@ -1139,7 +1135,7 @@
         "rid#0"
       ]
     },
-    "217": {
+    "218": {
       "op": "itob",
       "defined_out": [
         "encoded_value%0#0",
@@ -1150,7 +1146,19 @@
         "encoded_value%0#0"
       ]
     },
-    "218": {
+    "219": {
+      "op": "dup",
+      "defined_out": [
+        "encoded_value%0#0",
+        "rider#0"
+      ],
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "encoded_value%0#0"
+      ]
+    },
+    "220": {
       "op": "bytec_1 // \"c_\"",
       "defined_out": [
         "\"c_\"",
@@ -1160,25 +1168,20 @@
       "stack_out": [
         "rider#0",
         "encoded_value%0#0",
+        "encoded_value%0#0",
         "\"c_\""
       ]
     },
-    "219": {
-      "op": "dig 1",
-      "defined_out": [
-        "\"c_\"",
-        "encoded_value%0#0",
-        "encoded_value%0#0 (copy)",
-        "rider#0"
-      ],
+    "221": {
+      "op": "swap",
       "stack_out": [
         "rider#0",
         "encoded_value%0#0",
         "\"c_\"",
-        "encoded_value%0#0 (copy)"
+        "encoded_value%0#0"
       ]
     },
-    "221": {
+    "222": {
       "op": "concat",
       "defined_out": [
         "encoded_value%0#0",
@@ -1191,22 +1194,21 @@
         "map_prefixed_key%0#0"
       ]
     },
-    "222": {
+    "223": {
       "op": "dup",
       "defined_out": [
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "map_prefixed_key%0#0 (copy)",
         "rider#0"
       ],
       "stack_out": [
         "rider#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "map_prefixed_key%0#0 (copy)"
+        "map_prefixed_key%0#0"
       ]
     },
-    "223": {
+    "224": {
       "op": "box_get",
       "defined_out": [
         "customer#0",
@@ -1223,7 +1225,7 @@
         "exists#0"
       ]
     },
-    "224": {
+    "225": {
       "error": "escrow not found",
       "op": "assert // escrow not found",
       "stack_out": [
@@ -1233,7 +1235,7 @@
         "customer#0"
       ]
     },
-    "225": {
+    "226": {
       "op": "txn Sender",
       "defined_out": [
         "customer#0",
@@ -1250,7 +1252,7 @@
         "tmp%1#1"
       ]
     },
-    "227": {
+    "228": {
       "op": "==",
       "defined_out": [
         "encoded_value%0#0",
@@ -1265,22 +1267,108 @@
         "tmp%2#1"
       ]
     },
-    "228": {
-      "error": "only customer can release payment",
-      "op": "assert // only customer can release payment",
+    "229": {
+      "op": "bnz payout_bool_true@3",
       "stack_out": [
         "rider#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0"
       ]
     },
-    "229": {
-      "op": "bytec_2 // \"f_\"",
+    "232": {
+      "op": "txn Sender",
       "defined_out": [
-        "\"f_\"",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "rider#0"
+        "rider#0",
+        "tmp%3#0"
+      ],
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%3#0"
+      ]
+    },
+    "234": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "rider#0",
+        "tmp%3#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%3#0",
+        "tmp%4#0"
+      ]
+    },
+    "236": {
+      "op": "==",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "rider#0",
+        "tmp%5#0"
+      ],
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%5#0"
+      ]
+    },
+    "237": {
+      "op": "bz payout_bool_false@4",
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ]
+    },
+    "240": {
+      "block": "payout_bool_true@3",
+      "stack_in": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ],
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "or_result%0#0"
+      ],
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "or_result%0#0"
+      ]
+    },
+    "241": {
+      "error": "only customer or admin can release payment",
+      "block": "payout_bool_merge@5",
+      "stack_in": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "or_result%0#0"
+      ],
+      "op": "assert // only customer or admin can release payment",
+      "defined_out": [],
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ]
+    },
+    "242": {
+      "op": "bytec_2 // \"f_\"",
+      "defined_out": [
+        "\"f_\""
       ],
       "stack_out": [
         "rider#0",
@@ -1289,117 +1377,123 @@
         "\"f_\""
       ]
     },
-    "230": {
-      "op": "uncover 2",
+    "243": {
+      "op": "dig 2",
+      "defined_out": [
+        "\"f_\"",
+        "encoded_value%0#0"
+      ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "\"f_\"",
         "encoded_value%0#0"
       ]
     },
-    "232": {
+    "245": {
       "op": "concat",
       "defined_out": [
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0",
-        "rider#0"
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0"
       ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "233": {
+    "246": {
       "op": "dup",
       "defined_out": [
-        "map_prefixed_key%0#0",
+        "encoded_value%0#0",
         "map_prefixed_key%1#0",
-        "map_prefixed_key%1#0 (copy)",
-        "rider#0"
+        "map_prefixed_key%1#0 (copy)"
       ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "map_prefixed_key%1#0 (copy)"
       ]
     },
-    "234": {
+    "247": {
       "op": "box_get",
       "defined_out": [
         "aggregate%box_get%0#0",
         "aggregate%box_get%1#0",
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0",
-        "rider#0"
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0"
       ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "aggregate%box_get%0#0",
         "aggregate%box_get%1#0"
       ]
     },
-    "235": {
+    "248": {
       "error": "check self.escrow_fare entry exists",
       "op": "assert // check self.escrow_fare entry exists",
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "aggregate%box_get%0#0"
       ]
     },
-    "236": {
+    "249": {
       "op": "btoi",
       "defined_out": [
+        "encoded_value%0#0",
         "fare#0",
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0",
-        "rider#0"
+        "map_prefixed_key%1#0"
       ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "fare#0"
       ]
     },
-    "237": {
+    "250": {
       "op": "itxn_begin"
     },
-    "238": {
+    "251": {
       "op": "intc_0 // 0",
       "defined_out": [
         "0",
+        "encoded_value%0#0",
         "fare#0",
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0",
-        "rider#0"
+        "map_prefixed_key%1#0"
       ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "fare#0",
         "0"
       ]
     },
-    "239": {
+    "252": {
       "op": "bytec_0 // \"gigo_asset_id\"",
       "defined_out": [
         "\"gigo_asset_id\"",
         "0",
+        "encoded_value%0#0",
         "fare#0",
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0",
-        "rider#0"
+        "map_prefixed_key%1#0"
       ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "fare#0",
@@ -1407,18 +1501,18 @@
         "\"gigo_asset_id\""
       ]
     },
-    "240": {
+    "253": {
       "op": "app_global_get_ex",
       "defined_out": [
+        "encoded_value%0#0",
         "fare#0",
-        "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "maybe_exists%1#0",
-        "maybe_value%1#0",
-        "rider#0"
+        "maybe_value%1#0"
       ],
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "fare#0",
@@ -1426,146 +1520,226 @@
         "maybe_exists%1#0"
       ]
     },
-    "241": {
+    "254": {
       "error": "check self.gigo_asset_id exists",
       "op": "assert // check self.gigo_asset_id exists",
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "fare#0",
         "maybe_value%1#0"
       ]
     },
-    "242": {
+    "255": {
       "op": "swap",
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "maybe_value%1#0",
         "fare#0"
       ]
     },
-    "243": {
+    "256": {
       "op": "itxn_field AssetAmount",
       "stack_out": [
         "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "maybe_value%1#0"
       ]
     },
-    "245": {
-      "op": "uncover 3",
+    "258": {
+      "op": "dig 4",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "maybe_value%1#0",
+        "rider#0"
+      ],
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "maybe_value%1#0",
         "rider#0"
       ]
     },
-    "247": {
+    "260": {
       "op": "itxn_field AssetReceiver",
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "maybe_value%1#0"
       ]
     },
-    "249": {
+    "262": {
       "op": "itxn_field XferAsset",
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "251": {
+    "264": {
       "op": "intc_2 // axfer",
       "defined_out": [
         "axfer",
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0"
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "rider#0"
       ],
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "axfer"
       ]
     },
-    "252": {
+    "265": {
       "op": "itxn_field TypeEnum",
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "254": {
+    "267": {
       "op": "intc_0 // 0",
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "0"
       ]
     },
-    "255": {
+    "268": {
       "op": "itxn_field Fee",
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "257": {
+    "270": {
       "op": "itxn_submit"
     },
-    "258": {
-      "op": "swap",
+    "271": {
+      "op": "dig 1",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0",
+        "rider#0"
+      ],
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "map_prefixed_key%0#0"
       ]
     },
-    "259": {
+    "273": {
       "op": "box_del",
       "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
+        "rider#0",
         "{box_del}"
       ],
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
         "map_prefixed_key%1#0",
         "{box_del}"
       ]
     },
-    "260": {
+    "274": {
       "op": "pop",
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "261": {
+    "275": {
       "op": "box_del",
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
         "{box_del}"
       ]
     },
-    "262": {
+    "276": {
       "op": "pop",
-      "stack_out": []
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ]
     },
-    "263": {
+    "277": {
       "op": "intc_1 // 1",
       "defined_out": [
-        "1"
+        "1",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "rider#0"
       ],
       "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
         "1"
       ]
     },
-    "264": {
+    "278": {
       "op": "return",
-      "stack_out": []
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ]
     },
-    "265": {
+    "279": {
+      "block": "payout_bool_false@4",
+      "stack_in": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ],
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "or_result%0#0"
+      ],
+      "stack_out": [
+        "rider#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "or_result%0#0"
+      ]
+    },
+    "280": {
+      "op": "b payout_bool_merge@5"
+    },
+    "283": {
       "subroutine": "smart_contracts.hello_world.contract.RideContract.cancel_and_refund[routing]",
       "params": {},
       "block": "cancel_and_refund",
@@ -1578,7 +1752,7 @@
         "ride_id#0"
       ]
     },
-    "268": {
+    "286": {
       "op": "dup",
       "defined_out": [
         "ride_id#0",
@@ -1589,7 +1763,7 @@
         "ride_id#0 (copy)"
       ]
     },
-    "269": {
+    "287": {
       "op": "len",
       "defined_out": [
         "len%0#0",
@@ -1600,7 +1774,7 @@
         "len%0#0"
       ]
     },
-    "270": {
+    "288": {
       "op": "intc_3 // 8",
       "defined_out": [
         "8",
@@ -1613,7 +1787,7 @@
         "8"
       ]
     },
-    "271": {
+    "289": {
       "op": "==",
       "defined_out": [
         "eq%0#0",
@@ -1624,14 +1798,14 @@
         "eq%0#0"
       ]
     },
-    "272": {
+    "290": {
       "error": "invalid number of bytes for arc4.uint64",
       "op": "assert // invalid number of bytes for arc4.uint64",
       "stack_out": [
         "ride_id#0"
       ]
     },
-    "273": {
+    "291": {
       "op": "btoi",
       "defined_out": [
         "rid#0"
@@ -1640,7 +1814,7 @@
         "rid#0"
       ]
     },
-    "274": {
+    "292": {
       "op": "itob",
       "defined_out": [
         "encoded_value%0#0"
@@ -1649,7 +1823,7 @@
         "encoded_value%0#0"
       ]
     },
-    "275": {
+    "293": {
       "op": "bytec_1 // \"c_\"",
       "defined_out": [
         "\"c_\"",
@@ -1660,7 +1834,7 @@
         "\"c_\""
       ]
     },
-    "276": {
+    "294": {
       "op": "dig 1",
       "defined_out": [
         "\"c_\"",
@@ -1673,7 +1847,7 @@
         "encoded_value%0#0 (copy)"
       ]
     },
-    "278": {
+    "296": {
       "op": "concat",
       "defined_out": [
         "encoded_value%0#0",
@@ -1684,7 +1858,7 @@
         "map_prefixed_key%0#0"
       ]
     },
-    "279": {
+    "297": {
       "op": "dup",
       "defined_out": [
         "encoded_value%0#0",
@@ -1697,7 +1871,7 @@
         "map_prefixed_key%0#0 (copy)"
       ]
     },
-    "280": {
+    "298": {
       "op": "box_get",
       "defined_out": [
         "customer#0",
@@ -1712,7 +1886,7 @@
         "exists#0"
       ]
     },
-    "281": {
+    "299": {
       "error": "escrow not found",
       "op": "assert // escrow not found",
       "stack_out": [
@@ -1721,7 +1895,7 @@
         "customer#0"
       ]
     },
-    "282": {
+    "300": {
       "op": "txn Sender",
       "defined_out": [
         "customer#0",
@@ -1736,7 +1910,7 @@
         "tmp%1#0"
       ]
     },
-    "284": {
+    "302": {
       "op": "dig 1",
       "defined_out": [
         "customer#0",
@@ -1753,7 +1927,7 @@
         "customer#0 (copy)"
       ]
     },
-    "286": {
+    "304": {
       "op": "==",
       "defined_out": [
         "customer#0",
@@ -1768,7 +1942,7 @@
         "tmp%2#0"
       ]
     },
-    "287": {
+    "305": {
       "error": "only customer can refund",
       "op": "assert // only customer can refund",
       "stack_out": [
@@ -1777,7 +1951,7 @@
         "customer#0"
       ]
     },
-    "288": {
+    "306": {
       "op": "bytec_2 // \"f_\"",
       "defined_out": [
         "\"f_\"",
@@ -1792,7 +1966,7 @@
         "\"f_\""
       ]
     },
-    "289": {
+    "307": {
       "op": "uncover 3",
       "stack_out": [
         "map_prefixed_key%0#0",
@@ -1801,7 +1975,7 @@
         "encoded_value%0#0"
       ]
     },
-    "291": {
+    "309": {
       "op": "concat",
       "defined_out": [
         "customer#0",
@@ -1814,7 +1988,7 @@
         "map_prefixed_key%1#0"
       ]
     },
-    "292": {
+    "310": {
       "op": "dup",
       "defined_out": [
         "customer#0",
@@ -1829,7 +2003,7 @@
         "map_prefixed_key%1#0 (copy)"
       ]
     },
-    "293": {
+    "311": {
       "op": "box_get",
       "defined_out": [
         "aggregate%box_get%0#0",
@@ -1846,7 +2020,7 @@
         "aggregate%box_get%1#0"
       ]
     },
-    "294": {
+    "312": {
       "error": "check self.escrow_fare entry exists",
       "op": "assert // check self.escrow_fare entry exists",
       "stack_out": [
@@ -1856,7 +2030,7 @@
         "aggregate%box_get%0#0"
       ]
     },
-    "295": {
+    "313": {
       "op": "btoi",
       "defined_out": [
         "customer#0",
@@ -1871,10 +2045,10 @@
         "fare#0"
       ]
     },
-    "296": {
+    "314": {
       "op": "itxn_begin"
     },
-    "297": {
+    "315": {
       "op": "intc_0 // 0",
       "defined_out": [
         "0",
@@ -1891,7 +2065,7 @@
         "0"
       ]
     },
-    "298": {
+    "316": {
       "op": "bytec_0 // \"gigo_asset_id\"",
       "defined_out": [
         "\"gigo_asset_id\"",
@@ -1910,7 +2084,7 @@
         "\"gigo_asset_id\""
       ]
     },
-    "299": {
+    "317": {
       "op": "app_global_get_ex",
       "defined_out": [
         "customer#0",
@@ -1929,7 +2103,7 @@
         "maybe_exists%1#0"
       ]
     },
-    "300": {
+    "318": {
       "error": "check self.gigo_asset_id exists",
       "op": "assert // check self.gigo_asset_id exists",
       "stack_out": [
@@ -1940,7 +2114,7 @@
         "maybe_value%1#0"
       ]
     },
-    "301": {
+    "319": {
       "op": "swap",
       "stack_out": [
         "map_prefixed_key%0#0",
@@ -1950,7 +2124,7 @@
         "fare#0"
       ]
     },
-    "302": {
+    "320": {
       "op": "itxn_field AssetAmount",
       "stack_out": [
         "map_prefixed_key%0#0",
@@ -1959,7 +2133,7 @@
         "maybe_value%1#0"
       ]
     },
-    "304": {
+    "322": {
       "op": "uncover 2",
       "stack_out": [
         "map_prefixed_key%0#0",
@@ -1968,7 +2142,7 @@
         "customer#0"
       ]
     },
-    "306": {
+    "324": {
       "op": "itxn_field AssetReceiver",
       "stack_out": [
         "map_prefixed_key%0#0",
@@ -1976,14 +2150,14 @@
         "maybe_value%1#0"
       ]
     },
-    "308": {
+    "326": {
       "op": "itxn_field XferAsset",
       "stack_out": [
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "310": {
+    "328": {
       "op": "intc_2 // axfer",
       "defined_out": [
         "axfer",
@@ -1996,14 +2170,14 @@
         "axfer"
       ]
     },
-    "311": {
+    "329": {
       "op": "itxn_field TypeEnum",
       "stack_out": [
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "313": {
+    "331": {
       "op": "intc_0 // 0",
       "stack_out": [
         "map_prefixed_key%0#0",
@@ -2011,24 +2185,24 @@
         "0"
       ]
     },
-    "314": {
+    "332": {
       "op": "itxn_field Fee",
       "stack_out": [
         "map_prefixed_key%0#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "316": {
+    "334": {
       "op": "itxn_submit"
     },
-    "317": {
+    "335": {
       "op": "swap",
       "stack_out": [
         "map_prefixed_key%1#0",
         "map_prefixed_key%0#0"
       ]
     },
-    "318": {
+    "336": {
       "op": "box_del",
       "defined_out": [
         "map_prefixed_key%1#0",
@@ -2039,23 +2213,23 @@
         "{box_del}"
       ]
     },
-    "319": {
+    "337": {
       "op": "pop",
       "stack_out": [
         "map_prefixed_key%1#0"
       ]
     },
-    "320": {
+    "338": {
       "op": "box_del",
       "stack_out": [
         "{box_del}"
       ]
     },
-    "321": {
+    "339": {
       "op": "pop",
       "stack_out": []
     },
-    "322": {
+    "340": {
       "op": "intc_1 // 1",
       "defined_out": [
         "1"
@@ -2064,7 +2238,7 @@
         "1"
       ]
     },
-    "323": {
+    "341": {
       "op": "return",
       "stack_out": []
     }

@@ -379,12 +379,12 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             onClick={(event) => {
                               event.stopPropagation()
                               ride.setFocusedRideId(item.rideId)
-                              void ride.endRide(item.rideId)
+                              void ride.endRide(item.rideId, driverLocation ?? undefined)
                             }}
                             disabled={ride.actionState.endRide}
                             className="rounded-[22px] bg-gradient-to-r from-white via-white to-slate-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
                           >
-                            {ride.actionState.endRide ? 'Ending ride' : 'End ride'}
+                            {ride.actionState.endRide ? 'Processing payout...' : 'End ride & claim payment'}
                           </button>
                         ) : null}
 
@@ -477,14 +477,36 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                 ) : null}
 
-                {activeRide.status === RideStatus.RIDE_COMPLETED && activeRide.rider === ride.activeAddress ? (
-                  <div className="mt-5 rounded-[28px] border border-amber-300/18 bg-amber-300/10 p-4">
+                {activeRide.status === RideStatus.RIDE_STARTED && activeRide.rider === ride.activeAddress ? (
+                  <div className="mt-5 rounded-[28px] border border-blue-300/18 bg-blue-300/10 p-4">
                     <div className="flex items-start gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 text-amber-100" />
+                      <MapPinned className="mt-0.5 h-5 w-5 text-blue-300" />
                       <div>
-                        <p className="text-sm font-semibold text-white">Ride Completed</p>
+                        <p className="text-sm font-semibold text-white">Ride in Progress</p>
                         <p className="mt-1 text-sm leading-6 text-white/62">
-                          You have successfully completed the ride! Please wait for the customer to release the GIGC payment from the escrow on their dashboard.
+                          Navigate to the drop point. Once you arrive (within 0.5 km), click <strong>"End ride &amp; claim payment"</strong> — GPS will be verified and your GIGC fare will be sent automatically!
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => void ride.endRide(activeRide.rideId, driverLocation ?? undefined)}
+                          disabled={ride.actionState.endRide}
+                          className="mt-3 rounded-[20px] bg-gradient-to-r from-white via-white to-slate-300 px-5 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
+                        >
+                          {ride.actionState.endRide ? '⏳ Processing payout...' : '📍 End ride & claim payment'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {activeRide.status === RideStatus.RIDE_COMPLETED && activeRide.rider === ride.activeAddress ? (
+                  <div className="mt-5 rounded-[28px] border border-emerald-300/18 bg-emerald-300/10 p-4">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-400" />
+                      <div>
+                        <p className="text-sm font-semibold text-white">🎉 Ride Complete — Payment Sent!</p>
+                        <p className="mt-1 text-sm leading-6 text-white/62">
+                          GPS verified. The GIGC fare has been automatically released to your wallet from the escrow. Check your wallet balance!
                         </p>
                       </div>
                     </div>

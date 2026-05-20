@@ -180,40 +180,57 @@ payout:
     assert // invalid number of bytes for arc4.uint64
     txna ApplicationArgs 2
     dup
+    cover 2
     len
     pushint 32
     ==
     assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
     // smart_contracts/hello_world/contract.py:55
     // rid = ride_id.native
-    swap
     btoi
     // smart_contracts/hello_world/contract.py:56
     // customer, exists = self.escrow_customer.maybe(rid)
     itob
+    dup
     bytec_1 // "c_"
-    dig 1
+    swap
     concat
     dup
     box_get
     // smart_contracts/hello_world/contract.py:57
     // assert exists, "escrow not found"
     assert // escrow not found
-    // smart_contracts/hello_world/contract.py:58
-    // assert Txn.sender == customer, "only customer can release payment"
+    // smart_contracts/hello_world/contract.py:58-60
+    // # Allow either the customer themselves OR the platform admin (creator) to release payment.
+    // # The admin releases payment automatically after GPS-verified ride completion.
+    // assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can release payment"
     txn Sender
     ==
-    assert // only customer can release payment
-    // smart_contracts/hello_world/contract.py:60
+    bnz payout_bool_true@3
+    txn Sender
+    global CreatorAddress
+    ==
+    bz payout_bool_false@4
+
+payout_bool_true@3:
+    intc_1 // 1
+
+payout_bool_merge@5:
+    // smart_contracts/hello_world/contract.py:58-60
+    // # Allow either the customer themselves OR the platform admin (creator) to release payment.
+    // # The admin releases payment automatically after GPS-verified ride completion.
+    // assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can release payment"
+    assert // only customer or admin can release payment
+    // smart_contracts/hello_world/contract.py:62
     // fare = self.escrow_fare[rid]
     bytec_2 // "f_"
-    uncover 2
+    dig 2
     concat
     dup
     box_get
     assert // check self.escrow_fare entry exists
     btoi
-    // smart_contracts/hello_world/contract.py:62-67
+    // smart_contracts/hello_world/contract.py:64-69
     // itxn.AssetTransfer(
     //     xfer_asset=self.gigo_asset_id.value,
     //     asset_receiver=rider,
@@ -221,7 +238,7 @@ payout:
     //     fee=0
     // ).submit()
     itxn_begin
-    // smart_contracts/hello_world/contract.py:63
+    // smart_contracts/hello_world/contract.py:65
     // xfer_asset=self.gigo_asset_id.value,
     intc_0 // 0
     bytec_0 // "gigo_asset_id"
@@ -229,18 +246,18 @@ payout:
     assert // check self.gigo_asset_id exists
     swap
     itxn_field AssetAmount
-    uncover 3
+    dig 4
     itxn_field AssetReceiver
     itxn_field XferAsset
-    // smart_contracts/hello_world/contract.py:62
+    // smart_contracts/hello_world/contract.py:64
     // itxn.AssetTransfer(
     intc_2 // axfer
     itxn_field TypeEnum
-    // smart_contracts/hello_world/contract.py:66
+    // smart_contracts/hello_world/contract.py:68
     // fee=0
     intc_0 // 0
     itxn_field Fee
-    // smart_contracts/hello_world/contract.py:62-67
+    // smart_contracts/hello_world/contract.py:64-69
     // itxn.AssetTransfer(
     //     xfer_asset=self.gigo_asset_id.value,
     //     asset_receiver=rider,
@@ -248,12 +265,12 @@ payout:
     //     fee=0
     // ).submit()
     itxn_submit
-    // smart_contracts/hello_world/contract.py:69
+    // smart_contracts/hello_world/contract.py:71
     // del self.escrow_customer[rid]
-    swap
+    dig 1
     box_del
     pop
-    // smart_contracts/hello_world/contract.py:70
+    // smart_contracts/hello_world/contract.py:72
     // del self.escrow_fare[rid]
     box_del
     pop
@@ -262,10 +279,14 @@ payout:
     intc_1 // 1
     return
 
+payout_bool_false@4:
+    intc_0 // 0
+    b payout_bool_merge@5
+
 
 // smart_contracts.hello_world.contract.RideContract.cancel_and_refund[routing]() -> void:
 cancel_and_refund:
-    // smart_contracts/hello_world/contract.py:72
+    // smart_contracts/hello_world/contract.py:74
     // @arc4.abimethod
     txna ApplicationArgs 1
     dup
@@ -273,10 +294,10 @@ cancel_and_refund:
     intc_3 // 8
     ==
     assert // invalid number of bytes for arc4.uint64
-    // smart_contracts/hello_world/contract.py:74
+    // smart_contracts/hello_world/contract.py:76
     // rid = ride_id.native
     btoi
-    // smart_contracts/hello_world/contract.py:75
+    // smart_contracts/hello_world/contract.py:77
     // customer, exists = self.escrow_customer.maybe(rid)
     itob
     bytec_1 // "c_"
@@ -284,16 +305,16 @@ cancel_and_refund:
     concat
     dup
     box_get
-    // smart_contracts/hello_world/contract.py:76
+    // smart_contracts/hello_world/contract.py:78
     // assert exists, "escrow not found"
     assert // escrow not found
-    // smart_contracts/hello_world/contract.py:77
+    // smart_contracts/hello_world/contract.py:79
     // assert Txn.sender == customer, "only customer can refund"
     txn Sender
     dig 1
     ==
     assert // only customer can refund
-    // smart_contracts/hello_world/contract.py:79
+    // smart_contracts/hello_world/contract.py:81
     // fare = self.escrow_fare[rid]
     bytec_2 // "f_"
     uncover 3
@@ -302,7 +323,7 @@ cancel_and_refund:
     box_get
     assert // check self.escrow_fare entry exists
     btoi
-    // smart_contracts/hello_world/contract.py:81-86
+    // smart_contracts/hello_world/contract.py:83-88
     // itxn.AssetTransfer(
     //     xfer_asset=self.gigo_asset_id.value,
     //     asset_receiver=customer,
@@ -310,7 +331,7 @@ cancel_and_refund:
     //     fee=0
     // ).submit()
     itxn_begin
-    // smart_contracts/hello_world/contract.py:82
+    // smart_contracts/hello_world/contract.py:84
     // xfer_asset=self.gigo_asset_id.value,
     intc_0 // 0
     bytec_0 // "gigo_asset_id"
@@ -321,15 +342,15 @@ cancel_and_refund:
     uncover 2
     itxn_field AssetReceiver
     itxn_field XferAsset
-    // smart_contracts/hello_world/contract.py:81
+    // smart_contracts/hello_world/contract.py:83
     // itxn.AssetTransfer(
     intc_2 // axfer
     itxn_field TypeEnum
-    // smart_contracts/hello_world/contract.py:85
+    // smart_contracts/hello_world/contract.py:87
     // fee=0
     intc_0 // 0
     itxn_field Fee
-    // smart_contracts/hello_world/contract.py:81-86
+    // smart_contracts/hello_world/contract.py:83-88
     // itxn.AssetTransfer(
     //     xfer_asset=self.gigo_asset_id.value,
     //     asset_receiver=customer,
@@ -337,16 +358,16 @@ cancel_and_refund:
     //     fee=0
     // ).submit()
     itxn_submit
-    // smart_contracts/hello_world/contract.py:88
+    // smart_contracts/hello_world/contract.py:90
     // del self.escrow_customer[rid]
     swap
     box_del
     pop
-    // smart_contracts/hello_world/contract.py:89
+    // smart_contracts/hello_world/contract.py:91
     // del self.escrow_fare[rid]
     box_del
     pop
-    // smart_contracts/hello_world/contract.py:72
+    // smart_contracts/hello_world/contract.py:74
     // @arc4.abimethod
     intc_1 // 1
     return

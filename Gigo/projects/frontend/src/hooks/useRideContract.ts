@@ -396,14 +396,31 @@ export function useRideContract() {
         updateActionState('acceptRide', false)
       }
     },
-    endRide: async (rideId: bigint) => {
+    endRide: async (rideId: bigint, driverLocation?: { lat: number; lng: number }) => {
+      if (!activeAddress) throw new Error('Connect wallet first.')
       updateActionState('endRide', true)
       try {
-        await axios.post(`${BACKEND_URL}/api/rides/update-status`, {
-           rideId: rideId.toString(),
-           status: RideStatus.RIDE_COMPLETED
-        });
+        if (!driverLocation) {
+          throw new Error('Driver location is required to end the ride. Please enable location services.')
+        }
+        const response = await axios.post(`${BACKEND_URL}/api/rides/end-ride`, {
+          rideId: rideId.toString(),
+          driverAddress: activeAddress,
+          driverLat: driverLocation.lat,
+          driverLng: driverLocation.lng,
+        })
+        if (response.data?.payoutTxId) {
+          pushToast({
+            tone: 'success',
+            title: '💰 Payment Released!',
+            description: `GIGC sent to your wallet! TxID: ${response.data.payoutTxId.slice(0, 12)}...`,
+          })
+        }
         await refreshRides()
+      } catch (error: any) {
+        const msg = error?.response?.data?.error || error?.message || 'Failed to end ride'
+        pushToast({ tone: 'error', title: 'Could not end ride', description: msg })
+        throw error
       } finally {
         updateActionState('endRide', false)
       }

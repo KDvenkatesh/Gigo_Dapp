@@ -55,7 +55,9 @@ class RideContract(ARC4Contract):
         rid = ride_id.native
         customer, exists = self.escrow_customer.maybe(rid)
         assert exists, "escrow not found"
-        assert Txn.sender == customer, "only customer can release payment"
+        # Allow either the customer themselves OR the platform admin (creator) to release payment.
+        # The admin releases payment automatically after GPS-verified ride completion.
+        assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can release payment"
 
         fare = self.escrow_fare[rid]
 
