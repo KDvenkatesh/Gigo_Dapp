@@ -136,14 +136,14 @@ router.post('/check-timeout', async (req, res) => {
     if (!startedAt) {
       // Stamp now if missing (legacy rides)
       await Ride.findOneAndUpdate({ rideId }, { rideStartedAt: new Date() });
-      return res.json({ timedOut: false, minutesElapsed: 0, minutesRemaining: 10 });
+      return res.json({ timedOut: false, minutesElapsed: 0, minutesRemaining: 1 });
     }
 
     const elapsedMs = Date.now() - new Date(startedAt).getTime();
     const elapsedMins = elapsedMs / 60000;
-    const minutesRemaining = Math.max(0, 10 - elapsedMins);
+    const minutesRemaining = Math.max(0, 1 - elapsedMins);
 
-    if (elapsedMins < 10) {
+    if (elapsedMins < 1) {
       return res.json({ timedOut: false, minutesElapsed: elapsedMins, minutesRemaining });
     }
 

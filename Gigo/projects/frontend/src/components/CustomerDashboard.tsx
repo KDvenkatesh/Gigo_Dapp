@@ -498,7 +498,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                  <div className="flex-1">
                                     <p className="text-sm font-semibold text-white">Ride Auto-Refunded</p>
                                     <p className="mt-1 text-xs text-white/60 leading-relaxed">
-                                       The driver did not reach the drop location within the 10-minute limit. Your escrowed GIGC tokens have been auto-refunded to your wallet.
+                                       The driver did not reach the drop location within the 1-minute limit. Your escrowed GIGC tokens have been auto-refunded to your wallet.
                                     </p>
                                     <a 
                                        href={`https://testnet.explorer.peraswap.app/tx/${refundedTxId}`}
@@ -573,7 +573,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                        {minsRemaining !== null ? (
                                           <p className="text-xs text-white/70 leading-relaxed">
                                              Driver has <strong className="text-amber-300 font-mono text-sm">{Math.floor(minsRemaining)}m {Math.floor((minsRemaining % 1) * 60)}s</strong> to drop you off. 
-                                             If they don't arrive within 10 minutes, the escrow will be auto-refunded to your wallet.
+                                             If they don't arrive within 1 minute, the escrow will be auto-refunded to your wallet.
                                           </p>
                                        ) : (
                                           <p className="text-xs text-white/50">Calculating remaining ride time...</p>
