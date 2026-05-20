@@ -11,8 +11,12 @@ import { RideStatus, type ContractNotice, type RideLocation, type RideRecord, ty
 import axios from 'axios'
 
 let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
-if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && BACKEND_URL.includes('localhost')) {
-  BACKEND_URL = 'https://gigo-dapp.onrender.com'
+if (typeof window !== 'undefined') {
+  if (window.location.hostname === 'localhost') {
+    BACKEND_URL = 'http://localhost:3001'
+  } else if (BACKEND_URL.includes('localhost')) {
+    BACKEND_URL = 'https://gigo-dapp.onrender.com'
+  }
 }
 
 type RideActionState = {

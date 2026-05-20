@@ -8,7 +8,9 @@ import smartRouteRouter from './routes/smartRoute';
 import earningsRouter from './routes/earnings';
 import storageRouter from './routes/storage';
 import ridesRouter from './routes/rides';
+import topupRouter from './routes/topup';
 import mongoose from 'mongoose';
+
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
@@ -63,6 +65,8 @@ app.use('/api/smart-route', smartRouteRouter);
 app.use('/api/earnings-insight', earningsRouter);
 app.use('/api/storage', storageRouter);
 app.use('/api/rides', ridesRouter);
+app.use('/api/topup', topupRouter);
+
 
 /* ── 404 fallback ── */
 app.use((_req, res) => {
