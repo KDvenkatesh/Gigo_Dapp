@@ -300,30 +300,49 @@ cancel_and_refund:
     // smart_contracts/hello_world/contract.py:77
     // customer, exists = self.escrow_customer.maybe(rid)
     itob
+    dup
     bytec_1 // "c_"
-    dig 1
+    swap
     concat
     dup
     box_get
+    swap
+    dup
+    uncover 2
     // smart_contracts/hello_world/contract.py:78
     // assert exists, "escrow not found"
     assert // escrow not found
-    // smart_contracts/hello_world/contract.py:79
-    // assert Txn.sender == customer, "only customer can refund"
+    // smart_contracts/hello_world/contract.py:79-81
+    // # Allow either the customer themselves OR the platform admin (creator) to refund.
+    // # The admin triggers auto-refund when driver doesn't arrive within 10 minutes.
+    // assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can refund"
     txn Sender
-    dig 1
     ==
-    assert // only customer can refund
-    // smart_contracts/hello_world/contract.py:81
+    bnz cancel_and_refund_bool_true@3
+    txn Sender
+    global CreatorAddress
+    ==
+    bz cancel_and_refund_bool_false@4
+
+cancel_and_refund_bool_true@3:
+    intc_1 // 1
+
+cancel_and_refund_bool_merge@5:
+    // smart_contracts/hello_world/contract.py:79-81
+    // # Allow either the customer themselves OR the platform admin (creator) to refund.
+    // # The admin triggers auto-refund when driver doesn't arrive within 10 minutes.
+    // assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can refund"
+    assert // only customer or admin can refund
+    // smart_contracts/hello_world/contract.py:83
     // fare = self.escrow_fare[rid]
     bytec_2 // "f_"
-    uncover 3
+    dig 3
     concat
     dup
     box_get
     assert // check self.escrow_fare entry exists
     btoi
-    // smart_contracts/hello_world/contract.py:83-88
+    // smart_contracts/hello_world/contract.py:85-90
     // itxn.AssetTransfer(
     //     xfer_asset=self.gigo_asset_id.value,
     //     asset_receiver=customer,
@@ -331,7 +350,7 @@ cancel_and_refund:
     //     fee=0
     // ).submit()
     itxn_begin
-    // smart_contracts/hello_world/contract.py:84
+    // smart_contracts/hello_world/contract.py:86
     // xfer_asset=self.gigo_asset_id.value,
     intc_0 // 0
     bytec_0 // "gigo_asset_id"
@@ -339,18 +358,18 @@ cancel_and_refund:
     assert // check self.gigo_asset_id exists
     swap
     itxn_field AssetAmount
-    uncover 2
+    dig 2
     itxn_field AssetReceiver
     itxn_field XferAsset
-    // smart_contracts/hello_world/contract.py:83
+    // smart_contracts/hello_world/contract.py:85
     // itxn.AssetTransfer(
     intc_2 // axfer
     itxn_field TypeEnum
-    // smart_contracts/hello_world/contract.py:87
+    // smart_contracts/hello_world/contract.py:89
     // fee=0
     intc_0 // 0
     itxn_field Fee
-    // smart_contracts/hello_world/contract.py:83-88
+    // smart_contracts/hello_world/contract.py:85-90
     // itxn.AssetTransfer(
     //     xfer_asset=self.gigo_asset_id.value,
     //     asset_receiver=customer,
@@ -358,12 +377,12 @@ cancel_and_refund:
     //     fee=0
     // ).submit()
     itxn_submit
-    // smart_contracts/hello_world/contract.py:90
+    // smart_contracts/hello_world/contract.py:92
     // del self.escrow_customer[rid]
-    swap
+    dig 2
     box_del
     pop
-    // smart_contracts/hello_world/contract.py:91
+    // smart_contracts/hello_world/contract.py:93
     // del self.escrow_fare[rid]
     box_del
     pop
@@ -371,3 +390,7 @@ cancel_and_refund:
     // @arc4.abimethod
     intc_1 // 1
     return
+
+cancel_and_refund_bool_false@4:
+    intc_0 // 0
+    b cancel_and_refund_bool_merge@5

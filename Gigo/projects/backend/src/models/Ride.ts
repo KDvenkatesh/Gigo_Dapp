@@ -17,6 +17,7 @@ export interface IRide extends Document {
   otp?: string;
   paymentLocked: boolean;
   vehicleType: string;
+  rideStartedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,7 +38,8 @@ const RideSchema = new Schema({
   fareMicroAlgos: { type: String, required: true },
   otp: { type: String, required: false },
   paymentLocked: { type: Boolean, required: true, default: true },
-  vehicleType: { type: String, required: true }
+  vehicleType: { type: String, required: true },
+  rideStartedAt: { type: Date, required: false },
 }, {
   timestamps: true
 });

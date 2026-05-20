@@ -76,7 +76,9 @@ class RideContract(ARC4Contract):
         rid = ride_id.native
         customer, exists = self.escrow_customer.maybe(rid)
         assert exists, "escrow not found"
-        assert Txn.sender == customer, "only customer can refund"
+        # Allow either the customer themselves OR the platform admin (creator) to refund.
+        # The admin triggers auto-refund when driver doesn't arrive within 10 minutes.
+        assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can refund"
 
         fare = self.escrow_fare[rid]
 

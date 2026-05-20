@@ -51,13 +51,15 @@ router.post('/create', async (req, res) => {
   }
 });
 
-// Update ride status and rider
+// Update ride status and rider — also stamps rideStartedAt when ride begins
 router.post('/update-status', async (req, res) => {
   try {
     const { rideId, status, rider, paymentLocked } = req.body;
     const updateData: any = { status };
     if (rider !== undefined) updateData.rider = rider;
     if (paymentLocked !== undefined) updateData.paymentLocked = paymentLocked;
+    // Stamp the time when driver actually starts driving
+    if (status === 'RIDE_STARTED') updateData.rideStartedAt = new Date();
     const ride = await Ride.findOneAndUpdate(
       { rideId },
       updateData,
@@ -103,6 +105,94 @@ router.post('/clear', async (req, res) => {
 });
 
 /**
+ * POST /api/rides/check-timeout
+ * Called by the customer's frontend every 30s when ride is in "Ride Started" state.
+ * If the driver hasn't reached the drop location within 10 minutes, the backend
+ * automatically triggers cancel_and_refund on the smart contract.
+ */
+router.post('/check-timeout', async (req, res) => {
+  try {
+    const { rideId } = req.body;
+    if (!rideId) return res.status(400).json({ error: 'Missing rideId' });
+
+    const ride = await Ride.findOne({ rideId });
+    if (!ride) return res.status(404).json({ error: 'Ride not found' });
+
+    // Only applies to active rides
+    if (ride.status !== 'RIDE_STARTED') {
+      return res.json({ timedOut: false, status: ride.status });
+    }
+
+    const startedAt = ride.rideStartedAt;
+    if (!startedAt) {
+      // Stamp now if missing (legacy rides)
+      await Ride.findOneAndUpdate({ rideId }, { rideStartedAt: new Date() });
+      return res.json({ timedOut: false, minutesElapsed: 0, minutesRemaining: 10 });
+    }
+
+    const elapsedMs = Date.now() - new Date(startedAt).getTime();
+    const elapsedMins = elapsedMs / 60000;
+    const minutesRemaining = Math.max(0, 10 - elapsedMins);
+
+    if (elapsedMins < 10) {
+      return res.json({ timedOut: false, minutesElapsed: elapsedMins, minutesRemaining });
+    }
+
+    // ⏰ TIMEOUT — auto-refund customer
+    console.log(`⏰ Ride ${rideId} timed out after ${elapsedMins.toFixed(1)} min — triggering refund`);
+
+    if (!TREASURY_MNEMONIC) {
+      return res.status(500).json({ error: 'Treasury wallet not configured for refund' });
+    }
+
+    try {
+      const treasuryAccount = algosdk.mnemonicToSecretKey(TREASURY_MNEMONIC.trim());
+      const suggestedParams = await algodClient.getTransactionParams().do();
+
+      // ABI call: cancel_and_refund(uint64 ride_id) void
+      const refundMethodSig = 'cancel_and_refund(uint64)void';
+      const abiMethod = new ABIMethod(ABIMethod.fromSignature(refundMethodSig).toJSON());
+
+      const atc = new algosdk.AtomicTransactionComposer();
+      atc.addMethodCall({
+        appID: APP_ID,
+        method: abiMethod,
+        methodArgs: [BigInt(rideId)],
+        sender: treasuryAccount.addr,
+        suggestedParams: { ...suggestedParams, fee: 2000, flatFee: true },
+        signer: algosdk.makeBasicAccountTransactionSigner(treasuryAccount),
+      });
+
+      const result = await atc.execute(algodClient, 4);
+      const refundTxId = result.txIDs[0];
+
+      // Update ride status in DB
+      await Ride.findOneAndUpdate(
+        { rideId },
+        { status: 'CANCELLED', paymentLocked: false },
+        { returnDocument: 'after' }
+      );
+
+      console.log(`💸 Refund to customer ${ride.customer} — TxID: ${refundTxId}`);
+      return res.json({ timedOut: true, refunded: true, refundTxId });
+
+    } catch (chainErr: any) {
+      console.error('Refund transaction failed:', chainErr?.message);
+      return res.status(500).json({
+        timedOut: true,
+        refunded: false,
+        error: 'Timeout detected but refund transaction failed. Contact support.',
+        detail: chainErr?.message,
+      });
+    }
+
+  } catch (error: any) {
+    console.error('Error in check-timeout:', error);
+    res.status(500).json({ error: error?.message || 'Failed to check timeout' });
+  }
+});
+
+/**
  * POST /api/rides/end-ride
  * Called by the driver when they click "End Ride".
  *
@@ -126,7 +216,7 @@ router.post('/end-ride', async (req, res) => {
     const ride = await Ride.findOne({ rideId });
     if (!ride) return res.status(404).json({ error: 'Ride not found' });
 
-    if (ride.status !== 'Ride Started') {
+    if (ride.status !== 'RIDE_STARTED') {
       return res.status(400).json({ error: `Cannot end ride in status: ${ride.status}` });
     }
 
@@ -151,7 +241,7 @@ router.post('/end-ride', async (req, res) => {
     // 3. Mark ride completed in MongoDB
     await Ride.findOneAndUpdate(
       { rideId },
-      { status: 'Ride Completed', paymentLocked: false },
+      { status: 'RIDE_COMPLETED', paymentLocked: false },
       { returnDocument: 'after' }
     );
     console.log(`✅ Ride ${rideId} marked as Completed in DB`);

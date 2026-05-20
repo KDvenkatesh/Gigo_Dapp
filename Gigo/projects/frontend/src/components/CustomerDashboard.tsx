@@ -18,7 +18,7 @@ import { calculateDistanceKm } from '../lib/location'
 import { cn } from '../lib/cn'
 import { RideStatus, type PlaceSuggestion, type RideLocation, type AppRole } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
-import { useEffect, useMemo, useState, useCallback } from 'react'
+import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { ipfs } from '../lib/ipfs'
 
@@ -43,38 +43,96 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
       destinationTouched,
    )
 
-   useEffect(() => {
+    useEffect(() => {
       if (!pickupTouched) {
          setPickupInput(location.label)
          setPickupLocation(location)
       }
-   }, [location, pickupTouched])
+    }, [location, pickupTouched])
 
-   useEffect(() => {
-      setDestinationInput(ride.selectedDestination.label)
-      setDestinationLocation(ride.selectedDestination)
-   }, [ride.selectedDestination])
+    // 10-minute countdown timer state
+    const [minsRemaining, setMinsRemaining] = useState<number | null>(null)
+    const [refundedTxId, setRefundedTxId] = useState<string | null>(null)
+    const timeoutIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-   const distanceKm = useMemo(
-      () => calculateDistanceKm(pickupLocation, destinationLocation),
-      [pickupLocation, destinationLocation],
-   )
-   const estimatedFare = useMemo(
-      () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18))),
-      [distanceKm, ride.selectedVehicle.multiplier],
-   )
-   const discountedFare = useMemo(
-      () => passData.applyDiscount(estimatedFare),
-      [estimatedFare, passData.applyDiscount],
-   )
-   const hasActivePass = Boolean(passData.activePass && passData.activePass.isActive)
+    useEffect(() => {
+       setDestinationInput(ride.selectedDestination.label)
+       setDestinationLocation(ride.selectedDestination)
+    }, [ride.selectedDestination])
 
-   const activeRide = useMemo(
-      () => ride.customerRides.find(r =>
-         r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED
-      ),
-      [ride.customerRides],
-   )
+    const distanceKm = useMemo(
+       () => calculateDistanceKm(pickupLocation, destinationLocation),
+       [pickupLocation, destinationLocation],
+    )
+    const estimatedFare = useMemo(
+       () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18))),
+       [distanceKm, ride.selectedVehicle.multiplier],
+    )
+    const discountedFare = useMemo(
+       () => passData.applyDiscount(estimatedFare),
+       [estimatedFare, passData.applyDiscount],
+    )
+    const hasActivePass = Boolean(passData.activePass && passData.activePass.isActive)
+
+    const activeRide = useMemo(
+       () => ride.customerRides.find(r =>
+          r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED
+       ),
+       [ride.customerRides],
+    )
+
+    useEffect(() => {
+      let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
+      if (typeof window !== 'undefined') {
+         if (window.location.hostname === 'localhost') {
+            BACKEND_URL = 'http://localhost:3001'
+         } else if (BACKEND_URL.includes('localhost')) {
+            BACKEND_URL = 'https://gigo-dapp.onrender.com'
+         }
+      }
+
+      const activeRideId = activeRide?.status === RideStatus.RIDE_STARTED ? activeRide.rideId : null
+
+      if (!activeRideId) {
+         setMinsRemaining(null)
+         if (timeoutIntervalRef.current) {
+            clearInterval(timeoutIntervalRef.current)
+            timeoutIntervalRef.current = null
+         }
+         return
+      }
+
+      const checkTimeout = async () => {
+         try {
+            const response = await axios.post(`${BACKEND_URL}/api/rides/check-timeout`, {
+               rideId: activeRideId.toString()
+            })
+            const data = response.data
+            if (data.timedOut) {
+               if (data.refunded) {
+                  setRefundedTxId(data.refundTxId || 'Simulated refund')
+                  void ride.refreshRides()
+               } else {
+                  console.error('Timed out but refund failed:', data.error)
+               }
+            } else if (data.minutesRemaining !== undefined) {
+               setMinsRemaining(data.minutesRemaining)
+            }
+         } catch (error) {
+            console.error('Error checking ride timeout:', error)
+         }
+      }
+
+      void checkTimeout()
+      timeoutIntervalRef.current = setInterval(checkTimeout, 15000)
+
+      return () => {
+         if (timeoutIntervalRef.current) {
+            clearInterval(timeoutIntervalRef.current)
+            timeoutIntervalRef.current = null
+         }
+      }
+    }, [activeRide?.status, activeRide?.rideId, ride])
 
    function selectPickup(suggestion: PlaceSuggestion | RideLocation) {
       setPickupTouched(true)
@@ -192,10 +250,10 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col flex-1 lg:grid lg:grid-cols-[1.1fr_0.9fr] overflow-hidden"
+                  className="flex flex-col flex-1 min-h-0 lg:grid lg:grid-cols-[1fr_1fr] overflow-hidden"
                >
-                  {/* Map */}
-                  <div className="map-container relative h-[320px] sm:h-[420px] lg:h-full overflow-hidden">
+                  {/* Map — fixed height on mobile, full height on desktop */}
+                  <div className="map-container relative h-[260px] sm:h-[300px] lg:h-full shrink-0 overflow-hidden">
                      <BookingMap
                         pickup={pickupLocation}
                         drop={destinationLocation}
@@ -234,8 +292,8 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                      )}
                   </div>
 
-                  {/* Booking form */}
-                  <div className="flex-1 overflow-y-auto custom-scrollbar bg-[#05060a]">
+                  {/* Booking form — always scrollable */}
+                  <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar bg-[#05060a]">
                      <div className="mx-auto w-full max-w-2xl space-y-4 px-4 py-6 pb-20 sm:px-6">
 
                         {locationError && (
@@ -433,6 +491,35 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                            </>
                         )}
 
+                        {refundedTxId && (
+                           <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4 text-left mb-3">
+                              <div className="flex items-start gap-3">
+                                 <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                                 <div className="flex-1">
+                                    <p className="text-sm font-semibold text-white">Ride Auto-Refunded</p>
+                                    <p className="mt-1 text-xs text-white/60 leading-relaxed">
+                                       The driver did not reach the drop location within the 10-minute limit. Your escrowed GIGC tokens have been auto-refunded to your wallet.
+                                    </p>
+                                    <a 
+                                       href={`https://testnet.explorer.peraswap.app/tx/${refundedTxId}`}
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       className="mt-2 inline-flex items-center text-[10px] text-emerald-400 font-mono underline hover:text-emerald-300"
+                                    >
+                                       TxID: {refundedTxId.slice(0, 10)}...{refundedTxId.slice(-10)} ↗
+                                    </a>
+                                    <button
+                                       type="button"
+                                       onClick={() => setRefundedTxId(null)}
+                                       className="mt-2 block text-xs text-white/40 hover:text-white/60 underline"
+                                    >
+                                       Dismiss
+                                    </button>
+                                 </div>
+                              </div>
+                           </div>
+                        )}
+
                         {/* Active ride status */}
                         {activeRide && !showSuggestions && (
                            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
@@ -471,9 +558,27 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                  </div>
                               )}
                               {activeRide.status === RideStatus.RIDE_STARTED && (
-                                 <div className="mt-3 flex items-center gap-2 rounded-lg bg-sky-500/[0.06] p-3 text-sm text-white/70">
-                                    <UserRound className="h-4 w-4 text-sky-400" />
-                                    Ride in progress {'\u00B7'} Escrow locked
+                                 <div className="mt-3 space-y-3">
+                                    <div className="flex items-center gap-2 rounded-lg bg-sky-500/[0.06] p-3 text-sm text-white/70">
+                                       <UserRound className="h-4 w-4 text-sky-400" />
+                                       Ride in progress {'\u00B7'} Escrow locked
+                                    </div>
+
+                                    {/* Arrival Timer */}
+                                    <div className="flex flex-col gap-2 rounded-lg border border-amber-500/20 bg-amber-500/[0.04] p-3 text-left">
+                                       <div className="flex items-center gap-2 text-amber-400">
+                                          <Clock3 className="h-4 w-4 animate-pulse" />
+                                          <span className="text-[10px] font-bold uppercase tracking-wider">Refund Timeout Countdown</span>
+                                       </div>
+                                       {minsRemaining !== null ? (
+                                          <p className="text-xs text-white/70 leading-relaxed">
+                                             Driver has <strong className="text-amber-300 font-mono text-sm">{Math.floor(minsRemaining)}m {Math.floor((minsRemaining % 1) * 60)}s</strong> to drop you off. 
+                                             If they don't arrive within 10 minutes, the escrow will be auto-refunded to your wallet.
+                                          </p>
+                                       ) : (
+                                          <p className="text-xs text-white/50">Calculating remaining ride time...</p>
+                                       )}
+                                    </div>
                                  </div>
                               )}
                            </motion.div>
