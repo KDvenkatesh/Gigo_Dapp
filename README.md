@@ -162,61 +162,9 @@ CID stored in backend/blockchain
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0ef7a6d4-4141-4894-9e2b-7b80652ff1f1" />
 
 
-UPDATED ARCHITECTURE
-<img width="1536" height="1024" alt="ChatGPT Image" src="https://github.com/user-attachments/assets/2207e643-05c8-46b7-9764-19b8da7e0949" />
- 
-
 </p>
 
-```text
-                                      ┌──────────────────────────┐
-                                      │      GigGo Users         │
-                                      │ Passengers • Drivers     │
-                                      │ Merchants • Admins       │
-                                      └────────────┬─────────────┘
-                                                   │
-                                                   ▼
-                           ┌──────────────────────────────────────┐
-                           │        React PWA Frontend            │
-                           │ Customer Dashboard • Driver Panel    │
-                           │ Wallet Connect • Booking UI          │
-                           │ GIGC Top-Up • Merchant Features      │
-                           └────────────────┬─────────────────────┘
-                                            │
-                 ┌──────────────────────────┼──────────────────────────┐
-                 ▼                          ▼                          ▼
 
-      ┌───────────────────┐     ┌────────────────────┐     ┌────────────────────┐
-      │ Wallet Integration│     │  Node.js Backend   │     │ AI Recommendation  │
-      │ Pera • Defly      │     │ Express + MongoDB  │     │ & Automation Layer │
-      │ WalletConnect     │     │ Authentication API │     │ Smart Matching     │
-      └─────────┬─────────┘     └─────────┬──────────┘     └────────────────────┘
-                │                         │
-                ▼                         ▼
-     ┌────────────────────┐    ┌──────────────────────────┐
-     │ Algorand Blockchain│    │   Transaction Services   │
-     │ ASA Infrastructure │    │ Booking • Ride Status    │
-     │ Smart Contracts    │    │ Notifications • Escrow   │
-     └─────────┬──────────┘    └──────────┬───────────────┘
-               │                          │
-      ┌────────┼─────────┐                │
-      ▼                  ▼                ▼
-
-┌──────────────────┐  ┌──────────────────┐   ┌────────────────────┐
-│ GIGC ASA Token   │  │ Self-Service     │   │ MongoDB Database   │
-│ Payments         │  │ASA Top-Up System │   │ Users • Rides      │
-│ Rewards • Payouts│  │Auto Verification │   │ Wallet Records     │
-└─────────┬────────┘  │ Treasury Transfer│   │Transactions        │
-          │           └──────────────────┘   └────────────────────┘
-          │
-          ▼
-┌────────────────────┐
-│ Pinata IPFS Storage│
-│ KYC • Documents    │
-│ Ride Proofs        │
-│ Metadata Storage   │
-└────────────────────┘
-```
 
 ---
 
