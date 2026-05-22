@@ -232,7 +232,7 @@ cd frontend
 npm install
 
 # Create .env file
-cp .env.example .env  # or create manually with the template below
+cp .env  # or create manually with the template below
 ```
 
 ### Frontend Environment Variables (`.env`)
@@ -273,7 +273,7 @@ cd ../backend
 npm install
 
 # Create .env file
-cp .env.example .env  # or create manually with the template below
+cp .env  # or create manually with the template below
 ```
 
 ### Backend Environment Variables (`.env`)
