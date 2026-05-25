@@ -192,6 +192,11 @@ CID stored in backend/blockchain
 /projects/contracts  # Algorand Smart Contracts
 ```
 
+*Want to know more about how each part works? Check out our human-readable deep dives:*
+- 🖥️ **[Frontend Architecture ➜](./Gigo/projects/frontend/README.md)**
+- ⚙️ **[Backend Architecture ➜](./Gigo/projects/backend/README.md)**
+- 📜 **[Smart Contracts (The Trust Layer) ➜](./Gigo/projects/contracts/README.md)**
+
 ---
 
 ---
