@@ -9,6 +9,7 @@ import earningsRouter from './routes/earnings';
 import storageRouter from './routes/storage';
 import ridesRouter from './routes/rides';
 import topupRouter from './routes/topup';
+import passesRouter from './routes/passes';
 import mongoose from 'mongoose';
 
 
@@ -66,6 +67,7 @@ app.use('/api/earnings-insight', earningsRouter);
 app.use('/api/storage', storageRouter);
 app.use('/api/rides', ridesRouter);
 app.use('/api/topup', topupRouter);
+app.use('/api/passes', passesRouter);
 
 
 /* ── 404 fallback ── */

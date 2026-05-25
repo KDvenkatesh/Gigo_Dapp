@@ -1,10 +1,12 @@
 import { useWallet } from '@txnlab/use-wallet-react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowLeft, Gem, Loader2, RefreshCw, ShieldAlert, Sparkles, Wallet } from 'lucide-react'
-import { useAlgorandAssets, type PassTier } from '../hooks/useAlgorandAssets'
+import { useAlgorandAssets, type PassTier, type PassInfo } from '../hooks/useAlgorandAssets'
 import { cn } from '../lib/cn'
 import { NFTPassCard } from './NFTPassCard'
 import { WalletConnectButton } from './WalletConnectButton'
+import { PassPurchaseModal } from './PassPurchaseModal'
+import { useState } from 'react'
 
 // ── Stats Bar ──
 function StatsBar({
@@ -59,13 +61,15 @@ function StatsBar({
 }
 
 interface PassDashboardProps {
+  ride: any
   onBack: () => void
 }
 
-export function PassDashboard({ onBack }: PassDashboardProps) {
+export function PassDashboard({ ride, onBack }: PassDashboardProps) {
   const { activeAddress } = useWallet()
   const { passes, activeTier, isLoading, error, refetch, hasPriorityMatching, hasZeroSurge } =
     useAlgorandAssets()
+  const [selectedPass, setSelectedPass] = useState<PassInfo | null>(null)
 
   return (
     <div className="absolute inset-0 z-30 flex flex-col overflow-hidden bg-[#05060a]">
@@ -205,13 +209,7 @@ export function PassDashboard({ onBack }: PassDashboardProps) {
                   <NFTPassCard
                     pass={pass}
                     isWalletConnected={Boolean(activeAddress)}
-                    onBuyPass={() => {
-                      // Open Algorand explorer for the asset
-                      window.open(
-                        `https://testnet.explorer.perawallet.app/asset/${pass.assetId}/`,
-                        '_blank',
-                      )
-                    }}
+                    onBuyPass={() => setSelectedPass(pass)}
                   />
                 </motion.div>
               ))}
@@ -232,12 +230,12 @@ export function PassDashboard({ onBack }: PassDashboardProps) {
                   {
                     step: '01',
                     title: 'Acquire Pass',
-                    desc: 'Get an NFT ride pass on the Algorand blockchain as an ASA token.',
+                    desc: 'Opt-in to the specific Gigo pass NFT (ASA) on your wallet.',
                   },
                   {
                     step: '02',
-                    title: 'Connect & Verify',
-                    desc: 'Connect your Pera wallet. We verify pass ownership via the Indexer API.',
+                    title: 'Pay GIGC',
+                    desc: 'Purchase the pass directly using GIGC tokens.',
                   },
                   {
                     step: '03',
@@ -260,6 +258,20 @@ export function PassDashboard({ onBack }: PassDashboardProps) {
           )}
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedPass && (
+          <PassPurchaseModal
+            pass={selectedPass}
+            ride={ride}
+            onClose={() => setSelectedPass(null)}
+            onSuccess={() => {
+              setSelectedPass(null)
+              refetch()
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

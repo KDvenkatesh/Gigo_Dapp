@@ -233,7 +233,7 @@ export function useRideContract() {
         sender: activeAddress,
         receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
         amount: Number(fareMicroAlgos),
-        assetIndex: 762258472,
+        assetIndex: 763011769,
         suggestedParams,
       })
 
@@ -303,9 +303,9 @@ export function useRideContract() {
     }
   }
 
-  async function checkAsaBalance(address: string): Promise<{ optedIn: boolean; balance: bigint }> {
+  async function checkAsaBalance(address: string, assetId: number = 763011769): Promise<{ optedIn: boolean; balance: bigint }> {
     try {
-      const info = await algod.accountAssetInformation(address, 762258472).do()
+      const info = await algod.accountAssetInformation(address, assetId).do()
       const holding = (info as any)['asset-holding'] || (info as any)['assetHolding'] || info
       const amount = holding['amount'] !== undefined ? holding['amount'] : (holding.amount ?? 0)
       return { optedIn: true, balance: BigInt(amount) }
@@ -314,7 +314,7 @@ export function useRideContract() {
     }
   }
 
-  async function optInToAsa() {
+  async function optInToAsa(assetId: number = 763011769) {
     if (!activeAddress || !transactionSigner) return
     updateActionState('optIn', true)
     try {
@@ -323,13 +323,13 @@ export function useRideContract() {
         sender: activeAddress,
         receiver: activeAddress,
         amount: 0,
-        assetIndex: 762258472,
+        assetIndex: assetId,
         suggestedParams,
       })
       const atc = new algosdk.AtomicTransactionComposer()
       atc.addTransaction({ txn, signer: transactionSigner })
       await atc.execute(algod, 4)
-      pushToast({ tone: 'success', title: 'Opt-in successful', description: 'GIGC enabled.' })
+      pushToast({ tone: 'success', title: 'Opt-in successful', description: `Asset enabled.` })
       return true
     } finally {
       updateActionState('optIn', false)

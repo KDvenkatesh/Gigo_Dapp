@@ -4,6 +4,8 @@ import { useWallet } from '@txnlab/use-wallet-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { NFTPassCard } from './NFTPassCard'
 import { BookingMap } from './BookingMap'
+import { PassPurchaseModal } from './PassPurchaseModal'
+import { type PassInfo } from '../hooks/useAlgorandAssets'
 import { PWAInstallFooter } from './PWAInstallFooter'
 import { ThemeToggle } from './ThemeToggle'
 import algosdk from 'algosdk'
@@ -666,7 +668,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
 
             {/* ══════════════════════ PASSES TAB ══════════════════════ */}
             {tab === 'passes' && (
-               <PassesTabContent />
+               <PassesTabContent ride={ride} />
             )}
          </AnimatePresence>
 
@@ -700,8 +702,9 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
 }
 
 // ── Passes Tab ──
-function PassesTabContent() {
+function PassesTabContent({ ride }: { ride: RideHook }) {
    const { passes, activeTier, isLoading, error, refetch, hasPriorityMatching, hasZeroSurge } = useAlgorandAssets()
+   const [selectedPass, setSelectedPass] = useState<PassInfo | null>(null)
 
    const tierNames: Record<PassTier, string> = { silver: 'Silver', gold: 'Gold', platinum: 'Platinum' }
 
@@ -714,7 +717,7 @@ function PassesTabContent() {
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
                <h2 className="text-2xl font-bold text-white sm:text-3xl">Your Passes</h2>
                <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/40">
-                  NFT-powered ride passes on Algorand. Get automatic discounts on every ride.
+                  NFT-powered ride passes on Algorand. Buy passes using GIGC and get automatic discounts.
                </p>
             </motion.div>
 
@@ -763,7 +766,7 @@ function PassesTabContent() {
                         <NFTPassCard
                            pass={pass}
                            isWalletConnected={true}
-                           onBuyPass={() => window.open(`https://testnet.explorer.perawallet.app/asset/${pass.assetId}/`, '_blank')}
+                           onBuyPass={() => setSelectedPass(pass)}
                         />
                      </motion.div>
                   ))}
@@ -777,8 +780,8 @@ function PassesTabContent() {
                   <h3 className="text-base font-semibold text-white">How it works</h3>
                   <div className="mt-4 grid gap-4 sm:grid-cols-3">
                      {[
-                        { n: '01', t: 'Opt-in', d: 'Opt-in to a Gigo pass NFT (ASA) via Pera Wallet.' },
-                        { n: '02', t: 'Auto-verified', d: 'We detect ownership and activate your pass instantly.' },
+                        { n: '01', t: 'Opt-in', d: 'Opt-in to the specific Gigo pass NFT (ASA) on your wallet.' },
+                        { n: '02', t: 'Pay GIGC', d: 'Purchase the pass directly using GIGC tokens.' },
                         { n: '03', t: 'Enjoy Benefits', d: 'Discounts apply automatically. Higher tiers unlock priority matching & zero surge.' },
                      ].map((item) => (
                         <div key={item.n} className="flex gap-3">
@@ -793,6 +796,20 @@ function PassesTabContent() {
                </motion.div>
             )}
          </div>
+
+         <AnimatePresence>
+            {selectedPass && (
+               <PassPurchaseModal
+                  pass={selectedPass}
+                  ride={ride}
+                  onClose={() => setSelectedPass(null)}
+                  onSuccess={() => {
+                     setSelectedPass(null)
+                     refetch()
+                  }}
+               />
+            )}
+         </AnimatePresence>
       </motion.div>
    )
 }

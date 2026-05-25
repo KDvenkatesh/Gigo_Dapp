@@ -3,9 +3,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 // ── NFT Pass Asset IDs on Algorand Testnet ──
 export const PASS_ASSETS = {
-  silver: { assetId: 759169821, name: 'Gigo Silver Pass' },
-  gold: { assetId: 759262915, name: 'Gigo Gold Pass' },
-  platinum: { assetId: 759263033, name: 'Gigo Platinum Pass' },
+  silver: { assetId: 763061527, name: 'Gigo Silver Pass' },
+  gold: { assetId: 763061537, name: 'Gigo Gold Pass' },
+  platinum: { assetId: 763061543, name: 'Gigo Platinum Pass' },
 } as const
 
 export type PassTier = keyof typeof PASS_ASSETS
@@ -128,9 +128,8 @@ export function useAlgorandAssets(): AlgorandAssetsResult {
       const assetMap = new Map<number, number>()
       for (const tier of Object.values(PASS_ASSETS)) {
         const found = assets.find((a) => a['asset-id'] === tier.assetId)
-        // Opt-in on Algorand adds asset with amount=0; treat opt-in as "subscribed"
         if (found) {
-          assetMap.set(tier.assetId, Math.max(1, found.amount))
+          assetMap.set(tier.assetId, found.amount)
         }
       }
       setOwnedAssetIds(assetMap)
