@@ -246,28 +246,253 @@ UPDATED ARCHITECTURE
 
 ---
 
-# 🚀 Quick Setup
+# 🚀 Setup Guide
 
-## 1️⃣ Frontend Environment
+## 📋 Prerequisites
 
-`/frontend/.env`
+Before you begin, ensure you have installed:
 
-```env
-VITE_BACKEND_URL=
-VITE_RIDE_APP_ID=
-VITE_GIGC_ASA_ID=762258472
+- **Node.js** (v18+) and npm
+- **Python** (v3.10+) - For smart contracts
+- **Git**
+- **Wallet**: [Pera Wallet](https://perawallet.app/) or [Defly](https://www.defly.app/)
+
+---
+
+## 1️⃣ Clone the Repository
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/Gigo.git
+cd Gigo/Gigo_Dapp/Gigo
+
+# Navigate to projects directory
+cd projects
 ```
 
 ---
 
-## 2️⃣ Backend Environment
+## 2️⃣ Frontend Setup
 
-`/backend/.env`
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cp .env.example .env  # or create manually with the template below
+```
+
+### Frontend Environment Variables (`.env`)
 
 ```env
-MONGODB_URI=
-GROQ_API_KEY=
-PINATA_JWT=
+# Algorand Configuration
+VITE_RIDE_APP_ID=763288139
+VITE_BACKEND_URL=https://gigo-dapp.onrender.com
+
+# Optional: Override with local backend
+# VITE_BACKEND_URL=http://localhost:3001
+```
+
+### Run Frontend
+
+```bash
+# Development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+Frontend will be available at `http://localhost:5173`
+
+---
+
+## 3️⃣ Backend Setup
+
+```bash
+# Navigate to backend directory
+cd ../backend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cp .env.example .env  # or create manually with the template below
+```
+
+### Backend Environment Variables (`.env`)
+
+```env
+# Server Configuration
+PORT=3001
+
+# Algorand Configuration
+ALGORAND_NODE=https://testnet-api.algonode.cloud
+RIDE_APP_ID=763288139
+PLATFORM_WALLET=YOUR_PLATFORM_WALLET_ADDRESS
+
+# AI & Route Optimization
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxx
+ORS_API_KEY=eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjA1YmNjNmViNTQ5MDRkYjY5ZmFmY2M5MmFmYTcxMjZlIiwiaCI6Im11cm11cjY0In0=
+
+# Database
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/gigodapp
+
+# IPFS Storage (Pinata)
+PINATA_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
+PINATA_API_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PINATA_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# GIGC Token Configuration
+TREASURY_ADDRESS=YOUR_TREASURY_WALLET_ADDRESS
+TREASURY_MNEMONIC="word1 word2 ... word25"  # 25-word mnemonic
+CONVERSION_RATIO=100
+GIGC_ASSET_ID=763011769
+```
+
+### Run Backend
+
+```bash
+# Development server (with auto-reload)
+npm run dev
+
+# Production server
+npm start
+```
+
+Backend API will be available at `http://localhost:3001`
+
+---
+
+## 4️⃣ Smart Contracts Setup
+
+```bash
+# Navigate to contracts directory
+cd ../contracts
+
+# Install dependencies
+pip install -r requirements.txt
+# or
+poetry install
+```
+
+### Smart Contracts Environment Variables (`.env`)
+
+```env
+# TestNet Algod Configuration
+ALGOD_SERVER=https://testnet-api.4160.nodely.dev
+ALGOD_PORT=
+ALGOD_TOKEN=
+
+# TestNet Indexer Configuration
+INDEXER_SERVER=https://testnet-idx.4160.nodely.dev
+INDEXER_PORT=
+INDEXER_TOKEN=
+
+# Deployer Account (25-word mnemonic)
+DEPLOYER_MNEMONIC="word1 word2 word3 ... word25"
+```
+
+### Deploy Smart Contracts
+
+```bash
+# Deploy to TestNet
+python -m smart_contracts
+
+# View deployment artifacts
+ls artifacts/
+```
+
+---
+
+## 5️⃣ Environment Variables Summary
+
+| Component | Variable | Example Value |
+|-----------|----------|---------------|
+| **Frontend** | `VITE_RIDE_APP_ID` | `763288139` |
+| **Frontend** | `VITE_BACKEND_URL` | `http://localhost:3001` |
+| **Backend** | `PORT` | `3001` |
+| **Backend** | `MONGODB_URI` | `mongodb+srv://...` |
+| **Backend** | `GROQ_API_KEY` | `gsk_...` |
+| **Backend** | `PINATA_JWT` | `eyJhbGc...` |
+| **Backend** | `RIDE_APP_ID` | `763288139` |
+| **Contracts** | `DEPLOYER_MNEMONIC` | `magic mushroom ...` |
+
+---
+
+## 🔗 Important Addresses & IDs
+
+| Name | Value | Type |
+|------|-------|------|
+| **GIGC ASA ID** | `763011769` | Asset |
+| **Ride App ID** | `763288139` | Smart Contract |
+| **Platform Wallet** | `YOUR_PLATFORM_WALLET_ADDRESS` | Account |
+| **Network** | `Algorand TestNet` | Blockchain |
+
+---
+
+## ✅ Verification Checklist
+
+After setup, verify everything is working:
+
+- [ ] Frontend starts without errors: `npm run dev`
+- [ ] Backend server running: `http://localhost:3001`
+- [ ] MongoDB connection successful
+- [ ] Wallet connected in frontend
+- [ ] Smart contracts deployed
+- [ ] IPFS (Pinata) accessible
+
+---
+
+## 🆘 Troubleshooting
+
+### Port Already in Use
+```bash
+# Find process on port 3001
+lsof -i :3001
+
+# Kill the process
+kill -9 <PID>
+```
+
+### Module Not Found
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules
+npm install
+```
+
+### Environment Variables Not Loading
+- Verify `.env` file is in the correct directory
+- Restart the development server after creating `.env`
+- Check for typos in variable names
+
+---
+
+## 🧪 Running in Development
+
+### Terminal 1: Backend
+```bash
+cd projects/backend
+npm run dev
+```
+
+### Terminal 2: Frontend
+```bash
+cd projects/frontend
+npm run dev
+```
+
+### Terminal 3: Smart Contracts (optional for testing)
+```bash
+cd projects/contracts
+python -m smart_contracts
 ```
 
 ---
@@ -278,7 +503,7 @@ PINATA_JWT=
 | ---------- | ----------- |
 | Asset Name | Gigo Credit |
 | Ticker     | GIGC        |
-| ASA ID     | 762258472   |
+| ASA ID     | 763011769   |
 
 ---
 
