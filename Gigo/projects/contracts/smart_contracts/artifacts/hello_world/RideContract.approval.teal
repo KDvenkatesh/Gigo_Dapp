@@ -8,9 +8,9 @@ main:
     txn ApplicationID
     bnz main_after_if_else@2
     // smart_contracts/hello_world/contract.py:21
-    // self.gigo_asset_id = GlobalState(UInt64(762258472))
+    // self.gigo_asset_id = GlobalState(UInt64(763010130))
     bytec_0 // "gigo_asset_id"
-    pushint 762258472
+    pushint 763010130
     app_global_put
 
 main_after_if_else@2:

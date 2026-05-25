@@ -10,7 +10,7 @@ const algodClient = new algosdk.Algodv2('', ALGORAND_NODE, '');
 
 const TREASURY_MNEMONIC = process.env.TREASURY_MNEMONIC || 'magic mushroom lazy turtle erode matter aspect morning butter join where inherit step guitar skull skill sentence family unveil fortune true bless collect able hazard';
 const APP_ID = Number(process.env.RIDE_APP_ID || '762925572');
-const GIGC_ASSET_ID = Number(process.env.GIGC_ASSET_ID || '762258472');
+const GIGC_ASSET_ID = Number(process.env.GIGC_ASSET_ID || '763011769');
 
 // Haversine formula: returns distance in km between two GPS coordinates
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -116,7 +116,7 @@ router.post('/clear', async (req, res) => {
 /**
  * POST /api/rides/check-timeout
  * Called by the customer's frontend every 30s when ride is in "Ride Started" state.
- * If the driver hasn't reached the drop location within 10 minutes, the backend
+ * If the driver hasn't reached the drop location within the distance-based max allowed time, the backend
  * automatically triggers cancel_and_refund on the smart contract.
  */
 router.post('/check-timeout', async (req, res) => {
@@ -132,18 +132,27 @@ router.post('/check-timeout', async (req, res) => {
       return res.json({ timedOut: false, status: ride.status });
     }
 
+    const distanceKm = haversineKm(
+      ride.pickup.lat,
+      ride.pickup.lng,
+      ride.drop.lat,
+      ride.drop.lng
+    );
+    // Assume average city speed of 30 km/h => 2 minutes per km. Plus 30 mins grace period.
+    const maxAllowedMins = Math.ceil(distanceKm * 2) + 30;
+
     const startedAt = ride.rideStartedAt;
     if (!startedAt) {
       // Stamp now if missing (legacy rides)
       await Ride.findOneAndUpdate({ rideId }, { rideStartedAt: new Date() });
-      return res.json({ timedOut: false, minutesElapsed: 0, minutesRemaining: 10 });
+      return res.json({ timedOut: false, minutesElapsed: 0, minutesRemaining: maxAllowedMins });
     }
 
     const elapsedMs = Date.now() - new Date(startedAt).getTime();
     const elapsedMins = elapsedMs / 60000;
-    const minutesRemaining = Math.max(0, 10 - elapsedMins);
+    const minutesRemaining = Math.max(0, maxAllowedMins - elapsedMins);
 
-    if (elapsedMins < 10) {
+    if (elapsedMins < maxAllowedMins) {
       return res.json({ timedOut: false, minutesElapsed: elapsedMins, minutesRemaining });
     }
 

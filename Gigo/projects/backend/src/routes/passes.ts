@@ -1,7 +1,7 @@
 import express from 'express';
 import algosdk from 'algosdk';
 import axios from 'axios';
-import TopUpTransaction from '../models/TopUpTransaction';
+import PassPurchase from '../models/PassPurchase';
 
 const router = express.Router();
 
@@ -11,7 +11,20 @@ const algodClient = new algosdk.Algodv2('', ALGORAND_NODE, '');
 const TREASURY_ADDRESS = process.env.TREASURY_ADDRESS || 'FDSKCI2DHPIOTFR2CXHPESMLAUA4Y66B6KKGJ2CDKDY3UX34W43QVN52NA';
 const TREASURY_MNEMONIC = process.env.TREASURY_MNEMONIC || 'magic mushroom lazy turtle erode matter aspect morning butter join where inherit step guitar skull skill sentence family unveil fortune true bless collect able hazard';
 const GIGC_ASSET_ID = Number(process.env.GIGC_ASSET_ID || '763011769');
-const CONVERSION_RATIO = Number(process.env.CONVERSION_RATIO || '100'); // 100 GIGC = 1 ALGO
+
+// Pass NFT asset IDs on Algorand Testnet
+const PASS_ASSETS = {
+  silver: 763061527,
+  gold: 763061537,
+  platinum: 763061543,
+};
+
+// Prices in GIGC (decimal value, e.g. 50 GIGC)
+const PASS_PRICES = {
+  silver: 50,
+  gold: 150,
+  platinum: 300,
+};
 
 function safeEncodeAddress(val: any): string {
   if (!val) return '';
@@ -23,11 +36,11 @@ function safeEncodeAddress(val: any): string {
   }
 }
 
-async function verifyAlgoPayment(
+async function verifyGigcPayment(
   txId: string,
   expectedSender: string,
   expectedReceiver: string,
-  expectedMicroAlgos: number
+  expectedAssetAmountBase: number
 ): Promise<boolean> {
   // 1. Try Algod first
   try {
@@ -39,16 +52,18 @@ async function verifyAlgoPayment(
     if (confirmedRound && txnInner) {
       const type = txnInner['type'] || txnInner['tx-type'] || '';
       const sender = safeEncodeAddress(txnInner['snd']);
-      const receiver = safeEncodeAddress(txnInner['rcv']);
-      const amount = txnInner['amt'] || 0;
+      const receiver = safeEncodeAddress(txnInner['arcv']);
+      const amount = txnInner['aamt'] || 0;
+      const assetId = txnInner['xaid'] || 0;
 
-      const matchesType = type === 'pay' || type === 'payment' || type === '' || type === undefined;
+      const matchesType = type === 'axfer';
       
       if (
         matchesType &&
         sender === expectedSender &&
         receiver === expectedReceiver &&
-        Number(amount) === expectedMicroAlgos
+        Number(amount) === expectedAssetAmountBase &&
+        Number(assetId) === GIGC_ASSET_ID
       ) {
         return true;
       }
@@ -64,17 +79,19 @@ async function verifyAlgoPayment(
     if (tx) {
       const type = tx['tx-type'] || tx['type'];
       const sender = tx['sender'];
-      const paymentTx = tx['payment-transaction'];
-      const receiver = paymentTx?.['receiver'];
-      const amount = paymentTx?.['amount'] || 0;
+      const assetTx = tx['asset-transfer-transaction'];
+      const receiver = assetTx?.['receiver'];
+      const amount = assetTx?.['amount'] || 0;
+      const assetId = assetTx?.['asset-id'];
       const confirmedRound = tx['confirmed-round'];
 
       if (
         confirmedRound &&
-        (type === 'pay' || type === 'payment') &&
+        type === 'axfer' &&
         sender === expectedSender &&
         receiver === expectedReceiver &&
-        Number(amount) === expectedMicroAlgos
+        Number(amount) === expectedAssetAmountBase &&
+        Number(assetId) === GIGC_ASSET_ID
       ) {
         return true;
       }
@@ -86,22 +103,27 @@ async function verifyAlgoPayment(
   return false;
 }
 
-// Top Up GIGC using ALGO
-router.post('/', async (req, res) => {
+// Purchase NFT Pass using GIGC
+router.post('/buy', async (req, res) => {
   try {
-    const { txId, gigcAmount, sender } = req.body;
+    const { txId, tier, sender } = req.body;
 
-    if (!txId || !gigcAmount || !sender) {
-      return res.status(400).json({ error: 'Missing required parameters: txId, gigcAmount, sender' });
+    if (!txId || !tier || !sender) {
+      return res.status(400).json({ error: 'Missing required parameters: txId, tier, sender' });
     }
 
-    const numericGigcAmount = Number(gigcAmount);
-    if (isNaN(numericGigcAmount) || numericGigcAmount <= 0) {
-      return res.status(400).json({ error: 'Invalid gigcAmount' });
+    const lowerTier = (tier as string).toLowerCase();
+    if (lowerTier !== 'silver' && lowerTier !== 'gold' && lowerTier !== 'platinum') {
+      return res.status(400).json({ error: 'Invalid tier. Must be silver, gold, or platinum.' });
     }
+
+    const tierKey = lowerTier as keyof typeof PASS_PRICES;
+    const priceGigc = PASS_PRICES[tierKey];
+    const expectedAssetAmountBase = Math.round(priceGigc * 1000000); // 6 decimals
+    const passAssetId = PASS_ASSETS[tierKey];
 
     // 1. Prevent duplicate transaction processing
-    const existing = await TopUpTransaction.findOne({ txId });
+    const existing = await PassPurchase.findOne({ txId });
     if (existing) {
       if (existing.status === 'success') {
         return res.json({ success: true, alreadyProcessed: true, tx: existing });
@@ -110,46 +132,44 @@ router.post('/', async (req, res) => {
       }
     }
 
-    // Calculate amounts
-    const algoAmountMicro = Math.round(numericGigcAmount * (1000000 / CONVERSION_RATIO));
-    const gigcAmountBase = Math.round(numericGigcAmount * 1000000);
-
     // Create a pending entry in database
-    const pendingTx = await TopUpTransaction.create({
+    const pendingPurchase = await PassPurchase.create({
       txId,
       sender,
-      algoAmountMicro,
-      gigcAmountBase,
+      tier: lowerTier,
+      passAssetId,
+      priceGigc,
       status: 'pending'
     });
 
-    // 2. Verify ALGO payment received on-chain
-    console.log(`Verifying payment transaction ${txId} sender=${sender} receiver=${TREASURY_ADDRESS} amount=${algoAmountMicro}...`);
-    const isVerified = await verifyAlgoPayment(txId, sender, TREASURY_ADDRESS, algoAmountMicro);
+    // 2. Verify GIGC payment received on-chain
+    console.log(`Verifying GIGC payment transaction ${txId} sender=${sender} receiver=${TREASURY_ADDRESS} amount=${expectedAssetAmountBase}...`);
+    const isVerified = await verifyGigcPayment(txId, sender, TREASURY_ADDRESS, expectedAssetAmountBase);
 
     if (!isVerified) {
-      pendingTx.status = 'failed';
-      await pendingTx.save();
-      return res.status(400).json({ error: 'Payment transaction could not be verified on-chain. Please check sender, receiver, and amount.' });
+      pendingPurchase.status = 'failed';
+      await pendingPurchase.save();
+      return res.status(400).json({ error: 'GIGC payment transaction could not be verified on-chain. Please check sender, receiver, and amount.' });
     }
 
-    // 3. Send corresponding GIGC ASA amount
-    console.log(`Payment verified. Initiating GIGC transfer of ${numericGigcAmount} GIGC to ${sender}...`);
-    
+    // 3. Transfer the Pass NFT Asset (1 unit) to the sender
+    console.log(`GIGC Payment verified. Transferring Pass NFT Asset ${passAssetId} (${lowerTier}) to ${sender}...`);
+
     if (!TREASURY_MNEMONIC) {
-      pendingTx.status = 'failed';
-      await pendingTx.save();
+      pendingPurchase.status = 'failed';
+      await pendingPurchase.save();
       return res.status(500).json({ error: 'Treasury wallet mnemonic is not configured on the backend.' });
     }
 
     const treasuryAccount = algosdk.mnemonicToSecretKey(TREASURY_MNEMONIC.trim());
     const suggestedParams = await algodClient.getTransactionParams().do();
     
+    // Transfer 1 unit of Pass NFT
     const transferTx = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: treasuryAccount.addr,
       to: sender,
-      amount: gigcAmountBase,
-      assetIndex: GIGC_ASSET_ID,
+      amount: 1, // 1 NFT Pass
+      assetIndex: passAssetId,
       suggestedParams,
     });
 
@@ -160,20 +180,20 @@ router.post('/', async (req, res) => {
     await algosdk.waitForConfirmation(algodClient, transferTxId, 4);
 
     // Update database status to success
-    pendingTx.status = 'success';
-    pendingTx.transferTxId = transferTxId;
-    await pendingTx.save();
+    pendingPurchase.status = 'success';
+    pendingPurchase.transferTxId = transferTxId;
+    await pendingPurchase.save();
 
-    console.log(`GIGC transfer successful! TxID: ${transferTxId}`);
+    console.log(`Pass NFT transfer successful! TxID: ${transferTxId}`);
     return res.json({
       success: true,
       transferTxId,
-      tx: pendingTx
+      tx: pendingPurchase
     });
 
   } catch (error: any) {
-    console.error('Error in top-up processing:', error);
-    return res.status(500).json({ error: error?.message || 'Internal server error processing top-up' });
+    console.error('Error in pass purchase processing:', error);
+    return res.status(500).json({ error: error?.message || 'Internal server error processing pass purchase' });
   }
 });
 

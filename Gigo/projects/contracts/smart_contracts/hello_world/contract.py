@@ -18,7 +18,7 @@ class RideContract(ARC4Contract):
     """
 
     def __init__(self) -> None:
-        self.gigo_asset_id = GlobalState(UInt64(762258472))
+        self.gigo_asset_id = GlobalState(UInt64(763011769))
         self.escrow_customer = BoxMap(UInt64, Account, key_prefix="c_")
         self.escrow_fare = BoxMap(UInt64, UInt64, key_prefix="f_")
 
