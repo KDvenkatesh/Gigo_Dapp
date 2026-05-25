@@ -239,7 +239,7 @@ cp .env  # or create manually with the template below
 
 ```env
 # Algorand Configuration
-VITE_RIDE_APP_ID=762925572
+VITE_RIDE_APP_ID=763288139
 VITE_BACKEND_URL=...
 
 # Optional: Override with local backend
@@ -284,7 +284,7 @@ PORT=3001
 
 # Algorand Configuration
 ALGORAND_NODE=https://testnet-api.algonode.cloud
-RIDE_APP_ID=762925572
+RIDE_APP_ID=763288139
 PLATFORM_WALLET=YOUR_PLATFORM_WALLET_ADDRESS
 
 # AI & Route Optimization
@@ -303,7 +303,7 @@ PINATA_JWT=egfvgnhgfJhbG...
 TREASURY_ADDRESS=YOUR_TREASURY_WALLET_ADDRESS
 TREASURY_MNEMONIC="word1 word2 ... word25"  # 25-word mnemonic
 CONVERSION_RATIO=100
-GIGC_ASSET_ID=762258472
+GIGC_ASSET_ID=763011769
 ```
 
 ### Run Backend
@@ -365,13 +365,13 @@ ls artifacts/
 
 | Component | Variable | Example Value |
 |-----------|----------|---------------|
-| **Frontend** | `VITE_RIDE_APP_ID` | `762925572` |
+| **Frontend** | `VITE_RIDE_APP_ID` | `763288139` |
 | **Frontend** | `VITE_BACKEND_URL` | `http://localhost:3001` |
 | **Backend** | `PORT` | `3001` |
 | **Backend** | `MONGODB_URI` | `mongodb+srv://...` |
 | **Backend** | `GROQ_API_KEY` | `gffrcff_...` |
 | **Backend** | `PINATA_JWT` | `eyfvgfrfgh...` |
-| **Backend** | `RIDE_APP_ID` | `762925572` |
+| **Backend** | `RIDE_APP_ID` | `763288139` |
 | **Contracts** | `DEPLOYER_MNEMONIC` | `word1 word2 ...` |
 
 ---
@@ -380,8 +380,8 @@ ls artifacts/
 
 | Name | Value | Type |
 |------|-------|------|
-| **GIGC ASA ID** | `762258472` | Asset |
-| **Ride App ID** | `762925572` | Smart Contract |
+| **GIGC ASA ID** | `763011769` | Asset |
+| **Ride App ID** | `763288139` | Smart Contract |
 | **Platform Wallet** | `YOUR_PLATFORM_WALLET_ADDRESS` | Account |
 | **Network** | `Algorand TestNet` | Blockchain |
 
@@ -453,7 +453,7 @@ python -m smart_contracts
 | ---------- | ----------- |
 | Asset Name | Gigo Credit |
 | Ticker     | GIGC        |
-| ASA ID     | 762258472   |
+| ASA ID     | 763011769   |
 
 ---
 # 🪙 GIGC ASA Information
@@ -462,7 +462,7 @@ python -m smart_contracts
 | ---------- | ----------- |
 | Asset Name | Gigo Credit |
 | Ticker     | GIGC        |
-| ASA ID     | 762258472   |
+| ASA ID     | 763011769   |
 
 ---
 
