@@ -10,6 +10,30 @@
 
 ---
 
+## 🐳 Fast Start (Docker Compose)
+
+The easiest way to run the entire Gigo stack locally in a production-ready environment is using Docker. Ensure Docker Desktop is installed and running.
+
+```bash
+# Clone the repository
+git clone https://github.com/KDvenkatesh/Gigo_Dapp.git
+cd Gigo_Dapp/Gigo
+
+# Copy the environment templates (if you haven't already)
+cp projects/frontend/.env.example projects/frontend/.env
+cp projects/backend/.env.example projects/backend/.env
+
+# Build and start all services
+docker compose up --build
+```
+
+This single command will automatically:
+- Start a local **MongoDB** database instance.
+- Build and run the **Node.js Backend API** on port `3001`.
+- Build the **React PWA Frontend** and serve it via Nginx on port `5173`.
+
+---
+
 # 🌍 What is Gigo?
 
 Gigo is a decentralized ride-sharing and mobility infrastructure platform designed for **boda boda ecosystems** and informal transportation networks in emerging markets like **Uganda**, **Kenya**, and **East Africa**.
@@ -227,27 +251,6 @@ cd projects
 ```
 
 ---
-
-## 🐳 Fast Start (Docker Compose)
-
-The easiest way to run the entire Gigo stack locally in a production-ready environment is using Docker. Ensure Docker Desktop is installed and running.
-
-```bash
-# Ensure you are in the Gigo directory
-# cd Gigo/Gigo_Dapp/Gigo
-
-# Copy the environment templates (if you haven't already)
-cp projects/frontend/.env.example projects/frontend/.env
-cp projects/backend/.env.example projects/backend/.env
-
-# Build and start all services
-docker-compose up --build
-```
-
-This single command will automatically:
-- Start a local **MongoDB** database instance.
-- Build and run the **Node.js Backend API** on port `3001`.
-- Build the **React PWA Frontend** and serve it via Nginx on port `5173`.
 
 ---
 
