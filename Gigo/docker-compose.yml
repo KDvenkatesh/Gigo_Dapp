@@ -1,0 +1,38 @@
+services:
+  frontend:
+    build:
+      context: ./projects/frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_RIDE_APP_ID: 763288139
+        VITE_BACKEND_URL: http://localhost:3001
+    ports:
+      - "5173:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./projects/backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    restart: unless-stopped
+    env_file:
+      - ./projects/backend/.env
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/gigodapp
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
