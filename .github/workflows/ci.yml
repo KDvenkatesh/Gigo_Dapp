@@ -57,4 +57,4 @@ jobs:
 
       - name: Test Docker Compose Build
         working-directory: Gigo
-        run: docker-compose build
+        run: docker compose build
