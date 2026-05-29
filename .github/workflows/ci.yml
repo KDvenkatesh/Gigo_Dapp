@@ -49,6 +49,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         
+      - name: Setup Environment Files
+        working-directory: Gigo
+        run: |
+          cp projects/frontend/.env.example projects/frontend/.env
+          cp projects/backend/.env.example projects/backend/.env
+
       - name: Test Docker Compose Build
         working-directory: Gigo
         run: docker-compose build
