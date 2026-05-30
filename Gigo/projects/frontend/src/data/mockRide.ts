@@ -39,10 +39,10 @@ export const vehicleOptions: VehicleOption[] = [
     gradient: 'bg-gradient-to-br from-zinc-700 to-black border border-white/10',
   },
   {
-    id: 'ev',
-    name: 'EV Ride',
-    description: 'Eco-friendly and silent electric ride',
-    multiplier: 1.2,
-    gradient: 'bg-gradient-to-br from-emerald-500 to-emerald-700',
+    id: 'auto',
+    name: 'Auto',
+    description: 'Affordable open-air local transit',
+    multiplier: 1.0,
+    gradient: 'bg-gradient-to-br from-yellow-400 to-yellow-600',
   },
 ]

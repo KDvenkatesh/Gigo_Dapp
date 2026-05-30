@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Upload, Bike, Car, BatteryCharging, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Upload, ShieldCheck } from 'lucide-react';
+import bodaIcon from '../assets/Boda.png';
+import carIcon from '../assets/Car.png';
+import autoIcon from '../assets/Auto.png';
 import { useDriverContext } from '../contexts/DriverContext';
 import { WalletConnectButton } from './WalletConnectButton';
 import { ipfs } from '../lib/ipfs';
@@ -40,9 +43,9 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
   };
 
   const vehicleOptions = [
-    { id: 'boda', label: 'Boda', icon: Bike },
-    { id: 'car', label: 'Car', icon: Car },
-    { id: 'ev', label: 'EV Ride', icon: BatteryCharging },
+    { id: 'boda', label: 'Boda', icon: bodaIcon },
+    { id: 'car', label: 'Car', icon: carIcon },
+    { id: 'auto', label: 'Auto', icon: autoIcon },
   ];
 
   if (!ride.activeAddress) {
@@ -118,7 +121,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
                       : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  <option.icon className="h-8 w-8" />
+                  <img src={option.icon} alt={option.label} className="h-10 w-10 object-contain drop-shadow-sm" />
                   <span className="text-sm font-medium">{option.label}</span>
                 </button>
               ))}
