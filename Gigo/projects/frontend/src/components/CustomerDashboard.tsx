@@ -24,6 +24,16 @@ import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { ipfs } from '../lib/ipfs'
 
+import bodaIcon from '../assets/Boda.png'
+import carIcon from '../assets/Car.png'
+import autoIcon from '../assets/Auto.png'
+
+const vehicleIcons: Record<string, string> = {
+  boda: bodaIcon,
+  car: carIcon,
+  auto: autoIcon,
+}
+
 
 type RideHook = ReturnType<typeof useRideContract>
 
@@ -424,8 +434,8 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                           )}
                                        >
                                           <div className="flex items-center gap-3">
-                                             <div className={cn('rounded-xl p-2.5 text-white', vehicle.gradient)}>
-                                                <CarFront className="h-5 w-5" />
+                                             <div className={cn('rounded-xl p-1', vehicle.gradient)}>
+                                                <img src={vehicleIcons[vehicle.id]} alt={vehicle.name} className="h-8 w-8 object-contain drop-shadow-md" />
                                              </div>
                                              <div>
                                                 <p className="text-sm font-medium text-white">{vehicle.name}</p>
