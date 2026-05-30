@@ -121,7 +121,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
                       : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  <img src={option.icon} alt={option.label} className="h-10 w-10 object-contain drop-shadow-sm" />
+                  <img src={option.icon} alt={option.label} className="h-[60px] w-[60px] object-contain drop-shadow-sm" />
                   <span className="text-sm font-medium">{option.label}</span>
                 </button>
               ))}
