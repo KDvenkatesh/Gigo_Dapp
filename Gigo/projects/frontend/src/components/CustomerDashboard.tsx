@@ -435,7 +435,11 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                        >
                                           <div className="flex items-center gap-3">
                                              <div className={cn('rounded-xl p-1', vehicle.gradient)}>
-                                                <img src={vehicleIcons[vehicle.id]} alt={vehicle.name} className="h-[60px] w-[60px] object-contain drop-shadow-md" />
+                                                <img 
+                                                   src={vehicleIcons[vehicle.id]} 
+                                                   alt={vehicle.name} 
+                                                   className="h-[60px] w-[60px] object-contain drop-shadow-md dark:[filter:drop-shadow(1px_1px_0_white)_drop-shadow(-1px_-1px_0_white)_drop-shadow(1px_-1px_0_white)_drop-shadow(-1px_1px_0_white)]"
+                                                />
                                              </div>
                                              <div>
                                                 <p className="text-sm font-medium text-white">{vehicle.name}</p>
