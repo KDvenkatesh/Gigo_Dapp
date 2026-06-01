@@ -21,6 +21,7 @@ interface PricePredictionProps {
   pickup: string;
   destination: string;
   baseFare: number;
+  flat?: boolean;
 }
 
 /* ── Helpers ── */
@@ -47,7 +48,7 @@ const STEPS = [
 ] as const;
 
 /* ── Component ── */
-export function PricePrediction({ pickup, destination, baseFare }: PricePredictionProps) {
+export function PricePrediction({ pickup, destination, baseFare, flat = false }: PricePredictionProps) {
   const { callX402API, isWalletReady } = useX402();
   const [prediction, setPrediction] = useState<SurgeFarePrediction | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -79,10 +80,10 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
       setPhase('step3');
 
       const localTimeStr = new Date().toLocaleString('en-US', { 
-        weekday: 'long', 
-        hour: 'numeric', 
-        minute: 'numeric', 
-        hour12: true 
+          weekday: 'long', 
+          hour: 'numeric', 
+          minute: 'numeric', 
+          hour12: true 
       });
 
       const data = await callX402API<{ success: boolean; prediction: SurgeFarePrediction }>(
@@ -109,27 +110,30 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
   const pct30 = prediction ? percentChange(prediction.current_fare, prediction.fare_30min) : 0;
 
   const REC = {
-    BOOK_NOW: { label: '✅ BOOK NOW', bg: 'bg-emerald-500/10', border: 'border-emerald-500/25', text: 'text-emerald-400' },
-    WAIT:     { label: '⏳ WAIT',     bg: 'bg-amber-500/10',   border: 'border-amber-500/25',   text: 'text-amber-400'   },
-    NEUTRAL:  { label: '➖ NEUTRAL',  bg: 'bg-white/5',        border: 'border-white/10',       text: 'text-white/60'    },
+    BOOK_NOW: { label: '✅ BOOK NOW', bg: 'bg-emerald-500/10', border: 'border-emerald-500/25', text: 'text-emerald-600 dark:text-emerald-400' },
+    WAIT:     { label: '⏳ WAIT',     bg: 'bg-amber-500/10',   border: 'border-amber-500/25',   text: 'text-amber-600 dark:text-amber-400'   },
+    NEUTRAL:  { label: '➖ NEUTRAL',  bg: 'bg-black/5',        border: 'border-black/10',       text: 'text-current opacity-60'    },
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]"
+      className={cn(
+        "overflow-hidden flex flex-col justify-between h-full",
+        flat ? "" : "rounded-xl border border-white/[0.08] bg-white/[0.02]"
+      )}
     >
       {/* ── Header ── */}
-      <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
+      <div className="flex items-center justify-between border-b border-current/10 pb-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 shadow-sm">
             <Bot className="h-3.5 w-3.5 text-white" />
           </div>
           <div>
-            <span className="text-sm font-semibold text-white">AI Fare Prediction</span>
+            <span className="text-sm font-bold text-current">AI Fare Prediction</span>
             {capturedTime && !isLoading && prediction && (
-              <p className="text-[10px] text-white/30 mt-0.5">
+              <p className="text-[10px] opacity-40 mt-0.5">
                 Analyzed at {formatISOTime(capturedTime)}
               </p>
             )}
@@ -139,7 +143,7 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
           type="button"
           onClick={fetchPrediction}
           disabled={isLoading || !isWalletReady || !pickup || !destination}
-          className="flex items-center gap-1.5 rounded-lg bg-violet-500/10 px-3 py-1.5 text-[11px] font-semibold text-violet-400 transition hover:bg-violet-500/20 disabled:opacity-40 border border-violet-500/20"
+          className="flex items-center gap-1.5 rounded-lg bg-violet-600/10 px-3 py-1.5 text-[11px] font-semibold text-violet-700 dark:text-violet-300 transition hover:bg-violet-600/20 disabled:opacity-40 border border-violet-500/20 shadow-sm"
         >
           <RefreshCw className={cn('h-3 w-3', isLoading && 'animate-spin')} />
           {prediction ? 'Re-analyze' : 'Analyze'}
@@ -147,18 +151,18 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
       </div>
 
       {/* ── Body ── */}
-      <div className="px-4 py-4">
+      <div className="pt-4 flex-1 flex flex-col justify-center">
         <AnimatePresence mode="wait">
 
           {/* IDLE */}
           {!isLoading && !prediction && !error && (
             <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="flex flex-col items-center gap-2 py-5 text-center">
-              <Bot className="h-7 w-7 text-white/15" />
-              <p className="text-sm font-medium text-white/40">
-                Click <span className="text-violet-400 font-semibold">Analyze</span> to get live prediction
+              className="flex flex-col items-center gap-2 py-3 text-center">
+              <Bot className="h-7 w-7 opacity-15" />
+              <p className="text-sm font-bold opacity-50">
+                Click <span className="text-violet-700 dark:text-violet-300 font-bold">Analyze</span> to get live prediction
               </p>
-              <p className="text-[11px] text-white/20">
+              <p className="text-[10px] opacity-30">
                 Grok will use the exact current time when you click
               </p>
             </motion.div>
@@ -167,10 +171,10 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
           {/* LOADING — animated steps */}
           {isLoading && (
             <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="flex flex-col gap-3 py-2">
+              className="flex flex-col gap-2.5 py-1">
               <div className="flex items-center gap-3 mb-1">
-                <Loader2 className="h-5 w-5 animate-spin text-violet-400 shrink-0" />
-                <span className="text-xs font-semibold text-white/50">
+                <Loader2 className="h-4 w-4 animate-spin text-violet-600 dark:text-violet-400 shrink-0" />
+                <span className="text-xs font-bold opacity-50">
                   Analyzing for {capturedTime ? formatISOTime(capturedTime) : '…'}
                 </span>
               </div>
@@ -187,19 +191,19 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
                     animate={{ opacity: isActive || isDone ? 1 : 0.3, x: 0 }}
                     transition={{ delay: i * 0.1 }}
                     className={cn(
-                      'flex items-center gap-3 rounded-lg px-3 py-2.5 border transition-all',
+                      'flex items-center gap-3 rounded-lg px-3 py-2 border transition-all',
                       isDone   ? 'bg-emerald-500/5 border-emerald-500/15' :
                       isActive ? 'bg-violet-500/10 border-violet-500/20' :
-                                 'bg-white/[0.02] border-white/[0.05]'
+                                 'bg-black/5 border-black/5'
                     )}
                   >
-                    <span className="text-base leading-none">{step.icon}</span>
-                    <span className={cn('text-xs font-medium flex-1',
-                      isDone ? 'text-emerald-400' : isActive ? 'text-violet-300' : 'text-white/30')}>
+                    <span className="text-sm leading-none">{step.icon}</span>
+                    <span className={cn('text-xs font-bold flex-1',
+                      isDone ? 'text-emerald-600 dark:text-emerald-400' : isActive ? 'text-violet-700 dark:text-violet-300' : 'opacity-40')}>
                       {step.label}
                     </span>
-                    {isDone   && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />}
-                    {isActive && <Loader2 className="h-3.5 w-3.5 animate-spin text-violet-400 shrink-0" />}
+                    {isDone   && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />}
+                    {isActive && <Loader2 className="h-3.5 w-3.5 animate-spin text-violet-600 dark:text-violet-400 shrink-0" />}
                   </motion.div>
                 );
               })}
@@ -210,10 +214,10 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
           {!isLoading && error && (
             <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="flex items-center gap-3 rounded-lg bg-rose-500/[0.06] border border-rose-500/15 p-3">
-              <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+              <AlertCircle className="h-4 w-4 shrink-0 text-rose-500" />
               <div className="min-w-0">
-                <p className="text-sm font-medium text-rose-300">Could not predict</p>
-                <p className="mt-0.5 truncate text-xs text-white/30">{error}</p>
+                <p className="text-sm font-bold text-rose-600 dark:text-rose-400">Could not predict</p>
+                <p className="mt-0.5 truncate text-xs opacity-40">{error}</p>
               </div>
             </motion.div>
           )}
@@ -224,23 +228,23 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
               className="space-y-3">
 
               {/* ① Grok context: time + traffic — from Grok's own reply */}
-              <div className="rounded-lg border border-violet-500/15 bg-violet-500/[0.05] p-3 space-y-2">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-violet-400/70">
+              <div className="rounded-lg border border-current/10 bg-current/[0.03] p-3 space-y-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">
                   Grok Analysis · {formatISOTime(capturedTime)}
                 </p>
                 <div className="flex items-start gap-2">
-                  <span className="shrink-0 text-sm leading-none mt-0.5">🕒</span>
-                  <p className="text-xs text-white/70 leading-relaxed">{prediction.current_time_analysis}</p>
+                  <span className="shrink-0 text-xs mt-0.5">🕒</span>
+                  <p className="text-xs opacity-80 leading-relaxed">{prediction.current_time_analysis}</p>
                 </div>
                 <div className="flex items-start gap-2">
-                  <span className="shrink-0 text-sm leading-none mt-0.5">🚦</span>
-                  <p className="text-xs text-white/70 leading-relaxed">{prediction.traffic_details}</p>
+                  <span className="shrink-0 text-xs mt-0.5">🚦</span>
+                  <p className="text-xs opacity-80 leading-relaxed">{prediction.traffic_details}</p>
                 </div>
               </div>
 
               {/* ② Price rows */}
               <div className="space-y-1.5">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/25 px-1">Price Prediction</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest opacity-40 px-1">Price Prediction</p>
                 <FareRow label={`Now (${formatISOTime(capturedTime)})`} value={formatALGO(prediction.current_fare)} highlight />
                 <FareRow label="In 10 min" value={formatALGO(prediction.fare_10min)} change={pct10} />
                 <FareRow label="In 30 min" value={formatALGO(prediction.fare_30min)} change={pct30} />
@@ -250,8 +254,8 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
               {(() => {
                 const cfg = REC[prediction.recommendation];
                 return (
-                  <div className={cn('rounded-lg border p-3', cfg.bg, cfg.border)}>
-                    <p className={cn('text-sm font-semibold', cfg.text)}>
+                  <div className={cn('rounded-lg border p-3 shadow-sm', cfg.bg, cfg.border)}>
+                    <p className={cn('text-xs font-bold', cfg.text)}>
                       {cfg.label} — {prediction.reason}
                     </p>
                   </div>
@@ -260,16 +264,16 @@ export function PricePrediction({ pickup, destination, baseFare }: PricePredicti
 
               {/* Confidence bar */}
               <div className="flex items-center gap-3">
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-white/25 shrink-0">Confidence</span>
-                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-45 shrink-0">Confidence</span>
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-current/10">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${prediction.confidence}%` }}
                     transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-indigo-400"
+                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-indigo-500"
                   />
                 </div>
-                <span className="text-xs font-semibold text-white/50 shrink-0">{prediction.confidence}%</span>
+                <span className="text-xs font-bold opacity-60 shrink-0">{prediction.confidence}%</span>
               </div>
 
             </motion.div>
@@ -287,21 +291,21 @@ function FareRow({ label, value, change, highlight }: {
 }) {
   return (
     <div className={cn(
-      'flex items-center justify-between rounded-lg px-3 py-2',
-      highlight ? 'bg-white/[0.06] border border-white/[0.08]' : 'bg-white/[0.03]'
+      'flex items-center justify-between rounded-lg px-3 py-1.5',
+      highlight ? 'bg-current/[0.07] border border-current/10' : 'bg-current/[0.03]'
     )}>
-      <span className={cn('text-xs font-medium', highlight ? 'text-white/70' : 'text-white/40')}>{label}</span>
+      <span className={cn('text-xs font-bold', highlight ? 'text-current' : 'opacity-50')}>{label}</span>
       <div className="flex items-center gap-2">
-        <span className={cn('text-sm font-bold', highlight ? 'text-white' : 'text-white/80')}>{value}</span>
+        <span className={cn('text-xs font-black', highlight ? 'text-current' : 'opacity-85')}>{value}</span>
         {change !== undefined && change !== 0 && (
-          <span className={cn('flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-bold',
-            change > 0 ? 'bg-rose-500/10 text-rose-400' : 'bg-emerald-500/10 text-emerald-400')}>
+          <span className={cn('flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-bold shadow-sm',
+            change > 0 ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400')}>
             {change > 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
             {change > 0 ? '+' : ''}{change}%
           </span>
         )}
         {change === 0 && (
-          <span className="flex items-center gap-0.5 rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold text-white/30">
+          <span className="flex items-center gap-0.5 rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold opacity-30">
             <Minus className="h-3 w-3" />0%
           </span>
         )}

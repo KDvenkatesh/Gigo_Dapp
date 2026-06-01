@@ -206,50 +206,55 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
       <div className="absolute inset-0 z-30 flex flex-col overflow-hidden bg-[#05060a]">
 
          {/* ── Top nav bar ── */}
-         <div className="relative z-[1000] flex shrink-0 items-center justify-between gap-3 border-b border-white/[0.06] bg-[#05060a]/90 px-4 py-3 backdrop-blur-xl sm:px-6">
-            <button
-               type="button"
-               onClick={onBack}
-               className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-2 text-white/60 transition hover:bg-white/[0.06]"
-            >
-               <ArrowLeft className="h-4 w-4" />
-            </button>
+         <div className="relative z-[1000] flex shrink-0 items-center justify-between gap-3 border-b border-white/[0.06] px-4 py-3 sm:px-6 bg-transparent">
+            <div className="glass-filter" style={{ backdropFilter: 'blur(20px) saturate(120%)' }}></div>
+            <div className="glass-overlay"></div>
+            <div className="glass-specular" style={{ border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}></div>
+            <div className="glass-content flex items-center justify-between w-full gap-3">
+               <button
+                  type="button"
+                  onClick={onBack}
+                  className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-2 text-white/60 transition hover:bg-white/[0.06]"
+               >
+                  <ArrowLeft className="h-4 w-4" />
+               </button>
 
-            <div className="hidden lg:flex min-w-0 flex-1 items-center gap-1 overflow-x-auto no-scrollbar py-1">
-               {([
-                  { id: 'book' as const, icon: CarFront, label: 'Book' },
-                  { id: 'history' as const, icon: History, label: 'My Rides', count: ride.customerRides.length },
-                  { id: 'passes' as const, icon: Gem, label: 'Your Passes' },
-               ]).map((t) => (
-                  <button
-                     key={t.id}
-                     type="button"
-                     onClick={() => setTab(t.id)}
-                     className={cn(
-                        'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-[12px] font-medium transition active:scale-95',
-                        tab === t.id
-                           ? 'bg-white text-[#05060a]'
-                           : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]',
-                     )}
-                  >
-                     <t.icon className="h-3.5 w-3.5" />
-                     <span className="hidden sm:inline">{t.label}</span>
-                     <span className="sm:hidden">{t.id === 'history' ? 'Rides' : t.label}</span>
-                     {t.count && t.count > 0 ? (
-                        <span className={cn(
-                           'rounded-full px-1.5 py-0.5 text-[9px] font-semibold',
-                           tab === t.id ? 'bg-black/10 text-black/60' : 'bg-white/10 text-white/50',
-                        )}>
-                           {t.count}
-                        </span>
-                     ) : null}
-                  </button>
-               ))}
-            </div>
+               <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto no-scrollbar py-1">
+                  {([
+                     { id: 'book' as const, icon: CarFront, label: 'Book' },
+                     { id: 'history' as const, icon: History, label: 'My Rides', count: ride.customerRides.length },
+                     { id: 'passes' as const, icon: Gem, label: 'Your Passes' },
+                  ]).map((t) => (
+                     <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => setTab(t.id)}
+                        className={cn(
+                           'flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-[12px] font-medium transition active:scale-95',
+                           tab === t.id
+                              ? 'bg-white text-[#05060a]'
+                              : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]',
+                        )}
+                     >
+                        <t.icon className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">{t.label}</span>
+                        <span className="sm:hidden">{t.id === 'history' ? 'Rides' : t.label}</span>
+                        {t.count && t.count > 0 ? (
+                           <span className={cn(
+                              'rounded-full px-1.5 py-0.5 text-[9px] font-semibold',
+                              tab === t.id ? 'bg-black/10 text-black/60' : 'bg-white/10 text-white/50',
+                           )}>
+                              {t.count}
+                           </span>
+                        ) : null}
+                     </button>
+                  ))}
+               </div>
 
-            <div className="shrink-0 flex items-center gap-2">
-               <ThemeToggle />
-               <CustomerProfileDropdown ride={ride} onSwitchRole={onSwitchRole} currentTab={tab} onTabChange={setTab} rideCount={ride.customerRides.length} />
+               <div className="shrink-0 flex items-center gap-2">
+                  <ThemeToggle />
+                  <CustomerProfileDropdown ride={ride} onSwitchRole={onSwitchRole} currentTab={tab} onTabChange={setTab} rideCount={ride.customerRides.length} />
+               </div>
             </div>
          </div>
 
@@ -262,10 +267,15 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col flex-1 min-h-0 lg:grid lg:grid-cols-[1fr_1fr] overflow-hidden"
+                  className="flex flex-col flex-1 min-h-0 lg:grid lg:grid-cols-[1.08fr_0.92fr] gap-5 lg:gap-8 overflow-hidden px-4 sm:px-6 pb-6 pt-3"
                >
-                  {/* Map — fixed height on mobile, full height on desktop */}
-                  <div className="map-container relative h-[260px] sm:h-[300px] lg:h-full shrink-0 overflow-hidden">
+                  {/* Map — left side on desktop, fixed height on mobile — styled same as Driver Dashboard */}
+                  <div className="relative h-[260px] sm:h-[300px] lg:h-full shrink-0">
+                  <div className="map-container relative h-full w-full overflow-hidden rounded-[32px] border border-white/10 glass-container glass-container--rounded">
+                     <div className="glass-filter" style={{ backdropFilter: 'blur(20px) saturate(120%)' }}></div>
+                     <div className="glass-overlay"></div>
+                     <div className="glass-specular"></div>
+                     <div className="glass-content h-full">
                      <BookingMap
                         pickup={pickupLocation}
                         drop={destinationLocation}
@@ -302,79 +312,91 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                            </button>
                         </div>
                      )}
+                     </div>
+                  </div>
                   </div>
 
                   {/* Booking form — always scrollable */}
-                  <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar bg-[#05060a]">
-                     <div className="mx-auto w-full max-w-2xl space-y-4 px-4 py-6 pb-20 sm:px-6">
+                  <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar bg-transparent pr-1">
+                     <div className="mx-auto w-full max-w-3xl space-y-5 py-3 pb-20">
 
                         {locationError && (
-                           <div className="rounded-xl border border-amber-500/15 bg-amber-500/[0.06] p-3 text-sm text-amber-200/80">
+                           <div className="rounded-2xl border border-amber-500/15 bg-amber-500/[0.06] p-4 text-sm text-amber-200/80">
                               {locationError}
                            </div>
                         )}
 
-                        {/* Pickup + Destination */}
-                        <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
-                           <div
-                              className={cn('flex cursor-text items-center gap-3 px-4 py-3 transition', activeInput === 'pickup' ? 'bg-white/[0.04]' : 'hover:bg-white/[0.02]')}
+                        {/* Pickup + Destination (Glassmorphic Container) */}
+                        <div className="glass-container glass-container--rounded glass-container--large mb-4">
+                           <div className="glass-filter"></div>
+                           <div className="glass-overlay"></div>
+                           <div className="glass-specular"></div>
+                           <div className="glass-content p-6 space-y-4">
+                              <div
+                              className={cn('flex cursor-text items-center gap-4 p-3 rounded-2xl transition', activeInput === 'pickup' ? 'bg-white/[0.05]' : 'hover:bg-white/[0.02]')}
                               onClick={() => setActiveInput('pickup')}
                            >
-                              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-[9px] font-bold text-slate-950">A</div>
-                              <input
-                                 value={pickupInput}
-                                 onChange={(e) => { setPickupTouched(true); setPickupInput(e.target.value) }}
-                                 onFocus={() => setActiveInput('pickup')}
-                                 placeholder={isLocating ? 'Detecting location\u2026' : 'Pickup location'}
-                                 className="w-full bg-transparent text-sm font-medium text-white placeholder-white/30 outline-none"
-                              />
+                              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-[10px] font-black text-slate-950 shadow-[0_0_12px_rgba(52,211,153,0.4)]">A</div>
+                              <div className="flex-1 min-w-0">
+                                 <span className="text-[10px] font-black uppercase tracking-wider text-white/30 block">Pickup Location</span>
+                                 <input
+                                    value={pickupInput}
+                                    onChange={(e) => { setPickupTouched(true); setPickupInput(e.target.value) }}
+                                    onFocus={() => setActiveInput('pickup')}
+                                    placeholder={isLocating ? 'Detecting location\u2026' : 'Pickup location'}
+                                    className="w-full bg-transparent text-sm font-bold text-white placeholder-white/30 outline-none mt-0.5"
+                                 />
+                              </div>
                               {pickupInput && activeInput === 'pickup' && (
                                  <button type="button" onClick={(e) => { e.stopPropagation(); setPickupInput(''); setPickupTouched(false) }}>
-                                    <X className="h-4 w-4 text-white/30" />
+                                    <X className="h-4 w-4 text-white/30 hover:text-white" />
                                  </button>
                               )}
                            </div>
-                           <div className="mx-4 h-px bg-white/[0.06]" />
+                           <div className="h-px bg-white/[0.06] mx-3" />
                            <div
-                              className={cn('flex cursor-text items-center gap-3 px-4 py-3 transition', activeInput === 'drop' ? 'bg-white/[0.04]' : 'hover:bg-white/[0.02]')}
+                              className={cn('flex cursor-text items-center gap-4 p-3 rounded-2xl transition', activeInput === 'drop' ? 'bg-white/[0.05]' : 'hover:bg-white/[0.02]')}
                               onClick={() => setActiveInput('drop')}
                            >
-                              <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-400 text-[9px] font-bold text-slate-950">B</div>
-                              <input
-                                 value={destinationInput}
-                                 onChange={(e) => { setDestinationTouched(true); setDestinationInput(e.target.value) }}
-                                 onFocus={() => { setActiveInput('drop'); setDestinationTouched(true) }}
-                                 placeholder="Where to?"
-                                 className="w-full bg-transparent text-sm font-medium text-white placeholder-white/30 outline-none"
-                              />
+                              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-400 text-[10px] font-black text-slate-950 shadow-[0_0_12px_rgba(96,165,250,0.4)]">B</div>
+                              <div className="flex-1 min-w-0">
+                                 <span className="text-[10px] font-black uppercase tracking-wider text-white/30 block">Destination</span>
+                                 <input
+                                    value={destinationInput}
+                                    onChange={(e) => { setDestinationTouched(true); setDestinationInput(e.target.value) }}
+                                    onFocus={() => { setActiveInput('drop'); setDestinationTouched(true) }}
+                                    placeholder="Where to?"
+                                    className="w-full bg-transparent text-sm font-bold text-white placeholder-white/30 outline-none mt-0.5"
+                                 />
+                              </div>
                               {destinationInput && activeInput === 'drop' && (
                                  <button type="button" onClick={(e) => { e.stopPropagation(); setDestinationInput(''); setDestinationTouched(false) }}>
-                                    <X className="h-4 w-4 text-white/30" />
+                                    <X className="h-4 w-4 text-white/30 hover:text-white" />
                                  </button>
                               )}
                            </div>
 
                            {showSuggestions && (
-                              <div className="border-t border-white/[0.06] bg-[#05060a] px-2 py-2">
+                              <div className="rounded-2xl border border-white/[0.06] bg-black/40 px-2 py-2 backdrop-blur-md">
                                  {activeInput === 'pickup' && (
                                     <>
                                        {pickupSearchLoading && (
                                           <div className="flex items-center gap-2 px-3 py-2 text-xs text-white/40">
-                                             <LoaderCircle className="h-3 w-3 animate-spin" /> Searching{'\u2026'}
+                                             <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> Searching{'\u2026'}
                                           </div>
                                        )}
                                        <button type="button" onClick={() => selectPickup(location)}
-                                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
-                                          <div className="rounded-full bg-emerald-400/10 p-1.5 text-emerald-400"><MapPin className="h-3.5 w-3.5" /></div>
+                                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
+                                          <div className="rounded-full bg-emerald-400/10 p-1.5 text-emerald-400"><MapPin className="h-4 w-4" /></div>
                                           <p className="text-sm font-medium text-white">Use my current location</p>
                                        </button>
                                        {pickupSuggestions.map(option => (
                                           <button key={option.id} type="button" onClick={() => selectPickup(option)}
-                                             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
-                                             <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><MapPin className="h-3.5 w-3.5" /></div>
+                                             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
+                                             <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><MapPin className="h-4 w-4" /></div>
                                              <div className="min-w-0">
                                                 <p className="truncate text-sm font-medium text-white">{option.label}</p>
-                                                <p className="truncate text-xs text-white/40">{option.secondaryLabel}</p>
+                                                <p className="truncate text-xs text-white/45">{option.secondaryLabel}</p>
                                              </div>
                                           </button>
                                        ))}
@@ -384,16 +406,16 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                     <>
                                        {destinationSearchLoading && (
                                           <div className="flex items-center gap-2 px-3 py-2 text-xs text-white/40">
-                                             <LoaderCircle className="h-3 w-3 animate-spin" /> Searching{'\u2026'}
+                                             <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> Searching{'\u2026'}
                                           </div>
                                        )}
                                        {destinationSuggestions.map(option => (
                                           <button key={option.id} type="button" onClick={() => selectDestination(option)}
-                                             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
-                                             <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><Search className="h-3.5 w-3.5" /></div>
+                                             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
+                                             <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><Search className="h-4 w-4" /></div>
                                              <div className="min-w-0">
                                                 <p className="truncate text-sm font-medium text-white">{option.label}</p>
-                                                <p className="truncate text-xs text-white/40">{option.secondaryLabel}</p>
+                                                <p className="truncate text-xs text-white/45">{option.secondaryLabel}</p>
                                              </div>
                                           </button>
                                        ))}
@@ -401,133 +423,154 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                  )}
                               </div>
                            )}
+                           </div>
                         </div>
 
-                        {/* Price Prediction */}
+                        {/* Bento Grid layout for secondary features */}
                         {!showSuggestions && (
-                           <div className="mt-4 mb-2">
-                              <PricePrediction
-                                 pickup={pickupLocation.label}
-                                 destination={destinationLocation.label}
-                                 baseFare={Number(hasActivePass ? discountedFare : estimatedFare) / 1000000}
-                              />
+                           <div className="bento-grid">
+                              {/* Price Prediction Bento Block (Glassmorphic) */}
+                              <div className="col-span-12 sm:col-span-6 glass-container glass-container--rounded">
+                                 <div className="glass-filter"></div>
+                                 <div className="glass-overlay"></div>
+                                 <div className="glass-specular"></div>
+                                 <div className="glass-content p-6 flex flex-col justify-between">
+                                    <PricePrediction
+                                       pickup={pickupLocation.label}
+                                       destination={destinationLocation.label}
+                                       baseFare={Number(hasActivePass ? discountedFare : estimatedFare) / 1000000}
+                                       flat
+                                    />
+                                 </div>
+                              </div>
+
+                              {/* Trip summary Bento Block (Glassmorphic) */}
+                              <div className="col-span-12 sm:col-span-6 glass-container glass-container--rounded">
+                                 <div className="glass-filter"></div>
+                                 <div className="glass-overlay"></div>
+                                 <div className="glass-specular"></div>
+                                 <div className="glass-content p-6 flex flex-col justify-between">
+                                    <p className="text-[10px] font-black uppercase tracking-widest opacity-50 border-b border-current/10 pb-2">Trip Summary</p>
+                                    <div className="grid grid-cols-3 gap-2 pt-4 flex-1">
+                                       <div className="text-center sm:text-left">
+                                          <p className="text-[9px] font-black uppercase tracking-widest opacity-50">Distance</p>
+                                          <p className="mt-1 text-sm font-black text-current">{distanceKm.toFixed(1)} km</p>
+                                       </div>
+                                       <div className="text-center sm:text-left border-l border-current/10 pl-3">
+                                          <p className="text-[9px] font-black uppercase tracking-widest opacity-50">ETA</p>
+                                          <p className="mt-1 flex items-center justify-center sm:justify-start gap-1 text-sm font-black text-current">
+                                             <Clock3 className="h-3.5 w-3.5 opacity-55" />
+                                             {Math.max(4, Math.round(distanceKm * 2.4))}m
+                                          </p>
+                                       </div>
+                                       <div className="text-center sm:text-left border-l border-current/10 pl-3">
+                                          <p className="text-[9px] font-black uppercase tracking-widest opacity-50">Total Fare</p>
+                                          {hasActivePass && discountedFare < estimatedFare ? (
+                                             <div className="mt-0.5">
+                                                <p className="text-sm font-black text-emerald-700">{ride.formatAlgoAmount(discountedFare)}</p>
+                                                <p className="text-[9px] opacity-40 line-through">{ride.formatAlgoAmount(estimatedFare)}</p>
+                                                <p className="text-[8px] font-bold text-emerald-700 uppercase tracking-tight block mt-0.5">{passData.activePass!.discount}% Pass applied</p>
+                                             </div>
+                                          ) : (
+                                             <p className="mt-1 text-sm font-black text-current">{ride.formatAlgoAmount(estimatedFare)}</p>
+                                          )}
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              {/* Vehicle options (Glassmorphic) */}
+                              <div className="col-span-12 space-y-3.5">
+                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/30 pl-1">Select Ride Mode</p>
+                                 <div className="grid gap-3">
+                                    {ride.vehicleOptions.map((vehicle) => {
+                                       const fare = BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * vehicle.multiplier * 0.18)))
+                                       const selected = ride.selectedVehicleId === vehicle.id
+                                       return (
+                                          <button
+                                             key={vehicle.id}
+                                             type="button"
+                                             onClick={() => ride.setSelectedVehicleId(vehicle.id)}
+                                             className={cn(
+                                                'transition-all active:scale-[0.99] glass-container glass-container--rounded block',
+                                                selected
+                                                   ? 'bg-white/[0.14] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
+                                                   : 'bg-white/[0.05] border-white/10 opacity-70 hover:opacity-100',
+                                             )}
+                                          >
+                                             <div className="glass-filter"></div>
+                                             <div className="glass-overlay"></div>
+                                             <div className="glass-specular"></div>
+                                             <div className="glass-content flex items-center justify-between gap-4 p-4 text-left">
+                                                <div className="flex items-center gap-4">
+                                                   <div className={cn('rounded-2xl p-2 shrink-0 shadow-md', vehicle.gradient)}>
+                                                      <img 
+                                                         src={vehicleIcons[vehicle.id]} 
+                                                         alt={vehicle.name} 
+                                                         className="h-[52px] w-[52px] object-contain drop-shadow-md dark:[filter:drop-shadow(1px_1px_0_white)_drop-shadow(-1px_-1px_0_white)_drop-shadow(1px_-1px_0_white)_drop-shadow(-1px_1px_0_white)]"
+                                                      />
+                                                   </div>
+                                                   <div>
+                                                      <p className="text-sm font-bold text-white">{vehicle.name}</p>
+                                                      <p className="text-xs text-white/40">{vehicle.description}</p>
+                                                   </div>
+                                                </div>
+                                                <div className="text-right">
+                                                   <p className="text-sm font-black text-white">{ride.formatAlgoAmount(fare)}</p>
+                                                   <p className="text-xs text-white/40">{Math.max(4, Math.round(distanceKm * 2.4))} min</p>
+                                                </div>
+                                             </div>
+                                          </button>
+                                       )
+                                    })}
+                                 </div>
+                              </div>
+
+                              {/* Book CTA (Claymorphic) */}
+                              <div className="col-span-12 pt-2">
+                                 <button
+                                    type="button"
+                                    disabled={!ride.activeAddress || ride.actionState.createRide || ride.actionState.optIn || isLocating}
+                                    onClick={() => void handleCreateRide()}
+                                    className="w-full clay-btn clay-btn-brand flex items-center justify-center gap-2.5 text-headline disabled:opacity-40 disabled:cursor-not-allowed"
+                                 >
+                                    {ride.actionState.createRide || ride.actionState.optIn ? (
+                                       <LoaderCircle className="h-5 w-5 animate-spin" />
+                                    ) : (
+                                       <CarFront className="h-5 w-5" />
+                                    )}
+                                    {ride.actionState.optIn
+                                       ? 'Opting into GIGC\u2026'
+                                       : ride.actionState.createRide
+                                          ? 'Creating ride\u2026'
+                                          : `Book ${ride.selectedVehicle.name}`
+                                    }
+                                 </button>
+                              </div>
                            </div>
                         )}
 
-                        {/* Vehicle options */}
-                        {!showSuggestions && (
-                           <>
-                              <div className="grid gap-2">
-                                 {ride.vehicleOptions.map((vehicle) => {
-                                    const fare = BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * vehicle.multiplier * 0.18)))
-                                    const selected = ride.selectedVehicleId === vehicle.id
-                                    return (
-                                       <button
-                                          key={vehicle.id}
-                                          type="button"
-                                          onClick={() => ride.setSelectedVehicleId(vehicle.id)}
-                                          className={cn(
-                                             'flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition',
-                                             selected
-                                                ? 'border-white/[0.15] bg-white/[0.06]'
-                                                : 'border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04]',
-                                          )}
-                                       >
-                                          <div className="flex items-center gap-3">
-                                             <div className={cn('rounded-xl p-1', vehicle.gradient)}>
-                                                <img 
-                                                   src={vehicleIcons[vehicle.id]} 
-                                                   alt={vehicle.name} 
-                                                   className="h-[60px] w-[60px] object-contain drop-shadow-md dark:[filter:drop-shadow(1px_1px_0_white)_drop-shadow(-1px_-1px_0_white)_drop-shadow(1px_-1px_0_white)_drop-shadow(-1px_1px_0_white)]"
-                                                />
-                                             </div>
-                                             <div>
-                                                <p className="text-sm font-medium text-white">{vehicle.name}</p>
-                                                <p className="text-xs text-white/40">{vehicle.description}</p>
-                                             </div>
-                                          </div>
-                                          <div className="text-right">
-                                             <p className="text-sm font-semibold text-white">{ride.formatAlgoAmount(fare)}</p>
-                                             <p className="text-xs text-white/40">{Math.max(4, Math.round(distanceKm * 2.4))} min</p>
-                                          </div>
-                                       </button>
-                                    )
-                                 })}
-                              </div>
-
-                              {/* Trip summary */}
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-px overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.04]">
-                                 <div className="bg-[#05060a] p-3.5 flex justify-between sm:block">
-                                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30">Distance</p>
-                                    <p className="mt-1 text-sm font-semibold text-white">{distanceKm.toFixed(1)} km</p>
-                                 </div>
-                                 <div className="bg-[#05060a] p-3.5 border-t border-white/[0.04] sm:border-t-0 flex justify-between sm:block">
-                                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30">ETA</p>
-                                    <p className="mt-1 flex items-center gap-1 text-sm font-semibold text-white">
-                                       <Clock3 className="h-3.5 w-3.5 text-white/35" />
-                                       {Math.max(4, Math.round(distanceKm * 2.4))}m
-                                    </p>
-                                 </div>
-                                 <div className="bg-[#05060a] p-3.5 border-t border-white/[0.04] sm:border-t-0 flex justify-between sm:block">
-                                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30">Fare</p>
-                                    {hasActivePass && discountedFare < estimatedFare ? (
-                                       <div className="mt-1 text-right sm:text-left">
-                                          <p className="text-sm font-semibold text-white">{ride.formatAlgoAmount(discountedFare)}</p>
-                                          <p className="text-[10px] text-white/25 line-through">{ride.formatAlgoAmount(estimatedFare)}</p>
-                                          <p className="mt-1 text-[9px] font-bold text-emerald-400 uppercase tracking-widest">{passData.activePass!.discount}% Pass applied</p>
-                                       </div>
-                                    ) : (
-                                       <p className="mt-1 text-sm font-semibold text-white">{ride.formatAlgoAmount(estimatedFare)}</p>
-                                    )}
-                                 </div>
-                              </div>
-
-                              {/* Book CTA */}
-                              <button
-                                 type="button"
-                                 disabled={!ride.activeAddress || ride.actionState.createRide || ride.actionState.optIn || isLocating}
-                                 onClick={() => void handleCreateRide()}
-                                 className={cn(
-                                    'flex w-full items-center justify-center gap-2.5 rounded-xl px-5 py-3.5 text-[15px] font-semibold transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100',
-                                    'bg-white text-[#05060a]',
-                                 )}
-                              >
-                                 {ride.actionState.createRide || ride.actionState.optIn ? (
-                                    <LoaderCircle className="h-4.5 w-4.5 animate-spin" />
-                                 ) : (
-                                    <CarFront className="h-4.5 w-4.5" />
-                                 )}
-                                 {ride.actionState.optIn
-                                    ? 'Opting into GIGC\u2026'
-                                    : ride.actionState.createRide
-                                       ? 'Creating ride\u2026'
-                                       : `Book ${ride.selectedVehicle.name}`
-                                 }
-                              </button>
-                           </>
-                        )}
-
                         {refundedTxId && (
-                           <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4 text-left mb-3">
-                              <div className="flex items-start gap-3">
+                           <div className="rounded-3xl border border-emerald-500/20 bg-emerald-500/[0.04] p-5 text-left mb-3 backdrop-blur-md">
+                              <div className="flex items-start gap-4.5">
                                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
                                  <div className="flex-1">
                                     <p className="text-sm font-semibold text-white">Ride Auto-Refunded</p>
-                                    <p className="mt-1 text-xs text-white/60 leading-relaxed">
-                                       The driver did not reach the drop location within the 10-minute limit. Your escrowed GIGC tokens have been auto-refunded to your wallet.
+                                    <p className="mt-1.5 text-xs text-white/60 leading-relaxed">
+                                       The driver did not reach the drop location within the allowed distance-based time limit. Your escrowed GIGC tokens have been auto-refunded to your wallet.
                                     </p>
                                     <a 
                                        href={`https://testnet.explorer.peraswap.app/tx/${refundedTxId}`}
                                        target="_blank"
                                        rel="noopener noreferrer"
-                                       className="mt-2 inline-flex items-center text-[10px] text-emerald-400 font-mono underline hover:text-emerald-300"
+                                       className="mt-3 inline-flex items-center text-[10px] text-emerald-400 font-mono underline hover:text-emerald-300"
                                     >
                                        TxID: {refundedTxId.slice(0, 10)}...{refundedTxId.slice(-10)} ↗
                                     </a>
                                     <button
                                        type="button"
                                        onClick={() => setRefundedTxId(null)}
-                                       className="mt-2 block text-xs text-white/40 hover:text-white/60 underline"
+                                       className="mt-3 block text-xs text-white/40 hover:text-white/60 underline"
                                     >
                                        Dismiss
                                     </button>
@@ -539,64 +582,69 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                         {/* Active ride status */}
                         {activeRide && !showSuggestions && (
                            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                              className="rounded-xl border border-white/[0.1] bg-white/[0.03] p-4">
-                              <div className="flex items-start justify-between gap-3">
-                                 <div className="min-w-0 flex-1">
-                                    <p className="text-[10px] font-semibold uppercase tracking-widest text-emerald-400">Active ride</p>
-                                    <p className="mt-1 text-base font-semibold text-white">Ride #{activeRide.rideId.toString()}</p>
-                                    <p className="mt-0.5 truncate text-xs text-white/40">{activeRide.pickup.label} {'\u2192'} {activeRide.drop.label}</p>
+                              className="rounded-3xl border border-white/10 glass-container glass-container--rounded">
+                              <div className="glass-filter"></div>
+                              <div className="glass-overlay"></div>
+                              <div className="glass-specular"></div>
+                              <div className="glass-content p-5">
+                                 <div className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0 flex-1">
+                                       <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Active ride</p>
+                                       <p className="mt-1 text-base font-bold text-white">Ride #{activeRide.rideId.toString()}</p>
+                                       <p className="mt-1 truncate text-xs text-white/45">{activeRide.pickup.label} {'\u2192'} {activeRide.drop.label}</p>
+                                    </div>
+                                    <span className={cn(
+                                       'shrink-0 rounded-xl border px-3 py-1.5 text-[9px] font-black uppercase tracking-wider',
+                                       activeRide.status === RideStatus.REQUESTED && 'border-amber-500/20 bg-amber-500/10 text-amber-400',
+                                       activeRide.status === RideStatus.RIDER_ASSIGNED && 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400',
+                                       activeRide.status === RideStatus.RIDE_STARTED && 'border-sky-500/20 bg-sky-500/10 text-sky-400',
+                                    )}>
+                                       {activeRide.status}
+                                    </span>
                                  </div>
-                                 <span className={cn(
-                                    'shrink-0 rounded-md px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide',
-                                    activeRide.status === RideStatus.REQUESTED && 'bg-amber-500/10 text-amber-400',
-                                    activeRide.status === RideStatus.RIDER_ASSIGNED && 'bg-emerald-500/10 text-emerald-400',
-                                    activeRide.status === RideStatus.RIDE_STARTED && 'bg-sky-500/10 text-sky-400',
-                                 )}>
-                                    {activeRide.status}
-                                 </span>
-                              </div>
-                              {activeRide.status === RideStatus.RIDER_ASSIGNED && (
-                                 <div className="mt-3 rounded-lg bg-emerald-500/[0.06] p-3">
-                                    <div className="flex items-center gap-2">
-                                       <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                                       <p className="text-sm font-medium text-white">Share OTP with driver</p>
-                                    </div>
-                                    <div className="mt-2 flex items-center gap-3">
-                                       <button type="button" onClick={() => void handleGenerateOtp(activeRide.rideId)}
-                                          disabled={ride.actionState.storeOtp}
-                                          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white disabled:opacity-45">
-                                          {ride.actionState.storeOtp ? 'Generating\u2026' : activeRide.otp ? 'Regen OTP' : 'Generate OTP'}
-                                       </button>
-                                       {activeRide.otp && (
-                                          <span className="font-mono text-2xl font-bold tracking-[0.3em] text-white">{activeRide.otp}</span>
-                                       )}
-                                    </div>
-                                 </div>
-                              )}
-                              {activeRide.status === RideStatus.RIDE_STARTED && (
-                                 <div className="mt-3 space-y-3">
-                                    <div className="flex items-center gap-2 rounded-lg bg-sky-500/[0.06] p-3 text-sm text-white/70">
-                                       <UserRound className="h-4 w-4 text-sky-400" />
-                                       Ride in progress {'\u00B7'} Escrow locked
-                                    </div>
-
-                                    {/* Arrival Timer */}
-                                    <div className="flex flex-col gap-2 rounded-lg border border-amber-500/20 bg-amber-500/[0.04] p-3 text-left">
-                                       <div className="flex items-center gap-2 text-amber-400">
-                                          <Clock3 className="h-4 w-4 animate-pulse" />
-                                          <span className="text-[10px] font-bold uppercase tracking-wider">Refund Timeout Countdown</span>
+                                 {activeRide.status === RideStatus.RIDER_ASSIGNED && (
+                                    <div className="mt-4 rounded-2xl bg-emerald-500/[0.04] border border-emerald-500/10 p-4">
+                                       <div className="flex items-center gap-2">
+                                          <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                                          <p className="text-xs font-bold text-white uppercase tracking-wider">Share OTP with driver</p>
                                        </div>
-                                       {minsRemaining !== null ? (
-                                          <p className="text-xs text-white/70 leading-relaxed">
-                                             Driver has <strong className="text-amber-300 font-mono text-sm">{Math.floor(minsRemaining)}m {Math.floor((minsRemaining % 1) * 60)}s</strong> to drop you off. 
-                                             If they don't arrive within 10 minutes, the escrow will be auto-refunded to your wallet.
-                                          </p>
-                                       ) : (
-                                          <p className="text-xs text-white/50">Calculating remaining ride time...</p>
-                                       )}
+                                       <div className="mt-3 flex items-center gap-4">
+                                          <button type="button" onClick={() => void handleGenerateOtp(activeRide.rideId)}
+                                             disabled={ride.actionState.storeOtp}
+                                             className="clay-btn py-2.5 px-5 text-xs rounded-xl disabled:opacity-45">
+                                             {ride.actionState.storeOtp ? 'Generating\u2026' : activeRide.otp ? 'Regen OTP' : 'Generate OTP'}
+                                          </button>
+                                          {activeRide.otp && (
+                                             <span className="font-mono text-2xl font-black tracking-[0.3em] text-emerald-300">{activeRide.otp}</span>
+                                          )}
+                                       </div>
                                     </div>
-                                 </div>
-                              )}
+                                 )}
+                                 {activeRide.status === RideStatus.RIDE_STARTED && (
+                                    <div className="mt-4 space-y-4">
+                                       <div className="flex items-center gap-2 rounded-2xl border border-sky-500/10 bg-sky-500/[0.04] p-3 text-xs font-bold text-sky-300 uppercase tracking-wider">
+                                          <UserRound className="h-4 w-4 text-sky-400" />
+                                          Ride in progress {'\u00B7'} Escrow locked
+                                       </div>
+
+                                       {/* Arrival Timer */}
+                                       <div className="flex flex-col gap-2 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-4 text-left">
+                                          <div className="flex items-center gap-2 text-amber-400">
+                                             <Clock3 className="h-4 w-4 animate-pulse" />
+                                             <span className="text-[10px] font-bold uppercase tracking-wider">Refund Timeout Countdown</span>
+                                          </div>
+                                          {minsRemaining !== null ? (
+                                             <p className="text-xs text-white/70 leading-relaxed">
+                                                Driver has <strong className="text-amber-300 font-mono text-sm">{Math.floor(minsRemaining)}m {Math.floor((minsRemaining % 1) * 60)}s</strong> to drop you off. 
+                                                If they don't arrive within the allowed time limit (calculated based on ride distance), the escrow will be auto-refunded to your wallet.
+                                             </p>
+                                          ) : (
+                                             <p className="text-xs text-white/50">Calculating remaining ride time...</p>
+                                          )}
+                                       </div>
+                                    </div>
+                                 )}
+                              </div>
                            </motion.div>
                         )}
                      </div>
@@ -629,51 +677,61 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }}
                               onClick={() => ride.setFocusedRideId(item.rideId)}
                               className={cn(
-                                 'w-full rounded-xl border p-4 text-left transition cursor-pointer',
+                                 'w-full text-left transition cursor-pointer glass-container glass-container--rounded block',
                                  ride.focusedRideId === item.rideId
-                                    ? 'border-white/[0.15] bg-white/[0.06]'
-                                    : 'border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04]',
+                                    ? 'bg-white/[0.14] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
+                                    : 'bg-white/[0.05] border-white/10 opacity-70 hover:opacity-100',
                               )}>
-                              <div className="flex items-start justify-between gap-3">
-                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-white">Ride #{item.rideId.toString()}</p>
-                                    <p className="mt-1 truncate text-xs text-white/40">{item.pickup.label} {'\u2192'} {item.drop.label}</p>
+                              <div className="glass-filter"></div>
+                              <div className="glass-overlay"></div>
+                              <div className="glass-specular"></div>
+                              <div className="glass-content p-4">
+                                 <div className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0 flex-1">
+                                       <p className="text-sm font-medium text-white">Ride #{item.rideId.toString()}</p>
+                                       <p className="mt-1 truncate text-xs text-white/40">{item.pickup.label} {'\u2192'} {item.drop.label}</p>
+                                    </div>
+                                    <div className={cn(
+                                       'shrink-0 rounded-md px-2.5 py-1 text-[11px] font-medium',
+                                       item.status === RideStatus.PAID || item.status === RideStatus.RIDE_COMPLETED
+                                          ? 'bg-white/[0.04] text-white/40'
+                                          : 'bg-emerald-500/10 text-emerald-400',
+                                    )}>
+                                       {item.status === RideStatus.PAID
+                                          ? <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Paid</span>
+                                          : item.status}
+                                    </div>
                                  </div>
-                                 <div className={cn(
-                                    'shrink-0 rounded-md px-2.5 py-1 text-[11px] font-medium',
-                                    item.status === RideStatus.PAID || item.status === RideStatus.RIDE_COMPLETED
-                                       ? 'bg-white/[0.04] text-white/40'
-                                       : 'bg-emerald-500/10 text-emerald-400',
-                                 )}>
-                                    {item.status === RideStatus.PAID
-                                       ? <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Paid</span>
-                                       : item.status}
-                                 </div>
-                              </div>
-                              {item.status === RideStatus.RIDER_ASSIGNED && (
-                                 <div className="mt-3 rounded-lg border border-emerald-500/10 bg-emerald-500/[0.05] p-3">
-                                    <p className="text-xs font-medium text-white">OTP: <span className="font-mono tracking-widest">{item.otp ?? 'Not generated'}</span></p>
-                                    <button type="button" onClick={(e) => { e.stopPropagation(); void handleGenerateOtp(item.rideId) }}
-                                       disabled={ride.actionState.storeOtp}
-                                       className="mt-2 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-45">
-                                       {item.otp ? 'Regenerate OTP' : 'Generate OTP'}
+                                 {item.status === RideStatus.RIDER_ASSIGNED && (
+                                    <div className="mt-3 rounded-lg border border-emerald-500/10 bg-emerald-500/[0.05] p-3">
+                                       <p className="text-xs font-medium text-white">OTP: <span className="font-mono tracking-widest">{item.otp ?? 'Not generated'}</span></p>
+                                       <button type="button" onClick={(e) => { e.stopPropagation(); void handleGenerateOtp(item.rideId) }}
+                                          disabled={ride.actionState.storeOtp}
+                                          className="mt-2 rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-45">
+                                          {item.otp ? 'Regenerate OTP' : 'Generate OTP'}
+                                       </button>
+                                    </div>
+                                 )}
+                                 {item.status === RideStatus.RIDE_COMPLETED && (
+                                    <button type="button" onClick={(e) => { e.stopPropagation(); void ride.releasePayment(item.rideId, item.rider || 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HQC7V') }}
+                                       disabled={ride.actionState.payout || !item.rider}
+                                       className="mt-3 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-[#05060a] disabled:opacity-45">
+                                       {ride.actionState.payout ? 'Paying...' : 'Release payment'}
                                     </button>
-                                 </div>
-                              )}
-                              {item.status === RideStatus.RIDE_COMPLETED && (
-                                 <button type="button" onClick={(e) => { e.stopPropagation(); void ride.releasePayment(item.rideId, item.rider || 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HQC7V') }}
-                                    disabled={ride.actionState.payout || !item.rider}
-                                    className="mt-3 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-[#05060a] disabled:opacity-45">
-                                    {ride.actionState.payout ? 'Paying...' : 'Release payment'}
-                                 </button>
-                              )}
+                                 )}
+                              </div>
                            </motion.div>
                         ))}
                      </AnimatePresence>
 
                      {!ride.customerRides.length && (
-                        <div className="rounded-xl border border-dashed border-white/[0.08] bg-white/[0.02] p-10 text-center text-sm text-white/40">
-                           No rides yet. Book from the <strong className="text-white/60">Book</strong> tab.
+                        <div className="glass-container glass-container--rounded w-full text-center">
+                           <div className="glass-filter"></div>
+                           <div className="glass-overlay"></div>
+                           <div className="glass-specular"></div>
+                           <div className="glass-content p-10 text-sm text-white/40 border border-dashed border-white/[0.08]">
+                              No rides yet. Book from the <strong className="text-white/60">Book</strong> tab.
+                           </div>
                         </div>
                      )}
                   </div>
@@ -934,120 +992,127 @@ function CustomerProfileDropdown({
 
          <AnimatePresence>
             {isOpen && (
-               <motion.div 
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 top-full mt-3 w-[280px] sm:w-64 origin-top-right rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-[100]"
-               >
-                  <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl group relative">
-                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden shrink-0 border border-white/10">
-                        {profilePhoto ? (
-                           <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
-                        ) : (
-                           <UserRound className="w-5 h-5 text-white/70" />
-                        )}
-                     </div>
-                     <div className="overflow-hidden flex-1">
-                        <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Account</p>
-                        <p className="text-sm font-mono truncate text-white/90">{activeAddress}</p>
-                     </div>
-                     <label className="absolute -left-1 -top-1 bg-emerald-500 rounded-full p-1.5 cursor-pointer shadow-lg opacity-0 group-hover:opacity-100 transition-opacity scale-75 hover:scale-90">
-                        <Camera className="w-3.5 h-3.5 text-black" />
-                        <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
-                     </label>
-                  </div>
-
-                  <div className="mb-4">
-                     <button 
-                        onClick={() => document.getElementById('profile-upload')?.click()}
-                        className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left group"
-                     >
-                        <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20">
-                           <Camera className="w-4 h-4" />
-                        </div>
-                        <div>
-                           <span className="text-sm font-medium block">Update Photo</span>
-                           <span className="text-[10px] text-white/30">Max 100KB</span>
-                        </div>
-                        <input id="profile-upload" type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
-                     </button>
-                  </div>
-
-                   {/* Mobile Tabs */}
-                   {onTabChange && (
-                      <div className="lg:hidden space-y-1 mb-4 border-b border-white/10 pb-4">
-                         <p className="text-[10px] uppercase tracking-wider font-semibold text-white/40 mb-2 px-1">Navigation</p>
-                         <button onClick={() => { setIsOpen(false); onTabChange('book') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'book' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                            <CarFront className="w-4 h-4" />
-                            <span className="text-sm font-medium">Book</span>
-                         </button>
-                         <button onClick={() => { setIsOpen(false); onTabChange('history') }} className={cn("w-full flex items-center justify-between gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'history' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                            <div className="flex items-center gap-3">
-                               <History className="w-4 h-4" />
-                               <span className="text-sm font-medium">My Rides</span>
-                            </div>
-                            {rideCount ? <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{rideCount}</span> : null}
-                         </button>
-                         <button onClick={() => { setIsOpen(false); onTabChange('passes') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'passes' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                            <Gem className="w-4 h-4" />
-                            <span className="text-sm font-medium">Your Passes</span>
-                         </button>
-                      </div>
-                   )}
-
-                   <div className="space-y-2 mb-4">
-                     <button 
-                        onClick={() => { setIsOpen(false); onSwitchRole('driver') }}
-                        className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
-                     >
-                        <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                        <span className="text-sm font-medium">Driver Dashboard</span>
-                     </button>
-                     <button 
-                        onClick={() => { setIsOpen(false); onSwitchRole('admin') }}
-                        className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
-                     >
-                        <ShieldCheck className="w-4 h-4 text-blue-400" />
-                        <span className="text-sm font-medium">Admin Dashboard</span>
-                     </button>
-                  </div>
-
-                  <div className="mb-4 p-3.5 rounded-2xl border border-white/5 bg-white/[0.03] backdrop-blur-xl">
-                      <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-white/40 mb-2 font-bold">
-                         <span>Status</span>
-                         <span className="font-semibold text-emerald-400 flex items-center gap-1.5 normal-case font-mono">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                            Connected
-                         </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs font-semibold">
-                         <span className="text-white/60">Your GIGC Balance</span>
-                         <span className="font-bold text-white flex items-center gap-1">
-                            {isFetchingBalance ? (
-                               <Loader2 className="w-3.5 h-3.5 animate-spin text-white/40" />
-                            ) : (
-                               `${gigcBalance !== null ? gigcBalance.toLocaleString() : '0'} GIGC`
-                            )}
-                         </span>
-                      </div>
-                   </div>
-
-                   <button 
-                      onClick={() => { setIsOpen(false); setIsTopUpOpen(true) }}
-                      className="w-full flex items-center justify-center gap-2 py-3 mb-2.5 rounded-xl bg-white text-black hover:bg-white/90 active:scale-[0.98] transition font-bold text-sm shadow-lg shadow-black/20"
-                   >
-                      <Coins className="w-4 h-4" />
-                      Top-Up GIGC
-                   </button>
-
-                  <button 
-                     onClick={() => activeWallet?.disconnect()}
-                     className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 active:scale-[0.98] transition font-semibold text-sm"
+               <div className="absolute right-0 top-full mt-3 w-[280px] sm:w-64 origin-top-right z-[100] pointer-events-auto">
+                  <motion.div 
+                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                     animate={{ opacity: 1, y: 0, scale: 1 }}
+                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                     className="w-full glass-container glass-container--rounded shadow-2xl"
                   >
-                     Disconnect Wallet
-                  </button>
-               </motion.div>
+                     <div className="glass-filter"></div>
+                     <div className="glass-overlay"></div>
+                     <div className="glass-specular"></div>
+                     <div className="glass-content p-4">
+                        <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl group relative">
+                           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden shrink-0 border border-white/10">
+                              {profilePhoto ? (
+                                 <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
+                              ) : (
+                                 <UserRound className="w-5 h-5 text-white/70" />
+                              )}
+                           </div>
+                           <div className="overflow-hidden flex-1">
+                              <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Account</p>
+                              <p className="text-sm font-mono truncate text-white/90">{activeAddress}</p>
+                           </div>
+                           <label className="absolute -left-1 -top-1 bg-emerald-500 rounded-full p-1.5 cursor-pointer shadow-lg opacity-0 group-hover:opacity-100 transition-opacity scale-75 hover:scale-90">
+                              <Camera className="w-3.5 h-3.5 text-black" />
+                              <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                           </label>
+                        </div>
+
+                        <div className="mb-4">
+                           <button 
+                              onClick={() => document.getElementById('profile-upload')?.click()}
+                              className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left group"
+                           >
+                              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20">
+                                 <Camera className="w-4 h-4" />
+                              </div>
+                              <div>
+                                 <span className="text-sm font-medium block">Update Photo</span>
+                                 <span className="text-[10px] text-white/30">Max 100KB</span>
+                              </div>
+                              <input id="profile-upload" type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                           </button>
+                        </div>
+
+                         {/* Mobile Tabs */}
+                         {onTabChange && (
+                            <div className="lg:hidden space-y-1 mb-4 border-b border-white/10 pb-4">
+                               <p className="text-[10px] uppercase tracking-wider font-semibold text-white/40 mb-2 px-1">Navigation</p>
+                               <button onClick={() => { setIsOpen(false); onTabChange('book') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'book' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                                  <CarFront className="w-4 h-4" />
+                                  <span className="text-sm font-medium">Book</span>
+                               </button>
+                               <button onClick={() => { setIsOpen(false); onTabChange('history') }} className={cn("w-full flex items-center justify-between gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'history' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                                  <div className="flex items-center gap-3">
+                                     <History className="w-4 h-4" />
+                                     <span className="text-sm font-medium">My Rides</span>
+                                  </div>
+                                  {rideCount ? <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{rideCount}</span> : null}
+                               </button>
+                               <button onClick={() => { setIsOpen(false); onTabChange('passes') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'passes' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                                  <Gem className="w-4 h-4" />
+                                  <span className="text-sm font-medium">Your Passes</span>
+                               </button>
+                            </div>
+                         )}
+
+                         <div className="space-y-2 mb-4">
+                           <button 
+                              onClick={() => { setIsOpen(false); onSwitchRole('driver') }}
+                              className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
+                           >
+                              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                              <span className="text-sm font-medium">Driver Dashboard</span>
+                           </button>
+                           <button 
+                              onClick={() => { setIsOpen(false); onSwitchRole('admin') }}
+                              className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
+                           >
+                              <ShieldCheck className="w-4 h-4 text-blue-400" />
+                              <span className="text-sm font-medium">Admin Dashboard</span>
+                           </button>
+                        </div>
+
+                        <div className="mb-4 p-3.5 rounded-2xl border border-white/5 bg-white/[0.03] backdrop-blur-xl">
+                            <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-white/40 mb-2 font-bold">
+                               <span>Status</span>
+                               <span className="font-semibold text-emerald-400 flex items-center gap-1.5 normal-case font-mono">
+                                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                  Connected
+                               </span>
+                            </div>
+                            <div className="flex items-center justify-between text-xs font-semibold">
+                               <span className="text-white/60">Your GIGC Balance</span>
+                               <span className="font-bold text-white flex items-center gap-1">
+                                  {isFetchingBalance ? (
+                                     <Loader2 className="w-3.5 h-3.5 animate-spin text-white/40" />
+                                  ) : (
+                                     `${gigcBalance !== null ? gigcBalance.toLocaleString() : '0'} GIGC`
+                                  )}
+                               </span>
+                            </div>
+                         </div>
+
+                         <button 
+                            onClick={() => { setIsOpen(false); setIsTopUpOpen(true) }}
+                            className="w-full flex items-center justify-center gap-2 py-3 mb-2.5 rounded-xl bg-white text-black hover:bg-white/90 active:scale-[0.98] transition font-bold text-sm shadow-lg shadow-black/20"
+                         >
+                            <Coins className="w-4 h-4" />
+                            Top-Up GIGC
+                         </button>
+
+                        <button 
+                           onClick={() => activeWallet?.disconnect()}
+                           className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 active:scale-[0.98] transition font-semibold text-sm"
+                        >
+                           Disconnect Wallet
+                        </button>
+                     </div>
+                  </motion.div>
+               </div>
             )}
          </AnimatePresence>
 
@@ -1200,29 +1265,39 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
     }
 
    return (
-      <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/75 p-4 backdrop-blur-md overflow-y-auto">
          <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="w-full max-w-md overflow-y-auto max-h-[90vh] rounded-[32px] border border-white/10 bg-[#0f111a]/95 shadow-2xl backdrop-blur-2xl"
+            className="w-full max-w-md overflow-y-auto max-h-[90vh] glass-container glass-container--rounded glass-container--large shadow-2xl"
          >
-            <div className="p-6 relative">
-               <button
-                  onClick={onClose}
-                  className="absolute right-4 top-4 rounded-full border border-white/5 bg-white/[0.02] p-2 text-white/55 transition hover:bg-white/[0.08] hover:text-white"
-               >
-                  <X className="w-4 h-4" />
-               </button>
-
-               <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400">
-                     <Coins className="w-6 h-6" />
+            <div className="glass-filter" style={{ backdropFilter: 'blur(32px) saturate(150%)' }}></div>
+            <div className="glass-overlay"></div>
+            <div className="glass-specular"></div>
+            <div className="glass-content p-6 relative">
+               <div className="flex items-start justify-between mb-6 gap-4">
+                  <div className="flex items-center gap-3">
+                     <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 shrink-0">
+                        <Coins className="w-6 h-6" />
+                     </div>
+                     <div className="text-left">
+                        <h3 className="text-xl font-bold text-white">Top-Up GIGC</h3>
+                        <p className="text-xs text-white/40">Purchase ride credits using ALGO</p>
+                     </div>
                   </div>
-                  <div className="text-left">
-                     <h3 className="text-xl font-bold text-white">Top-Up GIGC</h3>
-                     <p className="text-xs text-white/40">Purchase ride credits using ALGO</p>
-                  </div>
+                  <button
+                     onClick={onClose}
+                     className="glass-container glass-container--rounded text-white/55 transition hover:text-white shrink-0"
+                     style={{ borderRadius: '9999px' }}
+                  >
+                     <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
+                     <div className="glass-overlay"></div>
+                     <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
+                     <div className="glass-content p-2 flex items-center justify-center">
+                        <X className="w-4 h-4" />
+                     </div>
+                  </button>
                </div>
 
                {status === 'idle' && (
@@ -1252,39 +1327,49 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
                         </div>
                      ) : (
                         <>
-                           <div>
-                              <label className="block text-xs font-semibold text-white/40 uppercase tracking-widest mb-2">
-                                 Enter GIGC Amount
-                              </label>
-                              <div className="relative">
-                                 <input
-                                    type="number"
-                                    min="1"
-                                    step="1"
-                                    value={gigcAmount}
-                                    onChange={(e) => {
-                                       setGigcAmount(e.target.value)
-                                       setErrorMsg('')
-                                    }}
-                                    placeholder="e.g. 100"
-                                    className="w-full rounded-2xl border border-white/10 bg-white/[0.02] py-4 pl-5 pr-16 text-lg font-bold text-white placeholder-white/20 outline-none focus:border-emerald-500/50 transition"
-                                 />
-                                 <span className="absolute right-5 top-1/2 -translate-y-1/2 font-bold text-sm text-white/40">
-                                    GIGC
-                                 </span>
+                           <div className="glass-container glass-container--rounded w-full">
+                              <div className="glass-filter"></div>
+                              <div className="glass-overlay"></div>
+                              <div className="glass-specular"></div>
+                              <div className="glass-content p-4 space-y-2 text-left">
+                                 <label className="block text-xs font-semibold text-white/40 uppercase tracking-widest">
+                                    Enter GIGC Amount
+                                 </label>
+                                 <div className="relative">
+                                    <input
+                                       type="number"
+                                       min="1"
+                                       step="1"
+                                       value={gigcAmount}
+                                       onChange={(e) => {
+                                          setGigcAmount(e.target.value)
+                                          setErrorMsg('')
+                                       }}
+                                       placeholder="e.g. 100"
+                                       className="w-full bg-transparent py-2 pl-1 pr-16 text-lg font-bold text-white placeholder-white/20 outline-none focus:border-none focus:ring-0 transition"
+                                    />
+                                    <span className="absolute right-1 top-1/2 -translate-y-1/2 font-bold text-sm text-white/40">
+                                       GIGC
+                                    </span>
+                                 </div>
                               </div>
                            </div>
 
-                           <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 space-y-2">
-                              <div className="flex items-center justify-between text-xs text-white/40">
-                                 <span>Exchange Rate</span>
-                                 <span className="font-medium text-white/80">100 GIGC = 1 ALGO</span>
-                              </div>
-                              <div className="flex items-center justify-between text-sm">
-                                 <span className="font-semibold text-white/70">Payment Amount</span>
-                                 <span className="font-black text-emerald-400">
-                                    {algoAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ALGO
-                                 </span>
+                           <div className="glass-container glass-container--rounded w-full">
+                              <div className="glass-filter"></div>
+                              <div className="glass-overlay"></div>
+                              <div className="glass-specular"></div>
+                              <div className="glass-content p-4 space-y-2.5">
+                                 <div className="flex items-center justify-between text-xs">
+                                    <span className="text-white/60">Exchange Rate</span>
+                                    <span className="font-bold text-white">100 GIGC = 1 ALGO</span>
+                                 </div>
+                                 <div className="border-t border-white/10 pt-2.5 flex items-center justify-between text-sm">
+                                    <span className="font-bold text-white/80">Payment Amount</span>
+                                    <span className="font-black text-emerald-400">
+                                       {algoAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })} ALGO
+                                    </span>
+                                 </div>
                               </div>
                            </div>
                         </>
@@ -1300,14 +1385,20 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
                         <div className="flex gap-3">
                            <button
                               onClick={onClose}
-                              className="flex-1 rounded-xl border border-white/10 bg-white/[0.02] py-3 text-sm font-semibold text-white hover:bg-white/[0.06] transition"
+                              className="flex-1 glass-container glass-container--rounded text-white hover:bg-white/10 transition-all"
+                              style={{ borderRadius: '9999px' }}
                            >
-                              Cancel
+                              <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
+                              <div className="glass-overlay"></div>
+                              <div className="glass-specular"></div>
+                              <div className="glass-content py-3 text-sm font-semibold flex items-center justify-center">
+                                 Cancel
+                              </div>
                            </button>
                            <button
                               onClick={handleConfirm}
                               disabled={gigcNum <= 0}
-                              className="flex-1 rounded-xl bg-emerald-500 py-3 text-sm font-bold text-black hover:bg-emerald-400 disabled:opacity-40 transition"
+                              className="flex-1 clay-btn clay-btn-brand py-3 text-sm font-bold disabled:opacity-40"
                            >
                               Confirm Purchase
                            </button>

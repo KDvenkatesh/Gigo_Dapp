@@ -138,8 +138,11 @@ router.post('/check-timeout', async (req, res) => {
       ride.drop.lat,
       ride.drop.lng
     );
-    // Assume average city speed of 30 km/h => 2 minutes per km. Plus 30 mins grace period.
-    const maxAllowedMins = Math.ceil(distanceKm * 2) + 30;
+    // Base travel time: 3 minutes per km (equivalent to 1h 30m for 30km)
+    const baseTimeMins = distanceKm * 3;
+    // Buffer time based on distance: 1 minute per km (equivalent to 30m for 30km)
+    const bufferTimeMins = distanceKm * 1;
+    const maxAllowedMins = Math.ceil(baseTimeMins + bufferTimeMins);
 
     const startedAt = ride.rideStartedAt;
     if (!startedAt) {
@@ -334,8 +337,20 @@ async function performAutomaticTimeoutScan() {
       const elapsedMs = Date.now() - new Date(startedAt).getTime();
       const elapsedMins = elapsedMs / 60000;
 
-      // 10 minutes timeout limit
-      if (elapsedMins >= 10) {
+      const distanceKm = haversineKm(
+        ride.pickup.lat,
+        ride.pickup.lng,
+        ride.drop.lat,
+        ride.drop.lng
+      );
+      // Base travel time: 3 minutes per km (equivalent to 1h 30m for 30km)
+      const baseTimeMins = distanceKm * 3;
+      // Buffer time based on distance: 1 minute per km (equivalent to 30m for 30km)
+      const bufferTimeMins = distanceKm * 1;
+      const maxAllowedMins = Math.ceil(baseTimeMins + bufferTimeMins);
+
+      // Distance-based timeout limit
+      if (elapsedMins >= maxAllowedMins) {
         console.log(`⏰ [Auto-Scanner] Ride ${ride.rideId} timed out after ${elapsedMins.toFixed(1)} mins. Executing automatic refund...`);
         
         if (!TREASURY_MNEMONIC) {
