@@ -38,18 +38,27 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-12">
             <div className="flex items-center gap-4">
-              <button onClick={onBack} className="rounded-full bg-white/5 p-2 hover:bg-white/10 transition">
-                <ArrowLeft className="h-5 w-5 text-white/60" />
+              <button onClick={onBack} className="glass-container glass-container--rounded text-white/60 transition hover:text-white" style={{ borderRadius: '9999px' }}>
+                <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
+                <div className="glass-overlay" style={{ borderRadius: '9999px' }}></div>
+                <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
+                <div className="glass-content p-2.5 flex items-center justify-center">
+                  <ArrowLeft className="h-5 w-5 text-white/60" />
+                </div>
               </button>
-              <h1 className="text-3xl font-bold">Admin Approval Dashboard</h1>
+              <h1 className="text-title-1 font-bold">Admin Approval Dashboard</h1>
             </div>
             <WalletConnectButton />
           </div>
 
-          <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl">
+          <div className="glass-container glass-container--rounded glass-container--large">
+            <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
+            <div className="glass-overlay"></div>
+            <div className="glass-specular"></div>
+            <div className="glass-content p-6 sm:p-8">
             <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-6">
               <Clock className="h-6 w-6 text-emerald-400" />
-              <h2 className="text-xl font-semibold">Pending Riders ({pendingDrivers.length})</h2>
+              <h2 className="text-title-2 font-semibold">Pending Riders ({pendingDrivers.length})</h2>
             </div>
 
             {pendingDrivers.length === 0 ? (
@@ -68,8 +77,12 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       key={driver.walletAddress} 
-                      className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 rounded-2xl bg-white/[0.03] border border-white/5 p-6 hover:bg-white/[0.05] transition"
+                      className="transition-all glass-container glass-container--rounded hover:bg-white/[0.14] border-white/30"
                     >
+                      <div className="glass-filter"></div>
+                      <div className="glass-overlay"></div>
+                      <div className="glass-specular"></div>
+                      <div className="glass-content flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6">
                       <div>
                         <p className="text-xs text-white/40 mb-1 font-mono">{driver.walletAddress}</p>
                         <p className="font-semibold text-lg flex items-center gap-2">
@@ -101,22 +114,24 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
                       <div className="flex w-full sm:w-auto gap-3 shrink-0">
                         <button 
                           onClick={() => rejectDriver(driver.walletAddress)}
-                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/20 transition"
+                          className="flex-1 sm:flex-none clay-btn clay-btn-danger text-xs px-4 py-2.5"
                         >
                           <X className="h-4 w-4" /> Reject
                         </button>
                         <button 
                           onClick={() => approveDriver(driver.walletAddress)}
-                          className="flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-400 transition shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                          className="flex-1 sm:flex-none clay-btn clay-btn-success py-2.5 px-5 text-xs"
                         >
                           <Check className="h-4 w-4" /> Approve
                         </button>
+                      </div>
                       </div>
                     </motion.div>
                   );
                 })}
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
@@ -136,8 +151,12 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#0f111a] border border-white/10 p-6 rounded-3xl max-w-3xl w-full max-h-[90vh] flex flex-col"
+              className="glass-container glass-container--rounded glass-container--large rounded-[32px] max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl"
             >
+              <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
+              <div className="glass-overlay"></div>
+              <div className="glass-specular"></div>
+              <div className="glass-content p-6 flex flex-col h-full">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold">{viewDoc.name}</h3>
                 <button onClick={() => setViewDoc(null)} className="p-2 bg-white/5 rounded-full hover:bg-white/10">
@@ -154,6 +173,7 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
                     className="max-w-full max-h-[60vh] object-contain rounded-lg" 
                   />
                 )}
+              </div>
               </div>
             </motion.div>
           </motion.div>

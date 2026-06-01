@@ -6,6 +6,29 @@ import algosdk from 'algosdk'
 import axios from 'axios'
 import type { PassInfo } from '../hooks/useAlgorandAssets'
 import { algorandConfig } from '../config/algorand'
+import { cn } from '../lib/cn'
+
+const tierAccents = {
+  silver: {
+    border: 'border-slate-400/20',
+    text: 'text-slate-400',
+    bg: 'bg-slate-500/5',
+    glow: 'shadow-[0_0_20px_rgba(148,163,184,0.05)]'
+  },
+  gold: {
+    border: 'border-amber-400/20',
+    text: 'text-amber-400',
+    bg: 'bg-amber-500/5',
+    glow: 'shadow-[0_0_20px_rgba(245,158,11,0.05)]'
+  },
+  platinum: {
+    border: 'border-violet-400/20',
+    text: 'text-violet-400',
+    bg: 'bg-violet-500/5',
+    glow: 'shadow-[0_0_20px_rgba(167,139,250,0.05)]'
+  }
+}
+
 
 interface PassPurchaseModalProps {
   pass: PassInfo
@@ -67,8 +90,6 @@ export function PassPurchaseModal({ pass, ride, onClose, onSuccess }: PassPurcha
       isMounted = false
     }
   }, [activeAddress, pass.assetId, ride])
-
-
 
   const handleConfirm = async () => {
     if (gigcBalance < priceGigc) {
@@ -147,29 +168,39 @@ export function PassPurchaseModal({ pass, ride, onClose, onSuccess }: PassPurcha
   }
 
   return (
-    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/65 p-4 backdrop-blur-xl overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="w-full max-w-md overflow-y-auto max-h-[90vh] rounded-[32px] border border-white/10 bg-[#0f111a]/95 shadow-2xl backdrop-blur-2xl"
+        className="w-full max-w-md overflow-y-auto max-h-[90vh] glass-container glass-container--rounded glass-container--large shadow-2xl"
       >
-        <div className="p-6 relative">
-          <button
-            onClick={onClose}
-            className="absolute right-4 top-4 rounded-full border border-white/5 bg-white/[0.02] p-2 text-white/55 transition hover:bg-white/[0.08] hover:text-white"
-          >
-            <X className="w-4 h-4" />
-          </button>
-
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400">
-              <Coins className="w-6 h-6" />
+        <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
+        <div className="glass-overlay"></div>
+        <div className="glass-specular"></div>
+        <div className="glass-content p-6 relative">
+          <div className="flex items-start justify-between mb-6 gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 shrink-0">
+                <Coins className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <h3 className="text-xl font-bold text-white">Purchase Pass</h3>
+                <p className="text-xs text-white/40">Acquire Gigo NFT ride passes using GIGC</p>
+              </div>
             </div>
-            <div className="text-left">
-              <h3 className="text-xl font-bold text-white">Purchase Pass</h3>
-              <p className="text-xs text-white/40">Acquire Gigo NFT ride passes using GIGC</p>
-            </div>
+            <button
+              onClick={onClose}
+              className="glass-container glass-container--rounded text-white/55 transition hover:text-white shrink-0"
+              style={{ borderRadius: '9999px' }}
+            >
+              <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
+              <div className="glass-overlay" style={{ borderRadius: '9999px' }}></div>
+              <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
+              <div className="glass-content p-2 flex items-center justify-center">
+                <X className="w-4 h-4" />
+              </div>
+            </button>
           </div>
 
           {loading ? (
@@ -181,28 +212,43 @@ export function PassPurchaseModal({ pass, ride, onClose, onSuccess }: PassPurcha
             <>
               {status === 'idle' && (
                 <div className="space-y-5 text-left">
-                  {/* Pass details card */}
-                  <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
-                    <h4 className="font-bold text-white text-base">{pass.name}</h4>
-                    <p className="text-xs text-white/40 mt-1 capitalize">{pass.tier} Tier · {pass.validity}</p>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-xs text-white/40">Discount Benefit</span>
-                      <span className="font-bold text-emerald-400 text-sm">{pass.discount}% OFF</span>
+                  {/* Pass details card with dynamic tier-based accents */}
+                  <div className={cn(
+                    "glass-container glass-container--rounded w-full border", 
+                    tierAccents[pass.tier].border,
+                    tierAccents[pass.tier].glow
+                  )}>
+                    <div className="glass-filter"></div>
+                    <div className={cn("glass-overlay", tierAccents[pass.tier].bg)}></div>
+                    <div className="glass-specular"></div>
+                    <div className="glass-content p-4 flex flex-col justify-between">
+                      <h4 className={cn("font-black text-base", tierAccents[pass.tier].text)}>{pass.name}</h4>
+                      <p className="text-xs text-white/50 mt-1 capitalize">{pass.tier} Tier · {pass.validity}</p>
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className="text-xs text-white/50">Discount Benefit</span>
+                        <span className={cn("font-black text-sm", tierAccents[pass.tier].text)}>{pass.discount}% OFF</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4 space-y-2.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-white/40">Your GIGC Balance</span>
-                      <span className="font-bold text-white">{gigcBalance.toLocaleString()} GIGC</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-white/40">Pass Cost</span>
-                      <span className="font-bold text-white">{priceGigc} GIGC</span>
-                    </div>
-                    <div className="border-t border-white/5 pt-2.5 flex items-center justify-between text-sm">
-                      <span className="font-semibold text-white/70">Payment Amount</span>
-                      <span className="font-black text-emerald-400">{priceGigc} GIGC</span>
+                  {/* Payment details card */}
+                  <div className="glass-container glass-container--rounded w-full">
+                    <div className="glass-filter"></div>
+                    <div className="glass-overlay"></div>
+                    <div className="glass-specular"></div>
+                    <div className="glass-content p-4 space-y-2.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-white/60">Your GIGC Balance</span>
+                        <span className="font-bold text-white">{gigcBalance.toLocaleString()} GIGC</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-white/60">Pass Cost</span>
+                        <span className="font-bold text-white">{priceGigc} GIGC</span>
+                      </div>
+                      <div className="border-t border-white/10 pt-2.5 flex items-center justify-between text-sm">
+                        <span className="font-bold text-white/80">Payment Amount</span>
+                        <span className="font-black text-emerald-400">{priceGigc} GIGC</span>
+                      </div>
                     </div>
                   </div>
 
@@ -224,14 +270,20 @@ export function PassPurchaseModal({ pass, ride, onClose, onSuccess }: PassPurcha
                   <div className="flex gap-3">
                     <button
                       onClick={onClose}
-                      className="flex-1 rounded-xl border border-white/10 bg-white/[0.02] py-3 text-sm font-semibold text-white hover:bg-white/[0.06] transition"
+                      className="flex-1 glass-container glass-container--rounded text-white hover:bg-white/10 transition-all"
+                      style={{ borderRadius: '9999px' }}
                     >
-                      Cancel
+                      <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
+                      <div className="glass-overlay" style={{ borderRadius: '9999px' }}></div>
+                      <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
+                      <div className="glass-content py-3 text-sm font-semibold flex items-center justify-center">
+                        Cancel
+                      </div>
                     </button>
                     <button
                       onClick={handleConfirm}
                       disabled={gigcBalance < priceGigc}
-                      className="flex-1 rounded-xl bg-emerald-500 py-3 text-sm font-bold text-black hover:bg-emerald-400 disabled:opacity-40 transition animate-pulse"
+                      className="flex-1 clay-btn clay-btn-brand py-3 text-sm font-bold disabled:opacity-40"
                     >
                       Confirm Purchase
                     </button>
@@ -291,7 +343,7 @@ export function PassPurchaseModal({ pass, ride, onClose, onSuccess }: PassPurcha
 
                   <button
                     onClick={() => setStatus('idle')}
-                    className="w-full rounded-xl bg-white/10 hover:bg-white/20 py-3 text-sm font-semibold text-white transition"
+                    className="w-full clay-btn clay-btn-brand py-3 text-sm font-semibold"
                   >
                     Try Again
                   </button>

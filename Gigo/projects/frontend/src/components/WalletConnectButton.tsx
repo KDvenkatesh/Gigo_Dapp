@@ -10,17 +10,28 @@ export function WalletConnectButton({ preferPera = false }: { preferPera?: boole
   if (activeAddress) {
     return (
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-black/40 px-4 py-2.5 text-sm font-medium text-white shadow-[0_18px_40px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-300 shadow-[0_0_14px_rgba(110,231,183,0.8)]" />
-          {activeAddress.slice(0, 4)}...{activeAddress.slice(-4)}
+        <div className="glass-container glass-container--rounded">
+          <div className="glass-filter"></div>
+          <div className="glass-overlay"></div>
+          <div className="glass-specular"></div>
+          <div className="glass-content px-4 py-2 flex items-center gap-3 text-sm font-medium text-white shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)] animate-pulse" />
+            <span className="font-mono text-xs">{activeAddress.slice(0, 4)}...{activeAddress.slice(-4)}</span>
+          </div>
         </div>
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={() => activeWallet?.disconnect()}
-          className="rounded-full border border-white/10 bg-white/10 p-2.5 text-white/60 transition hover:bg-white/20 hover:text-white"
+          className="glass-container glass-container--rounded text-white/60 transition hover:text-white flex items-center justify-center"
+          style={{ borderRadius: '9999px' }}
           title="Disconnect"
         >
-          <X className="h-4 w-4" />
+          <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
+          <div className="glass-overlay" style={{ borderRadius: '9999px' }}></div>
+          <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
+          <div className="glass-content p-2.5 flex items-center justify-center">
+            <X className="h-4 w-4" />
+          </div>
         </motion.button>
       </div>
     )
@@ -31,10 +42,17 @@ export function WalletConnectButton({ preferPera = false }: { preferPera?: boole
       whileTap={{ scale: 0.98 }}
       type="button"
       onClick={() => preferredWallet?.connect()}
-      className="flex items-center gap-2 rounded-full border border-white/10 bg-white px-4 py-2.5 text-sm font-bold text-slate-950 shadow-[0_18px_40px_rgba(255,255,255,0.12)] transition hover:bg-white/92"
+      className="glass-container glass-container--rounded text-white font-bold transition hover:scale-[1.01]"
     >
-      <Wallet className="h-4 w-4" />
-      {preferPera ? 'Connect Pera Wallet' : preferredWallet ? `Connect ${preferredWallet.metadata.name}` : 'Connect wallet'}
+      <div className="glass-filter"></div>
+      <div className="glass-overlay"></div>
+      <div className="glass-specular"></div>
+      <div className="glass-content px-6 py-3.5 flex items-center gap-2.5 justify-center">
+        <Wallet className="h-4.5 w-4.5 text-current" />
+        <span>
+          {preferPera ? 'Connect Pera Wallet' : preferredWallet ? `Connect ${preferredWallet.metadata.name}` : 'Connect wallet'}
+        </span>
+      </div>
     </motion.button>
   )
 }

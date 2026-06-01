@@ -65,64 +65,71 @@ function DriverProfileDropdown({
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute right-0 top-full mt-3 w-[280px] sm:w-72 origin-top-right rounded-2xl bg-[#0f111a] border border-white/10 p-4 shadow-2xl z-[100]"
-          >
-            <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
-              <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center overflow-hidden">
-                {documents['Profile Photo'] ? (
-                  <img src={ipfs.getGatewayUrl(documents['Profile Photo'])} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                  <User className="w-4 h-4 text-emerald-400" />
-                )}
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Wallet</p>
-                <p className="text-sm font-mono truncate">{activeAddress}</p>
-              </div>
-            </div>
-
-            {/* Mobile Tabs */}
-            {onTabChange && (
-               <div className="lg:hidden mb-4 border-b border-white/10 pb-4">
-                  <p className="text-[10px] text-white/50 uppercase tracking-wider font-semibold mb-2 px-1">Navigation</p>
-                  <div className="space-y-1">
-                     <button onClick={() => { setIsOpen(false); onTabChange('rides') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'rides' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                        <CarFront className="w-4 h-4" />
-                        <span className="text-sm font-medium">Rides</span>
-                     </button>
-                     <button onClick={() => { setIsOpen(false); onTabChange('earnings') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'earnings' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                        <Banknote className="w-4 h-4" />
-                        <span className="text-sm font-medium">My Earnings</span>
-                     </button>
-                  </div>
-               </div>
-            )}
-
-            <div className="mb-4">
-              <p className="text-xs text-white/50 uppercase tracking-wider font-semibold mb-2">Your Documents</p>
-              <div className="space-y-2">
-                {Object.keys(documents).length > 0 ? Object.keys(documents).map(doc => (
-                  <div key={doc} onClick={() => setViewDoc({name: doc, data: documents[doc]})} className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-lg cursor-pointer transition border border-transparent hover:border-white/10">
-                    <FileText className="w-4 h-4 text-emerald-400" />
-                    <span className="text-sm">{doc}</span>
-                  </div>
-                )) : (
-                  <p className="text-xs text-white/40">No documents found</p>
-                )}
-              </div>
-            </div>
-
-            <button 
-              onClick={() => activeWallet?.disconnect()}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition font-semibold text-sm"
+          <div className="absolute right-0 top-full mt-3 w-[280px] sm:w-72 origin-top-right z-[100] pointer-events-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              className="w-full glass-container glass-container--rounded shadow-2xl"
             >
-              <LogOut className="w-4 h-4" /> Disconnect
-            </button>
-          </motion.div>
+              <div className="glass-filter"></div>
+              <div className="glass-overlay"></div>
+              <div className="glass-specular"></div>
+              <div className="glass-content p-4">
+                <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center overflow-hidden">
+                    {documents['Profile Photo'] ? (
+                      <img src={ipfs.getGatewayUrl(documents['Profile Photo'])} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-4 h-4 text-emerald-400" />
+                    )}
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="text-xs text-white/50 uppercase tracking-wider font-semibold">Wallet</p>
+                    <p className="text-sm font-mono truncate">{activeAddress}</p>
+                  </div>
+                </div>
+
+                {/* Mobile Tabs */}
+                {onTabChange && (
+                   <div className="lg:hidden mb-4 border-b border-white/10 pb-4">
+                      <p className="text-[10px] text-white/50 uppercase tracking-wider font-semibold mb-2 px-1">Navigation</p>
+                      <div className="space-y-1">
+                         <button onClick={() => { setIsOpen(false); onTabChange('rides') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'rides' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                            <CarFront className="w-4 h-4" />
+                            <span className="text-sm font-medium">Rides</span>
+                         </button>
+                         <button onClick={() => { setIsOpen(false); onTabChange('earnings') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'earnings' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                            <Banknote className="w-4 h-4" />
+                            <span className="text-sm font-medium">My Earnings</span>
+                         </button>
+                      </div>
+                   </div>
+                )}
+
+                <div className="mb-4">
+                  <p className="text-xs text-white/50 uppercase tracking-wider font-semibold mb-2">Your Documents</p>
+                  <div className="space-y-2">
+                    {Object.keys(documents).length > 0 ? Object.keys(documents).map(doc => (
+                      <div key={doc} onClick={() => setViewDoc({name: doc, data: documents[doc]})} className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-lg cursor-pointer transition border border-transparent hover:border-white/10">
+                        <FileText className="w-4 h-4 text-emerald-400" />
+                        <span className="text-sm">{doc}</span>
+                      </div>
+                    )) : (
+                      <p className="text-xs text-white/40">No documents found</p>
+                    )}
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => activeWallet?.disconnect()}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition font-semibold text-sm"
+                >
+                  <LogOut className="w-4 h-4" /> Disconnect
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
@@ -140,17 +147,21 @@ function DriverProfileDropdown({
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#0f111a] border border-white/10 p-6 rounded-3xl max-w-lg w-full"
+              className="w-full max-w-lg glass-container glass-container--rounded glass-container--large shadow-2xl"
             >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold">{viewDoc.name}</h3>
-                <button onClick={() => setViewDoc(null)} className="p-2 bg-white/5 rounded-full hover:bg-white/10">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              <div className="bg-black/50 rounded-xl overflow-hidden flex items-center justify-center">
-                {/* Check if it's a CID or base64 (for backward compatibility if needed, but here we assume CID) */}
-                <img src={ipfs.getGatewayUrl(viewDoc.data)} alt={viewDoc.name} className="max-w-full max-h-64 object-contain" />
+              <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
+              <div className="glass-overlay"></div>
+              <div className="glass-specular"></div>
+              <div className="glass-content p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-xl font-bold text-white">{viewDoc.name}</h3>
+                  <button onClick={() => setViewDoc(null)} className="p-2 bg-white/5 rounded-full hover:bg-white/10 text-white/70 hover:text-white">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <div className="bg-black/50 rounded-xl overflow-hidden flex items-center justify-center border border-white/5">
+                  <img src={ipfs.getGatewayUrl(viewDoc.data)} alt={viewDoc.name} className="max-w-full max-h-64 object-contain" />
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -212,64 +223,95 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
     <>
       <BottomSheet>
         {/* Top nav bar matching Customer Dashboard style */}
-        <div className="relative z-[1000] flex shrink-0 flex-wrap sm:flex-nowrap items-center justify-between gap-3 border-b border-white/[0.06] pb-4 mb-6">
-          <button
-            type="button"
-            onClick={onBack}
-            className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-2 text-white/60 transition hover:bg-white/[0.06]"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-
-          <div className="hidden lg:flex min-w-0 flex-1 items-center gap-1 overflow-x-auto no-scrollbar py-1">
+        <div className="relative z-[1000] flex shrink-0 items-center justify-between gap-3 border-b border-white/[0.06] px-4 py-3 sm:px-6 mb-6 bg-transparent">
+          <div className="glass-filter" style={{ backdropFilter: 'blur(20px) saturate(120%)' }}></div>
+          <div className="glass-overlay"></div>
+          <div className="glass-specular" style={{ border: 'none', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}></div>
+          <div className="glass-content flex items-center justify-between w-full gap-3">
             <button
               type="button"
-              onClick={() => setActiveTab('rides')}
-              className={cn(
-                'flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition',
-                activeTab === 'rides' ? 'bg-white text-[#05060a]' : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]'
-              )}
+              onClick={onBack}
+              className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-2 text-white/60 transition hover:bg-white/[0.06]"
             >
-              <CarFront className="h-3.5 w-3.5" /> Rides
+              <ArrowLeft className="h-4 w-4" />
             </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('earnings')}
-              className={cn(
-                'flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-[13px] font-medium transition',
-                activeTab === 'earnings' ? 'bg-white text-[#05060a]' : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]'
-              )}
-            >
-              <Banknote className="h-3.5 w-3.5" /> My Earnings
-            </button>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5">
-              <span className="text-xs font-medium text-white/60">Status:</span>
+            <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto no-scrollbar py-1">
               <button
                 type="button"
-                onClick={() => setActive(!active)}
+                onClick={() => setActiveTab('rides')}
                 className={cn(
-                  "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none",
-                  active ? "bg-emerald-500" : "bg-white/20"
+                  'transition-all',
+                  activeTab === 'rides' ? 'glass-container glass-container--rounded text-white shadow-sm' : 'flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-bold text-white/50 hover:text-white/85 hover:bg-white/[0.04]'
                 )}
               >
-                <span className="sr-only">Toggle online status</span>
-                <span
-                  className={cn(
-                    "pointer-events-none absolute left-0.5 inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
-                    active ? "translate-x-4" : "translate-x-0"
-                  )}
-                />
+                {activeTab === 'rides' ? (
+                   <>
+                      <div className="glass-filter"></div>
+                      <div className="glass-overlay"></div>
+                      <div className="glass-specular"></div>
+                      <div className="glass-content flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-bold">
+                         <CarFront className="h-3.5 w-3.5" /> Rides
+                      </div>
+                   </>
+                ) : (
+                   <>
+                      <CarFront className="h-3.5 w-3.5" /> Rides
+                   </>
+                )}
               </button>
-              <span className={cn("text-xs font-bold", active ? "text-emerald-400" : "text-white/40")}>
-                {active ? 'Online' : 'Offline'}
-              </span>
+              <button
+                type="button"
+                onClick={() => setActiveTab('earnings')}
+                className={cn(
+                  'transition-all',
+                  activeTab === 'earnings' ? 'glass-container glass-container--rounded text-white shadow-sm' : 'flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-bold text-white/50 hover:text-white/85 hover:bg-white/[0.04]'
+                )}
+              >
+                {activeTab === 'earnings' ? (
+                   <>
+                      <div className="glass-filter"></div>
+                      <div className="glass-overlay"></div>
+                      <div className="glass-specular"></div>
+                      <div className="glass-content flex items-center gap-1.5 px-3.5 py-1.5 text-[13px] font-bold">
+                         <Banknote className="h-3.5 w-3.5" /> My Earnings
+                      </div>
+                   </>
+                ) : (
+                   <>
+                      <Banknote className="h-3.5 w-3.5" /> My Earnings
+                   </>
+                )}
+              </button>
             </div>
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <DriverProfileDropdown currentTab={activeTab} onTabChange={setActiveTab} />
+
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5">
+                <span className="text-xs font-medium text-white/60">Status:</span>
+                <button
+                  type="button"
+                  onClick={() => setActive(!active)}
+                  className={cn(
+                    "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none",
+                    active ? "bg-emerald-500" : "bg-white/20"
+                  )}
+                >
+                  <span className="sr-only">Toggle online status</span>
+                  <span
+                    className={cn(
+                      "pointer-events-none absolute left-0.5 inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
+                      active ? "translate-x-4" : "translate-x-0"
+                    )}
+                  />
+                </button>
+                <span className={cn("text-xs font-bold", active ? "text-emerald-400" : "text-white/40")}>
+                  {active ? 'Online' : 'Offline'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <DriverProfileDropdown currentTab={activeTab} onTabChange={setActiveTab} />
+              </div>
             </div>
           </div>
         </div>
@@ -280,8 +322,12 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="glass-panel rounded-[32px] border border-white/10 p-4 sm:p-5"
+                className="glass-container glass-container--rounded glass-container--large"
               >
+                <div className="glass-filter"></div>
+                <div className="glass-overlay"></div>
+                <div className="glass-specular"></div>
+                <div className="glass-content p-6">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/38">Rider dashboard</p>
                   <h2 className="mt-2 text-2xl font-black tracking-[-0.05em] text-white sm:text-3xl">
@@ -335,12 +381,16 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                           exit={{ opacity: 0, scale: 0.95 }}
                           onClick={() => ride.setFocusedRideId(item.rideId)}
                           className={cn(
-                            'w-full rounded-[28px] border p-4 text-left transition hover:scale-[1.01] cursor-pointer',
+                            'w-full text-left transition-all active:scale-[0.99] cursor-pointer glass-container glass-container--rounded block',
                             ride.focusedRideId === item.rideId
-                              ? 'border-white/20 bg-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.25)]'
-                              : 'border-white/8 bg-white/[0.04] hover:bg-white/[0.06]',
+                               ? 'bg-white/[0.14] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
+                               : 'bg-white/[0.05] border-white/10 opacity-70 hover:opacity-100',
                           )}
                         >
+                          <div className="glass-filter"></div>
+                          <div className="glass-overlay"></div>
+                          <div className="glass-specular"></div>
+                          <div className="glass-content p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <p className="text-sm font-semibold text-white">Ride #{item.rideId.toString()}</p>
@@ -361,9 +411,9 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                               void ride.acceptRide(item.rideId)
                             }}
                             disabled={!ride.activeAddress || ride.actionState.acceptRide || ride.actionState.optIn}
-                            className="rounded-[22px] bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-400 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
+                            className="clay-btn clay-btn-success text-sm py-2.5 px-5 disabled:opacity-45"
                           >
-                            {ride.actionState.optIn ? 'Opting in...' : ride.actionState.acceptRide ? 'Accepting' : 'Accept ride'}
+                            {ride.actionState.optIn ? 'Opting in...' : ride.actionState.acceptRide ? 'Accepting' : 'Accept Ride'}
                           </button>
                         ) : null}
 
@@ -378,7 +428,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                                 setOtp('')
                                 setOtpError('')
                               }}
-                              className="rounded-[22px] bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-400 px-4 py-3 text-sm font-black text-slate-950"
+                              className="clay-btn clay-btn-brand text-sm px-5 py-2.5"
                             >
                               Verify customer OTP
                             </button>
@@ -400,7 +450,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                               }
                             }}
                             disabled={ride.actionState.endRide}
-                            className="rounded-[22px] bg-gradient-to-r from-white via-white to-slate-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
+                            className="clay-btn clay-btn-success text-sm px-5 py-2.5 disabled:opacity-45"
                           >
                             {ride.actionState.endRide ? '⏳ Processing...' : '📍 End ride & claim payment'}
                           </button>
@@ -411,6 +461,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             Waiting for customer to release payment
                           </div>
                         ) : null}
+                      </div>
                       </div>
                     </motion.div>
                   ))}
@@ -423,17 +474,23 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                 ) : null}
               </>
             )}
+            </div>
           </div>
             </motion.div>
           </div>
 
           <div className="space-y-4">
             <div className="flex flex-col gap-4">
-              <div className="relative h-[400px] w-full overflow-hidden rounded-[32px] border border-white/10 glass-panel">
-                <SmartMap
-                  pickup={mapOrigin || { label: '', lat: 0, lng: 0 }}
-                  destination={mapDestination || { label: '', lat: 0, lng: 0 }}
-                />
+              <div className="relative h-[400px] w-full overflow-hidden rounded-[32px] border border-white/10 glass-container glass-container--rounded">
+                <div className="glass-filter"></div>
+                <div className="glass-overlay"></div>
+                <div className="glass-specular"></div>
+                <div className="glass-content">
+                  <SmartMap
+                    pickup={mapOrigin || { label: '', lat: 0, lng: 0 }}
+                    destination={mapDestination || { label: '', lat: 0, lng: 0 }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -441,8 +498,12 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="glass-panel rounded-[32px] border border-white/10 p-4 sm:p-5"
+                className="glass-container glass-container--rounded glass-container--large shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
               >
+                <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
+                <div className="glass-overlay"></div>
+                <div className="glass-specular"></div>
+                <div className="glass-content p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-white/38">Focused ride</p>
@@ -455,26 +516,26 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                 </div>
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
-                    <p className="text-xs uppercase tracking-[0.24em] text-white/35">Customer wallet</p>
-                    <p className="mt-2 break-all text-sm font-medium text-white">{activeRide.customer}</p>
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  <div className="clay-card clay-card-lavender">
+                    <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Customer Wallet</p>
+                    <p className="mt-2 break-all text-xs font-bold text-current font-mono">{activeRide.customer}</p>
                   </div>
-                  <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
-                    <p className="text-xs uppercase tracking-[0.24em] text-white/35">Fare</p>
-                    <p className="mt-2 text-sm font-medium text-white">{ride.formatAlgoAmount(activeRide.fareMicroAlgos)}</p>
+                  <div className="clay-card clay-card-sky">
+                    <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Fare</p>
+                    <p className="mt-2 text-base font-black text-current">{ride.formatAlgoAmount(activeRide.fareMicroAlgos)}</p>
                   </div>
                 </div>
 
                 {activeRide.vehicleType && (
-                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-[24px] border border-emerald-300/10 bg-emerald-300/5 p-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Pickup Point</p>
-                      <p className="mt-2 text-xs font-bold text-white truncate">{activeRide.pickup.label}</p>
+                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                    <div className="clay-card clay-card-lavender">
+                      <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Pickup Point</p>
+                      <p className="mt-2 text-xs font-bold text-current truncate">{activeRide.pickup.label}</p>
                     </div>
-                    <div className="rounded-[24px] border border-emerald-300/10 bg-emerald-300/5 p-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-emerald-400/60">Drop Point</p>
-                      <p className="mt-2 text-xs font-bold text-white truncate">{activeRide.drop.label}</p>
+                    <div className="clay-card clay-card-sky">
+                      <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Drop Point</p>
+                      <p className="mt-2 text-xs font-bold text-current truncate">{activeRide.drop.label}</p>
                     </div>
                   </div>
                 )}
@@ -567,11 +628,12 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                               }
                             }}
                             disabled={ride.actionState.endRide}
-                            className={`mt-4 w-full rounded-[20px] px-5 py-3 text-sm font-black text-slate-950 disabled:opacity-45 transition ${
+                            className={cn(
+                              "w-full clay-btn py-3 text-sm font-bold disabled:opacity-45 mt-4",
                               isNear
-                                ? 'bg-gradient-to-r from-emerald-300 via-emerald-400 to-cyan-400 shadow-[0_4px_24px_rgba(52,211,153,0.35)]'
-                                : 'bg-gradient-to-r from-white via-white to-slate-300 opacity-60'
-                            }`}
+                                ? "clay-btn-success shadow-[0_4px_24px_rgba(16,185,129,0.35)]"
+                                : "clay-btn-brand opacity-60"
+                            )}
                           >
                             {ride.actionState.endRide ? '⏳ Processing payout...' : isNear ? '✅ End ride & claim payment' : '📍 End ride & claim payment'}
                           </button>
@@ -599,43 +661,54 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                 ) : null}
 
-                <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
-                    <Timer className="h-5 w-5 text-white/54" />
-                    <p className="mt-3 text-xs uppercase tracking-[0.24em] text-white/35">Pickup status</p>
-                    <p className="mt-2 text-sm font-medium text-white">
-                      {activeRide.status === RideStatus.REQUESTED ? 'Awaiting rider' : 'Rider assigned'}
-                    </p>
+                <div className="mt-5 grid gap-4 sm:grid-cols-3">
+                  <div className="clay-card clay-card-lavender flex flex-col justify-between">
+                    <Timer className="h-5 w-5 text-current opacity-70" />
+                    <div className="mt-4">
+                      <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Pickup Status</p>
+                      <p className="mt-1 text-xs font-bold text-current">
+                        {activeRide.status === RideStatus.REQUESTED ? 'Awaiting Rider' : 'Rider Assigned'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
-                    <MapPinned className="h-5 w-5 text-white/54" />
-                    <p className="mt-3 text-xs uppercase tracking-[0.24em] text-white/35">Payment lock</p>
-                    <p className="mt-2 text-sm font-medium text-white">
-                      {activeRide.paymentLocked ? 'Escrow locked' : 'Not locked yet'}
-                    </p>
+                  <div className="clay-card clay-card-sky flex flex-col justify-between">
+                    <MapPinned className="h-5 w-5 text-current opacity-70" />
+                    <div className="mt-4">
+                      <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Payment Lock</p>
+                      <p className="mt-1 text-xs font-bold text-current">
+                        {activeRide.paymentLocked ? 'Escrow Locked' : 'Not Locked'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="rounded-[24px] border border-white/8 bg-white/[0.04] p-4">
-                    <CheckCircle2 className="h-5 w-5 text-white/54" />
-                    <p className="mt-3 text-xs uppercase tracking-[0.24em] text-white/35">Rider ownership</p>
-                    <p className="mt-2 text-sm font-medium text-white">
-                      {activeRide.rider === ride.activeAddress ? 'Assigned to you' : activeRide.rider ? 'Assigned to another wallet' : 'Open ride'}
-                    </p>
+                  <div className="clay-card clay-card-mint flex flex-col justify-between">
+                    <CheckCircle2 className="h-5 w-5 text-current opacity-70" />
+                    <div className="mt-4">
+                      <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Rider Ownership</p>
+                      <p className="mt-1 text-xs font-bold text-current truncate">
+                        {activeRide.rider === ride.activeAddress ? 'Assigned to You' : activeRide.rider ? 'Assigned to Other' : 'Open Ride'}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
                 {ride.actionState.acceptRide || ride.actionState.endRide ? (
-                  <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-white/72">
+                  <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-white/72 font-bold">
                     <LoaderCircle className="h-4 w-4 animate-spin" />
                     Processing contract action
                   </div>
                 ) : null}
+              </div>
               </motion.div>
             ) : (
               <motion.div
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="glass-panel rounded-[32px] border border-white/10 p-5"
+                className="glass-container glass-container--rounded glass-container--large rounded-[32px] border border-white/10"
               >
+                <div className="glass-filter"></div>
+                <div className="glass-overlay"></div>
+                <div className="glass-specular"></div>
+                <div className="glass-content p-5">
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="mt-1 h-5 w-5 text-amber-100" />
                   <div>
@@ -644,6 +717,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                       Refresh the feed after a customer creates a ride, then select it here to view the pickup map and driver actions.
                     </p>
                   </div>
+                </div>
                 </div>
               </motion.div>
             )}
