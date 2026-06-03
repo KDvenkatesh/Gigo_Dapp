@@ -336,6 +336,49 @@ export function useRideContract() {
     }
   }
 
+  async function optInContractToAsa() {
+    if (!activeAddress || !transactionSigner) throw new Error('Connect wallet first.')
+    
+    updateActionState('optIn', true)
+    try {
+      const suggestedParams = await algod.getTransactionParams().do()
+      
+      // Provide 0.1 ALGO to the contract to cover the Min Balance Requirement (MBR) for holding 1 ASA
+      const fundTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+        sender: activeAddress,
+        receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
+        amount: 100000, 
+        suggestedParams,
+      })
+      
+      const atc = new algosdk.AtomicTransactionComposer()
+      atc.addTransaction({ txn: fundTxn, signer: transactionSigner })
+      
+      // Double the fee for the ABI call because it fires 1 inner transaction
+      const callParams = { ...suggestedParams, fee: 2000, flatFee: true }
+      
+      atc.addMethodCall({
+        appID: Number(algorandConfig.appId),
+        method: rideAbiMethods.opt_in_to_asa,
+        methodArgs: [],
+        sender: activeAddress,
+        suggestedParams: callParams,
+        signer: transactionSigner,
+      })
+
+      const populated = await populateAppCallResources(atc, algod)
+      await populated.execute(algod, 4)
+      
+      pushToast({ tone: 'success', title: 'Contract Initialized', description: `Escrow contract is now ready to receive GIGC.` })
+      return true
+    } catch (error) {
+      pushToast({ tone: 'error', title: 'Contract Initialization failed', description: getErrorMessage(error) })
+      throw error
+    } finally {
+      updateActionState('optIn', false)
+    }
+  }
+
   function generateOtp() { return String(Math.floor(1000 + Math.random() * 9000)) }
   function updateDestinationInput(v: string) { setDestinationInput(v) }
   function commitDestination(v: string) { setSelectedDestination(destinationOptions.find(d => d.label === v) || { label: v, lat: 0, lng: 0 }) }
@@ -374,6 +417,7 @@ export function useRideContract() {
     refreshRides,
     checkAsaBalance,
     optInToAsa,
+    optInContractToAsa,
     generateOtp,
     toasts,
     dismissToast,

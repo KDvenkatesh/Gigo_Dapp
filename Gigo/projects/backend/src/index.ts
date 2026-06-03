@@ -42,7 +42,7 @@ app.use(
       /\.vercel\.app$/, // Allow all vercel subdomains
       /\.onrender\.com$/, // Allow all render subdomains
     ],
-    methods: ['GET', 'POST', 'OPTIONS'],
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-PAYMENT'],
   }),
 );

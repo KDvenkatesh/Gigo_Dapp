@@ -10,7 +10,7 @@ import { ipfs } from '../lib/ipfs';
 import { Loader2 } from 'lucide-react';
 
 export function DriverOnboarding({ onBack }: { onBack: () => void }) {
-  const { status, submitApplication, ride } = useDriverContext();
+  const { status, setStatus, submitApplication, ride } = useDriverContext();
   const [vehicleType, setVehicleType] = useState('');
   const [uploadedDocs, setUploadedDocs] = useState<Record<string, string>>({});
   const [uploadingDocs, setUploadingDocs] = useState<Record<string, boolean>>({});
@@ -19,7 +19,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const docKeys = Object.keys(uploadedDocs);
-    if (!vehicleType || docKeys.length < 2) return;
+    if (!vehicleType || docKeys.length < 4) return;
     setIsSubmitting(true);
     // Simulate submission delay
     setTimeout(() => {
@@ -33,7 +33,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
     
     setUploadingDocs(prev => ({ ...prev, [doc]: true }));
     try {
-      const cid = await ipfs.uploadFile(file);
+      const cid = await ipfs.uploadFile(file, ride.activeAddress || undefined, 'driver', doc);
       setUploadedDocs(prev => ({ ...prev, [doc]: cid }));
     } catch (error) {
       console.error(`Failed to upload ${doc}`, error);
@@ -93,7 +93,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
           <div className="glass-content p-8">
             <h2 className="text-title-2 font-bold mb-2 text-red-400 font-mono">Application Rejected</h2>
           <p className="text-white/60 mb-6">Unfortunately, your application was not approved.</p>
-          <button onClick={() => submitApplication({ vehicleType: 'boda' })} className="w-full clay-btn clay-btn-brand py-3 text-sm mb-3">
+          <button onClick={() => setStatus('none')} className="w-full clay-btn clay-btn-brand py-3 text-sm mb-3">
             Re-apply
           </button>
           <button onClick={onBack} className="w-full text-white/50 hover:text-white text-sm py-2">
@@ -155,7 +155,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
           <div className="space-y-4">
             <h3 className="text-title-3 font-semibold text-white">2. Upload Documents</h3>
             <div className="grid gap-4 sm:grid-cols-2">
-              {['Driving License', 'National ID', 'Vehicle Registration', 'Insurance', 'Profile Photo'].map(doc => {
+              {['Driving License', 'National ID', 'Vehicle Registration', 'Insurance'].map(doc => {
                 const isUploaded = !!uploadedDocs[doc];
                 return (
                   <div key={doc} className="relative">
@@ -196,7 +196,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
 
           <button
             type="submit"
-            disabled={!vehicleType || Object.keys(uploadedDocs).length < 2 || isSubmitting}
+            disabled={!vehicleType || Object.keys(uploadedDocs).length < 4 || isSubmitting}
             className="w-full clay-btn clay-btn-brand py-4 font-black disabled:opacity-40"
           >
             {isSubmitting ? 'Submitting...' : 'Submit for Verification'}

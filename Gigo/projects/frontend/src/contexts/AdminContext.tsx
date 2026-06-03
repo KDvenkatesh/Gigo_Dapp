@@ -74,6 +74,17 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       if (!currentCid) return;
       
       const currentData = await ipfs.getJSON(currentCid);
+      
+      // If rejecting, delete all uploaded driver documents to clean up Pinata
+      if (status === 'rejected' && currentData.documents) {
+        for (const docKey in currentData.documents) {
+          const docCid = currentData.documents[docKey];
+          await ipfs.deleteFile(docCid);
+        }
+        // Clear documents so they aren't kept in the metadata
+        currentData.documents = {};
+      }
+
       const updatedData = {
         ...currentData,
         status,
@@ -81,8 +92,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         updatedAt: new Date().toISOString()
       };
       
-      const newCid = await ipfs.uploadJSON(updatedData);
-      await ipfs.saveDriverMetadata(walletAddress, newCid);
+      const newCid = await ipfs.uploadJSON(updatedData, walletAddress, 'driver', 'metadata');
+      await ipfs.saveDriverMetadata(walletAddress, newCid, status, updatedData.vehicleType);
+      
+      // Since the metadata file was updated to a new CID, delete the old metadata file
+      await ipfs.deleteFile(currentCid);
+      
       refreshDrivers();
     } catch (e) {
       console.error('Failed to update driver status on IPFS', e);

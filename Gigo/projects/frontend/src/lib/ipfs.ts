@@ -12,9 +12,12 @@ if (typeof window !== 'undefined' &&
 const GATEWAY_URL = 'https://gateway.pinata.cloud/ipfs/';
 
 export const ipfs = {
-  async uploadFile(file: File): Promise<string> {
+  async uploadFile(file: File, walletAddress?: string, role?: string, dataType?: string): Promise<string> {
     const formData = new FormData();
     formData.append('file', file);
+    if (walletAddress) formData.append('walletAddress', walletAddress);
+    if (role) formData.append('role', role);
+    if (dataType) formData.append('dataType', dataType);
 
     const response = await axios.post(`${BACKEND_URL}/api/storage/upload-file`, formData, {
       headers: {
@@ -25,15 +28,26 @@ export const ipfs = {
     return response.data.cid;
   },
 
-  async uploadJSON(data: any): Promise<string> {
-    const response = await axios.post(`${BACKEND_URL}/api/storage/upload-json`, data);
+  async deleteFile(cid: string): Promise<void> {
+    try {
+      await axios.delete(`${BACKEND_URL}/api/storage/unpin/${cid}`);
+    } catch (error) {
+      console.error(`Failed to delete file with CID ${cid}`, error);
+    }
+  },
+
+  async uploadJSON(data: any, walletAddress?: string, role?: string, dataType?: string): Promise<string> {
+    const payload = walletAddress ? { data, walletAddress, role, dataType } : data;
+    const response = await axios.post(`${BACKEND_URL}/api/storage/upload-json`, payload);
     return response.data.cid;
   },
 
-  async saveDriverMetadata(walletAddress: string, metadataCID: string): Promise<void> {
+  async saveDriverMetadata(walletAddress: string, metadataCID: string, status?: string, vehicleType?: string): Promise<void> {
     await axios.post(`${BACKEND_URL}/api/storage/driver-metadata`, {
       walletAddress,
       metadataCID,
+      status,
+      vehicleType
     });
   },
 
@@ -41,7 +55,18 @@ export const ipfs = {
     const response = await axios.post(`${BACKEND_URL}/api/storage/driver-metadata`, {
       walletAddress,
     });
-    return response.data.cid;
+    return response.data.cid || null;
+  },
+
+  async getDriverRecord(walletAddress: string): Promise<{ cid: string | null, status: string, vehicleType?: string }> {
+    const response = await axios.post(`${BACKEND_URL}/api/storage/driver-metadata`, {
+      walletAddress,
+    });
+    return {
+      cid: response.data.cid || null,
+      status: response.data.status || 'none',
+      vehicleType: response.data.vehicleType
+    };
   },
 
   async getAllDrivers(): Promise<Record<string, { metadataCID: string; updatedAt: string }>> {
@@ -50,18 +75,18 @@ export const ipfs = {
   },
 
   // Customer Methods
-  async saveCustomerProfile(walletAddress: string, profileCID: string): Promise<void> {
+  async saveCustomerProfile(walletAddress: string, profilePhotoBase64: string): Promise<void> {
     await axios.post(`${BACKEND_URL}/api/storage/customer-profile`, {
       walletAddress,
-      profileCID,
+      profilePhotoBase64,
     });
   },
 
-  async getCustomerProfileCID(walletAddress: string): Promise<string | null> {
+  async getCustomerProfileBase64(walletAddress: string): Promise<string | null> {
     const response = await axios.post(`${BACKEND_URL}/api/storage/get-customer-profile`, {
       walletAddress,
     });
-    return response.data.cid;
+    return response.data.profilePhotoBase64;
   },
 
   // Ride Methods

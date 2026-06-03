@@ -4,7 +4,7 @@ services:
       context: ./projects/frontend
       dockerfile: Dockerfile
       args:
-        VITE_RIDE_APP_ID: 763288139
+        VITE_RIDE_APP_ID: 763756954
         VITE_BACKEND_URL: http://localhost:3001
     ports:
       - "5173:80"

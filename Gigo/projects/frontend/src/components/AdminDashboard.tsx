@@ -6,8 +6,11 @@ import { WalletConnectButton } from './WalletConnectButton';
 import { PWAInstallFooter } from './PWAInstallFooter';
 import { ipfs } from '../lib/ipfs';
 
+import { useRideContract } from '../hooks/useRideContract';
+
 export function AdminDashboard({ onBack }: { onBack: () => void }) {
   const { isAdmin, isChecking, pendingDrivers, approveDriver, rejectDriver } = useAdminContext();
+  const { optInContractToAsa } = useRideContract();
   const [viewDoc, setViewDoc] = useState<{name: string, data: string} | null>(null);
 
   if (isChecking) {
@@ -56,9 +59,23 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
             <div className="glass-overlay"></div>
             <div className="glass-specular"></div>
             <div className="glass-content p-6 sm:p-8">
-            <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-6">
-              <Clock className="h-6 w-6 text-emerald-400" />
-              <h2 className="text-title-2 font-semibold">Pending Riders ({pendingDrivers.length})</h2>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/10 pb-6 mb-8">
+              <div className="flex items-center gap-3">
+                <Clock className="h-6 w-6 text-emerald-400" />
+                <h2 className="text-title-2 font-semibold">Pending Riders ({pendingDrivers.length})</h2>
+              </div>
+              <button 
+                onClick={async () => {
+                   try {
+                     await optInContractToAsa();
+                   } catch (e) {
+                     console.error('Failed to init contract', e);
+                   }
+                }}
+                className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition text-sm font-medium border border-emerald-500/30"
+              >
+                Initialize Escrow Contract
+              </button>
             </div>
 
             {pendingDrivers.length === 0 ? (
@@ -159,20 +176,26 @@ export function AdminDashboard({ onBack }: { onBack: () => void }) {
               <div className="glass-content p-6 flex flex-col h-full">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold">{viewDoc.name}</h3>
-                <button onClick={() => setViewDoc(null)} className="p-2 bg-white/5 rounded-full hover:bg-white/10">
-                  <X className="h-5 w-5" />
-                </button>
+                <div className="flex items-center gap-4">
+                  <a 
+                    href={ipfs.getGatewayUrl(viewDoc.data)} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-emerald-400 hover:text-emerald-300 text-sm font-medium flex items-center gap-2"
+                  >
+                    <Eye className="h-4 w-4" /> Open in New Tab
+                  </a>
+                  <button onClick={() => setViewDoc(null)} className="p-2 bg-white/5 rounded-full hover:bg-white/10">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
               <div className="flex-1 overflow-auto flex items-center justify-center bg-black/50 rounded-xl border border-white/5">
-                {viewDoc.data.startsWith('data:application/pdf') ? (
-                  <iframe src={viewDoc.data} className="w-full h-[60vh] rounded-lg" title={viewDoc.name} />
-                ) : (
-                  <img 
-                    src={ipfs.getGatewayUrl(viewDoc.data)} 
-                    alt={viewDoc.name} 
-                    className="max-w-full max-h-[60vh] object-contain rounded-lg" 
-                  />
-                )}
+                <iframe 
+                  src={ipfs.getGatewayUrl(viewDoc.data)} 
+                  className="w-full h-[60vh] rounded-lg bg-white/5" 
+                  title={viewDoc.name} 
+                />
               </div>
               </div>
             </motion.div>

@@ -26,7 +26,7 @@ def deploy() -> None:
     factory = algorand.client.get_typed_app_factory(
         RideContractFactory, 
         default_sender=deployer_.address,
-        app_name="GigoRideApp_FINAL_V9" 
+        app_name="GigoRideApp_FINAL_V10" 
     )
 
     print("Starting deployment (V6)...", flush=True)
