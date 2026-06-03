@@ -7,7 +7,7 @@ import { SmartMap } from './ai/SmartMap'
 import { OTPModal } from './OTPModal'
 import { CarFront, Banknote } from 'lucide-react'
 import { PWAInstallFooter } from './PWAInstallFooter'
-import { ThemeToggle } from './ThemeToggle'
+
 import { cn } from '../lib/cn'
 import { RideStatus } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
@@ -70,12 +70,9 @@ function DriverProfileDropdown({
               initial={{ opacity: 0, y: 10, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              className="w-full glass-container glass-container--rounded shadow-2xl"
+              className="w-full bg-white rounded-3xl shadow-[0_16px_40px_rgba(0,0,0,0.12)] border border-slate-200 overflow-hidden"
             >
-              <div className="glass-filter"></div>
-              <div className="glass-overlay"></div>
-              <div className="glass-specular"></div>
-              <div className="glass-content p-4">
+              <div className="p-4">
                 <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl">
                   <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center overflow-hidden">
                     {documents['Profile Photo'] ? (
@@ -187,12 +184,19 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
 export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () => void }) {
   const activeRide = ride.focusedRide
   const { location: driverLocation, locationError: gpsError } = useGeolocation()
-  const { active, setActive } = useDriverContext()
+  const { active, setActive, vehicleType } = useDriverContext()
   const [activeTab, setActiveTab] = useState<'rides' | 'earnings'>('rides')
   const [otpOpen, setOtpOpen] = useState(false)
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState('')
   const [endRideError, setEndRideError] = useState<string | null>(null)
+  
+  const filteredRides = ride.driverRides.filter((item: any) => {
+    if (vehicleType && item.vehicleType) {
+      return item.vehicleType === vehicleType;
+    }
+    return true;
+  });
   // Metadata is now fetched automatically via MongoDB in useRideContract
 
   async function handleVerifyOtp() {
@@ -309,7 +313,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <ThemeToggle />
+
                 <DriverProfileDropdown currentTab={activeTab} onTabChange={setActiveTab} />
               </div>
             </div>
@@ -370,7 +374,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                 ) : (
                   <>
                     <AnimatePresence initial={false}>
-                      {ride.driverRides.map((item) => (
+                      {filteredRides.map((item) => (
                         <motion.div
                           key={item.rideId.toString()}
                           layout
@@ -467,9 +471,9 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   ))}
                 </AnimatePresence>
 
-                {!ride.driverRides.length ? (
+                {!filteredRides.length ? (
                   <div className="rounded-[28px] border border-dashed border-white/10 bg-white/[0.03] p-5 text-sm text-white/54">
-                    No visible rides yet. Once a customer creates a ride, it will appear here after refresh polling.
+                    No visible rides yet. Once a customer creates a {vehicleType || 'ride'}, it will appear here after refresh polling.
                   </div>
                 ) : null}
               </>

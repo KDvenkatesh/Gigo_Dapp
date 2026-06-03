@@ -7,7 +7,7 @@ import { BookingMap } from './BookingMap'
 import { PassPurchaseModal } from './PassPurchaseModal'
 import { type PassInfo } from '../hooks/useAlgorandAssets'
 import { PWAInstallFooter } from './PWAInstallFooter'
-import { ThemeToggle } from './ThemeToggle'
+
 import algosdk from 'algosdk'
 import axios from 'axios'
 import { algorandConfig } from '../config/algorand'
@@ -252,7 +252,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                </div>
 
                <div className="shrink-0 flex items-center gap-2">
-                  <ThemeToggle />
+
                   <CustomerProfileDropdown ride={ride} onSwitchRole={onSwitchRole} currentTab={tab} onTabChange={setTab} rideCount={ride.customerRides.length} />
                </div>
             </div>
@@ -934,13 +934,13 @@ function CustomerProfileDropdown({
       if (activeAddress) {
          const fetchProfile = async () => {
             try {
-               const cid = await ipfs.getCustomerProfileCID(activeAddress);
-               if (cid) {
-                  setProfilePhoto(ipfs.getGatewayUrl(cid));
+               const photoBase64 = await ipfs.getCustomerProfileBase64(activeAddress);
+               if (photoBase64) {
+                  setProfilePhoto(photoBase64);
                   return;
                }
                
-               // Fallback to rider documents if available
+               // Fallback to rider documents if available (not needed anymore, but we can keep it safely)
                const driverCid = await ipfs.getDriverMetadataCID(activeAddress);
                if (driverCid) {
                   const driverData = await ipfs.getJSON(driverCid);
@@ -949,7 +949,7 @@ function CustomerProfileDropdown({
                   }
                }
             } catch (e) {
-               console.error('Failed to fetch customer profile from IPFS', e);
+               console.error('Failed to fetch customer profile', e);
             }
          };
          fetchProfile();
@@ -960,14 +960,32 @@ function CustomerProfileDropdown({
       const file = e.target.files?.[0]
       if (!file || !activeAddress) return
 
+      // Validate file size (< 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+         alert('File must be smaller than 2MB');
+         return;
+      }
+
       try {
          setIsUploading(true)
-         const cid = await ipfs.uploadFile(file)
-         await ipfs.saveCustomerProfile(activeAddress, cid)
-         setProfilePhoto(ipfs.getGatewayUrl(cid))
+         
+         // Convert file to base64
+         const reader = new FileReader();
+         reader.readAsDataURL(file);
+         
+         reader.onload = async () => {
+            const base64String = reader.result as string;
+            await ipfs.saveCustomerProfile(activeAddress, base64String);
+            setProfilePhoto(base64String);
+            setIsUploading(false);
+         };
+         
+         reader.onerror = (error) => {
+            console.error('Error reading file:', error);
+            setIsUploading(false);
+         };
       } catch (err) {
          console.error('Profile upload failed:', err)
-      } finally {
          setIsUploading(false)
       }
    }
@@ -997,12 +1015,9 @@ function CustomerProfileDropdown({
                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
                      animate={{ opacity: 1, y: 0, scale: 1 }}
                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                     className="w-full glass-container glass-container--rounded shadow-2xl"
+                     className="w-full bg-white rounded-3xl shadow-[0_16px_40px_rgba(0,0,0,0.12)] border border-slate-200 overflow-hidden"
                   >
-                     <div className="glass-filter"></div>
-                     <div className="glass-overlay"></div>
-                     <div className="glass-specular"></div>
-                     <div className="glass-content p-4">
+                     <div className="p-4">
                         <div className="flex items-center gap-3 mb-4 p-2 bg-white/5 rounded-xl group relative">
                            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden shrink-0 border border-white/10">
                               {profilePhoto ? (
@@ -1021,21 +1036,23 @@ function CustomerProfileDropdown({
                            </label>
                         </div>
 
-                        <div className="mb-4">
-                           <button 
-                              onClick={() => document.getElementById('profile-upload')?.click()}
-                              className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left group"
-                           >
-                              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20">
-                                 <Camera className="w-4 h-4" />
-                              </div>
-                              <div>
-                                 <span className="text-sm font-medium block">Update Photo</span>
-                                 <span className="text-[10px] text-white/30">Max 100KB</span>
-                              </div>
-                              <input id="profile-upload" type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
-                           </button>
-                        </div>
+                        {!profilePhoto && (
+                           <div className="mb-4">
+                              <button 
+                                 onClick={() => document.getElementById('profile-upload')?.click()}
+                                 className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left group"
+                              >
+                                 <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20">
+                                    <Camera className="w-4 h-4" />
+                                 </div>
+                                 <div>
+                                    <span className="text-sm font-medium block">Update Photo</span>
+                                    <span className="text-[10px] text-white/30">Max 2MB</span>
+                                 </div>
+                                 <input id="profile-upload" type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                              </button>
+                           </div>
+                        )}
 
                          {/* Mobile Tabs */}
                          {onTabChange && (

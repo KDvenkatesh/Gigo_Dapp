@@ -10,7 +10,7 @@ import { MapView } from './components/MapView'
 import { ToastStack } from './components/ToastStack'
 import { WalletConnectButton } from './components/WalletConnectButton'
 import { PWAInstallPrompt } from './components/PWAInstallPrompt'
-import { ThemeToggle } from './components/ThemeToggle'
+
 import { walletManager } from './config/wallet'
 import { useRideContract } from './hooks/useRideContract'
 import { CustomerProvider } from './contexts/CustomerContext'
@@ -96,9 +96,12 @@ function DriverFlow({ onBack }: { onBack: () => void }) {
   return <DriverOnboarding onBack={onBack} />
 }
 
+import { useTheme } from './hooks/useTheme'
+
 function RideApp() {
   const [role, setRole] = useState<AppRole>('customer')
   const ride = useRideContract()
+  useTheme()
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[var(--bg)] text-white">
@@ -111,7 +114,7 @@ function RideApp() {
 
       {role === 'customer' && !ride.activeAddress && (
         <div className="absolute top-6 right-6 z-[60] flex flex-col items-end gap-3">
-          <ThemeToggle />
+
           <motion.button
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
