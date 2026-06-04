@@ -275,7 +275,7 @@ cp .env  # or create manually with the template below
 
 ```env
 # Algorand Configuration
-VITE_RIDE_APP_ID=763288139
+VITE_RIDE_APP_ID=763756954
 VITE_BACKEND_URL=...
 
 # Optional: Override with local backend
@@ -320,7 +320,7 @@ PORT=3001
 
 # Algorand Configuration
 ALGORAND_NODE=https://testnet-api.algonode.cloud
-RIDE_APP_ID=763288139
+RIDE_APP_ID=763756954
 PLATFORM_WALLET=YOUR_PLATFORM_WALLET_ADDRESS
 
 # AI & Route Optimization
@@ -401,13 +401,13 @@ ls artifacts/
 
 | Component | Variable | Example Value |
 |-----------|----------|---------------|
-| **Frontend** | `VITE_RIDE_APP_ID` | `763288139` |
+| **Frontend** | `VITE_RIDE_APP_ID` | `763756954` |
 | **Frontend** | `VITE_BACKEND_URL` | `http://localhost:3001` |
 | **Backend** | `PORT` | `3001` |
 | **Backend** | `MONGODB_URI` | `mongodb+srv://...` |
 | **Backend** | `GROQ_API_KEY` | `gffrcff_...` |
 | **Backend** | `PINATA_JWT` | `eyfvgfrfgh...` |
-| **Backend** | `RIDE_APP_ID` | `763288139` |
+| **Backend** | `RIDE_APP_ID` | `763756954` |
 | **Contracts** | `DEPLOYER_MNEMONIC` | `word1 word2 ...` |
 
 ---
@@ -417,7 +417,7 @@ ls artifacts/
 | Name | Value | Type |
 |------|-------|------|
 | **GIGC ASA ID** | `763011769` | Asset |
-| **Ride App ID** | `763288139` | Smart Contract |
+| **Ride App ID** | `763756954` | Smart Contract |
 | **Platform Wallet** | `YOUR_PLATFORM_WALLET_ADDRESS` | Account |
 | **Network** | `Algorand TestNet` | Blockchain |
 
