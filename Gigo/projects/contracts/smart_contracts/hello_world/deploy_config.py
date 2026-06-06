@@ -17,7 +17,7 @@ def deploy() -> None:
         RideContractFactory,
     )
 
-    algorand = algokit_utils.AlgorandClient.testnet()
+    algorand = algokit_utils.AlgorandClient.from_environment()
     deployer_mnemonic = os.getenv("DEPLOYER_MNEMONIC")
     if not deployer_mnemonic:
         raise Exception("DEPLOYER_MNEMONIC not found in environment")
