@@ -71,6 +71,12 @@ class RideContract(ARC4Contract):
         del self.escrow_customer[rid]
         del self.escrow_fare[rid]
 
+        itxn.Payment(
+            receiver=customer,
+            amount=29_000,
+            fee=0
+        ).submit()
+
     @arc4.abimethod
     def cancel_and_refund(self, ride_id: arc4.UInt64) -> None:
         rid = ride_id.native
@@ -91,3 +97,9 @@ class RideContract(ARC4Contract):
 
         del self.escrow_customer[rid]
         del self.escrow_fare[rid]
+
+        itxn.Payment(
+            receiver=customer,
+            amount=29_000,
+            fee=0
+        ).submit()

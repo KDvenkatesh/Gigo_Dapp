@@ -14,9 +14,9 @@ const icons = {
 } as const
 
 const tones = {
-  info: 'border-sky-300/20 bg-sky-300/12',
-  success: 'border-emerald-300/20 bg-emerald-300/12',
-  error: 'border-rose-300/20 bg-rose-300/12',
+  info: 'border-sky-500/30 bg-slate-900/95',
+  success: 'border-emerald-500/30 bg-slate-900/95',
+  error: 'border-rose-500/30 bg-slate-900/95',
 } as const
 
 export function ToastStack({ toasts, onDismiss }: ToastStackProps) {

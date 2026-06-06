@@ -124,11 +124,15 @@ export function useRideContract() {
     args,
     sender,
     feeMultiplier = 1,
+    extraTxns = [],
+    boxes,
   }: {
     method: algosdk.ABIMethod
     args: any[]
     sender: string
     feeMultiplier?: number
+    extraTxns?: algosdk.Transaction[]
+    boxes?: algosdk.BoxReference[]
   }) {
     if (!algorandConfig.appId || !activeAddress || !transactionSigner) {
       throw new Error('Wallet/App not ready.')
@@ -140,6 +144,10 @@ export function useRideContract() {
       params.flatFee = true
     }
     const atc = new algosdk.AtomicTransactionComposer()
+
+    for (const txn of extraTxns) {
+      atc.addTransaction({ txn, signer: transactionSigner })
+    }
 
     // Transform args to handle transactions
     const methodArgs = args.map(arg => {
@@ -156,6 +164,7 @@ export function useRideContract() {
       sender,
       suggestedParams: params,
       signer: transactionSigner,
+      boxes,
     })
 
     const populated = await populateAppCallResources(atc, algod)
@@ -229,6 +238,14 @@ export function useRideContract() {
       const rideId = BigInt(Date.now())
 
       const suggestedParams = await algod.getTransactionParams().do()
+      
+      const mbrTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+        sender: activeAddress,
+        receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
+        amount: 29000,
+        suggestedParams,
+      })
+
       const paymentTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
         sender: activeAddress,
         receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
@@ -237,11 +254,19 @@ export function useRideContract() {
         suggestedParams,
       })
 
+      const rideIdBytes = algosdk.encodeUint64(rideId)
+      const boxes: algosdk.BoxReference[] = [
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('c_'), ...rideIdBytes]) },
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('f_'), ...rideIdBytes]) },
+      ]
+
       // Pass paymentTxn as the first argument (axfer)
       await executeMethod({
         method: rideAbiMethods.init_escrow,
         args: [paymentTxn, rideId],
         sender: activeAddress,
+        extraTxns: [mbrTxn],
+        boxes,
       })
 
       await axios.post(`${BACKEND_URL}/api/rides/create`, {
@@ -276,11 +301,18 @@ export function useRideContract() {
     
     updateActionState('payout', true)
     try {
+      const rideIdBytes = algosdk.encodeUint64(rideId)
+      const boxes: algosdk.BoxReference[] = [
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('c_'), ...rideIdBytes]) },
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('f_'), ...rideIdBytes]) },
+      ]
+
       await executeMethod({
         method: rideAbiMethods.payout,
         args: [rideId, riderAddress],
         sender: activeAddress,
         feeMultiplier: 2,
+        boxes,
       })
 
       await axios.post(`${BACKEND_URL}/api/rides/update-status`, {
@@ -343,11 +375,11 @@ export function useRideContract() {
     try {
       const suggestedParams = await algod.getTransactionParams().do()
       
-      // Provide 0.1 ALGO to the contract to cover the Min Balance Requirement (MBR) for holding 1 ASA
+      // Provide 0.2 ALGO to the contract to cover the Min Balance Requirement (MBR) for the base account (100k) + holding 1 ASA (100k)
       const fundTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
         sender: activeAddress,
         receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
-        amount: 100000, 
+        amount: 200000, 
         suggestedParams,
       })
       
