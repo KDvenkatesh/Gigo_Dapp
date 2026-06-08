@@ -68,14 +68,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
     const fetchCustomerDebt = useCallback(async () => {
       if (!activeAddress) return;
       try {
-         let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
-         if (typeof window !== 'undefined') {
-            if (window.location.hostname === 'localhost') {
-               BACKEND_URL = 'http://localhost:3001'
-            } else if (BACKEND_URL.includes('localhost')) {
-               BACKEND_URL = 'https://gigo-dapp.onrender.com'
-            }
-         }
+         const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
          const res = await axios.get(`${BACKEND_URL}/api/customers/${activeAddress}`)
          setOutstandingDebt(res.data.outstandingDebt || 0)
       } catch (e) {
@@ -132,14 +125,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
          const signedTxns = (await signTransactions([encodedTxn])) as Uint8Array[];
          const { txId } = await algodClient.sendRawTransaction(signedTxns).do() as any;
          
-         let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
-         if (typeof window !== 'undefined') {
-            if (window.location.hostname === 'localhost') {
-               BACKEND_URL = 'http://localhost:3001';
-            } else if (BACKEND_URL.includes('localhost')) {
-               BACKEND_URL = 'https://gigo-dapp.onrender.com';
-            }
-         }
+         const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
          
          let cleared = false;
          for (let i = 0; i < 5; i++) {
@@ -177,14 +163,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
     )
 
     useEffect(() => {
-      let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
-      if (typeof window !== 'undefined') {
-         if (window.location.hostname === 'localhost') {
-            BACKEND_URL = 'http://localhost:3001'
-         } else if (BACKEND_URL.includes('localhost')) {
-            BACKEND_URL = 'https://gigo-dapp.onrender.com'
-         }
-      }
+      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
 
       const activeRideId = activeRide?.status === RideStatus.RIDE_STARTED ? activeRide.rideId : null
 
@@ -1289,14 +1268,7 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
    const [localIsOptedIn, setLocalIsOptedIn] = useState(isOptedIn)
    const { transactionSigner } = useWallet()
 
-   let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
-   if (typeof window !== 'undefined') {
-      if (window.location.hostname === 'localhost') {
-         BACKEND_URL = 'http://localhost:3001'
-      } else if (BACKEND_URL.includes('localhost')) {
-         BACKEND_URL = 'https://gigo-dapp.onrender.com'
-      }
-   }
+   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
 
    const conversionRatio = 100 // 100 GIGC = 1 ALGO
    const gigcNum = parseFloat(gigcAmount) || 0

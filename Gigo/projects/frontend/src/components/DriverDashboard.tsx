@@ -483,12 +483,8 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                                  type="button"
                                  onClick={async (event) => {
                                    event.stopPropagation()
-                                 let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
-                                 if (window.location.hostname === 'localhost') {
-                                   BACKEND_URL = 'http://localhost:3001'
-                                 } else if (BACKEND_URL.includes('localhost')) {
-                                   BACKEND_URL = 'https://gigo-dapp.onrender.com'
-                                 }
+                                 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com'
+
                                    await fetch(`${BACKEND_URL}/api/rides/update-status`, {
                                      method: 'POST',
                                      headers: { 'Content-Type': 'application/json' },
@@ -767,12 +763,8 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             type="button"
                             onClick={async () => {
                                try {
-                                 let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
-                                 if (window.location.hostname === 'localhost') {
-                                   BACKEND_URL = 'http://localhost:3001'
-                                 } else if (BACKEND_URL.includes('localhost')) {
-                                   BACKEND_URL = 'https://gigo-dapp.onrender.com'
-                                 }
+                                 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com'
+
                                  await fetch(`${BACKEND_URL}/api/rides/driver-cancel`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
