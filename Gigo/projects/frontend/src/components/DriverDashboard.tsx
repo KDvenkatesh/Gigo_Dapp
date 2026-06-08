@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, Timer, Trash2, FileText, LogOut, User, X } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, Timer, Trash2, FileText, LogOut, User, X, ShieldCheck } from 'lucide-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { BottomSheet } from './BottomSheet'
 import { EarningsTab } from './ai/EarningsTab'
@@ -7,6 +7,8 @@ import { SmartMap } from './ai/SmartMap'
 import { OTPModal } from './OTPModal'
 import { CarFront, Banknote } from 'lucide-react'
 import { PWAInstallFooter } from './PWAInstallFooter'
+import { Web3ReceiptModal } from './Web3ReceiptModal'
+import { DemoPanel } from './DemoPanel'
 
 import { cn } from '../lib/cn'
 import { RideStatus } from '../types/ride'
@@ -181,6 +183,45 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 
+function WaitTimerDisplay({ driverArrivalAt, waitTimeFee }: { driverArrivalAt: string, waitTimeFee?: number }) {
+   const [timerString, setTimerString] = useState('')
+
+   useEffect(() => {
+      const updateTimer = () => {
+         const arrivedAt = new Date(driverArrivalAt).getTime()
+         const now = Date.now()
+         const elapsedMs = now - arrivedAt
+         const totalSecs = Math.floor(elapsedMs / 1000)
+         const limitSecs = 3 * 60
+         
+         if (totalSecs < limitSecs) {
+            const remaining = limitSecs - totalSecs
+            const m = Math.floor(remaining / 60)
+            const s = remaining % 60
+            setTimerString(`Grace period: ${m}:${s.toString().padStart(2, '0')} remaining`)
+         } else {
+            const extra = totalSecs - limitSecs
+            const m = Math.floor(extra / 60)
+            const s = extra % 60
+            setTimerString(`Wait fee active: +${m}:${s.toString().padStart(2, '0')}`)
+         }
+      }
+      updateTimer()
+      const interval = setInterval(updateTimer, 1000)
+      return () => clearInterval(interval)
+   }, [driverArrivalAt])
+
+   return (
+      <div className="mt-3 mb-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs">
+         <p className="font-bold text-amber-400">Wait Timer Started</p>
+         {timerString && <p className="text-amber-300 font-mono mt-1">{timerString}</p>}
+         <p className="text-amber-400/80 mt-1">
+            {waitTimeFee ? `Current Wait Fee: ${waitTimeFee} GIGC` : "3-minute grace period active. Fee will accumulate afterwards."}
+         </p>
+      </div>
+   )
+}
+
 export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () => void }) {
   const activeRide = ride.focusedRide
   const { location: driverLocation, locationError: gpsError } = useGeolocation()
@@ -190,6 +231,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
   const [otp, setOtp] = useState('')
   const [otpError, setOtpError] = useState('')
   const [endRideError, setEndRideError] = useState<string | null>(null)
+  const [selectedReceiptRide, setSelectedReceiptRide] = useState<any>(null)
   
   const filteredRides = ride.driverRides.filter((item: any) => {
     if (vehicleType && item.vehicleType) {
@@ -197,6 +239,19 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
     }
     return true;
   });
+
+
+
+  useEffect(() => {
+    if (activeRide?.customerPressedImHere) {
+       ride.pushToast({
+          tone: 'success',
+          title: 'Customer Ready',
+          description: `The customer has indicated they are at the pickup point!`,
+       })
+    }
+  }, [activeRide?.customerPressedImHere])
+
   // Metadata is now fetched automatically via MongoDB in useRideContract
 
   async function handleVerifyOtp() {
@@ -421,21 +476,48 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                           </button>
                         ) : null}
 
-                        {item.status === RideStatus.RIDER_ASSIGNED && item.rider === ride.activeAddress ? (
+                        {(item.status === RideStatus.RIDER_ASSIGNED || item.status === RideStatus.DRIVER_ARRIVED) && item.rider === ride.activeAddress ? (
                           <>
-                            <button
-                              type="button"
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                ride.setFocusedRideId(item.rideId)
-                                setOtpOpen(true)
-                                setOtp('')
-                                setOtpError('')
-                              }}
-                              className="clay-btn clay-btn-brand text-sm px-5 py-2.5"
-                            >
-                              Verify customer OTP
-                            </button>
+                            {!item.driverArrivalAt ? (
+                               <button
+                                 type="button"
+                                 onClick={async (event) => {
+                                   event.stopPropagation()
+                                 let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
+                                 if (window.location.hostname === 'localhost') {
+                                   BACKEND_URL = 'http://localhost:3001'
+                                 } else if (BACKEND_URL.includes('localhost')) {
+                                   BACKEND_URL = 'https://gigo-dapp.onrender.com'
+                                 }
+                                   await fetch(`${BACKEND_URL}/api/rides/update-status`, {
+                                     method: 'POST',
+                                     headers: { 'Content-Type': 'application/json' },
+                                     body: JSON.stringify({
+                                        rideId: item.rideId.toString(),
+                                        status: 'DRIVER_ARRIVED'
+                                     })
+                                   })
+                                   ride.refreshRides()
+                                 }}
+                                 className="clay-btn clay-btn-success text-sm px-5 py-2.5"
+                               >
+                                 I've Arrived
+                               </button>
+                            ) : (
+                               <button
+                                 type="button"
+                                 onClick={(event) => {
+                                   event.stopPropagation()
+                                   ride.setFocusedRideId(item.rideId)
+                                   setOtpOpen(true)
+                                   setOtp('')
+                                   setOtpError('')
+                                 }}
+                                 className="clay-btn clay-btn-brand text-sm px-5 py-2.5"
+                               >
+                                 Verify customer OTP
+                               </button>
+                            )}
                           </>
                         ) : null}
 
@@ -454,18 +536,50 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                               }
                             }}
                             disabled={ride.actionState.endRide}
-                            className="clay-btn clay-btn-success text-sm px-5 py-2.5 disabled:opacity-45"
+                            className="clay-btn clay-btn-brand text-sm px-5 py-2.5 disabled:opacity-45"
                           >
-                            {ride.actionState.endRide ? '⏳ Processing...' : '📍 End ride & claim payment'}
+                            {ride.actionState.endRide ? '⏳ Processing...' : '📍 End ride & request payment'}
                           </button>
                         ) : null}
 
+                        {item.status === RideStatus.DROPPED_OFF && item.rider === ride.activeAddress ? (
+                          <div className="rounded-[22px] bg-indigo-500/10 px-4 py-3 text-sm font-semibold text-indigo-400 border border-indigo-500/20">
+                            Waiting for customer to confirm payment...
+                          </div>
+                        ) : null}
+
                         {item.status === RideStatus.RIDE_COMPLETED && item.rider === ride.activeAddress ? (
-                          <div className="rounded-[22px] bg-amber-500/10 px-4 py-3 text-sm font-semibold text-amber-400 border border-amber-500/20">
-                            Waiting for customer to release payment
+                          <div className="rounded-[22px] bg-emerald-500/10 px-4 py-3 text-sm font-semibold text-emerald-400 border border-emerald-500/20">
+                            🎉 Payment successfully released to wallet!
                           </div>
                         ) : null}
                       </div>
+
+                      {/* inline notices for driver on list card */}
+                      {(item.customerPressedImHere || item.driverArrivalAt) && (item.status === RideStatus.RIDER_ASSIGNED || item.status === RideStatus.DRIVER_ARRIVED) && (
+                         <div className="mt-3 flex flex-col">
+                           {item.customerPressedImHere && (
+                              <div className="mb-2 rounded-xl border border-sky-500/30 bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-400">
+                                 👋 Customer says they are here!
+                              </div>
+                           )}
+                           {item.driverArrivalAt && (
+                              <WaitTimerDisplay driverArrivalAt={item.driverArrivalAt} waitTimeFee={Number(item.waitTimeFee)} />
+                           )}
+                         </div>
+                      )}
+
+                      {(item as any).receiptHash && (
+                         <div className="w-full mt-2 border-t border-white/10 pt-3">
+                            <button 
+                               onClick={(e) => { e.stopPropagation(); setSelectedReceiptRide(item) }}
+                               className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 transition"
+                            >
+                               <ShieldCheck className="h-3.5 w-3.5" />
+                               View Web3 Receipt (Immutable Hash)
+                            </button>
+                         </div>
+                      )}
                       </div>
                     </motion.div>
                   ))}
@@ -515,8 +629,15 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                       Ride #{activeRide.rideId.toString()}
                     </h3>
                   </div>
-                  <div className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs font-semibold text-white/72">
-                    {activeRide.status}
+                  <div className="flex items-center gap-2">
+                    {(activeRide as any).driverReputation !== undefined && (
+                      <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
+                        ⭐ {(activeRide as any).driverReputation}/5
+                      </div>
+                    )}
+                    <div className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs font-semibold text-white/72">
+                      {activeRide.status}
+                    </div>
                   </div>
                 </div>
 
@@ -546,12 +667,23 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
 
 
 
-                {activeRide.status === RideStatus.RIDER_ASSIGNED ? (
+                {activeRide.status === RideStatus.RIDER_ASSIGNED || activeRide.status === RideStatus.DRIVER_ARRIVED ? (
                   <div className="mt-5 rounded-[28px] border border-emerald-300/18 bg-emerald-300/10 p-4">
                     <div className="flex items-start gap-3">
                       <KeyRound className="mt-0.5 h-5 w-5 text-emerald-100" />
-                      <div>
-                        <p className="text-sm font-semibold text-white">Pickup OTP</p>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-white">Pickup Location & OTP</p>
+
+                        {activeRide.customerPressedImHere && (
+                           <div className="mt-3 mb-3 rounded-xl border border-sky-500/30 bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-400">
+                              👋 Customer says they are here!
+                           </div>
+                        )}
+
+                        {activeRide.driverArrivalAt && (
+                           <WaitTimerDisplay driverArrivalAt={activeRide.driverArrivalAt} waitTimeFee={Number(activeRide.waitTimeFee)} />
+                        )}
+
                         <p className="mt-1 text-sm leading-6 text-white/62">
                           Ask the customer to tell you the OTP displayed on their screen, then click "Verify customer OTP" to start the ride.
                         </p>
@@ -596,16 +728,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             <p className="mt-2 text-xs text-amber-400">⚠️ {gpsError}</p>
                           )}
 
-                          {/* Not near drop — show clear warning BEFORE button */}
-                          {distKm !== null && !isNear && (
-                            <div className="mt-3 rounded-[16px] border border-red-500/30 bg-red-500/10 px-4 py-3">
-                              <p className="text-sm font-bold text-red-400">🚫 Not at drop location yet!</p>
-                              <p className="mt-1 text-xs text-red-300/80">
-                                You are <strong>{distKm < 1 ? `${(distKm * 1000).toFixed(0)} meters` : `${distKm.toFixed(2)} km`}</strong> away from the customer's drop point.<br />
-                                Please drive to <strong>{activeRide.drop?.label}</strong> and get within 500 meters before ending the ride.
-                              </p>
-                            </div>
-                          )}
+                          {/* Distance UI removed per user request */}
 
                           {/* Backend / network error display */}
                           {endRideError && (
@@ -634,12 +757,40 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             disabled={ride.actionState.endRide}
                             className={cn(
                               "w-full clay-btn py-3 text-sm font-bold disabled:opacity-45 mt-4",
-                              isNear
-                                ? "clay-btn-success shadow-[0_4px_24px_rgba(16,185,129,0.35)]"
-                                : "clay-btn-brand opacity-60"
+                              "clay-btn-brand shadow-[0_4px_24px_rgba(59,130,246,0.35)]"
                             )}
                           >
-                            {ride.actionState.endRide ? '⏳ Processing payout...' : isNear ? '✅ End ride & claim payment' : '📍 End ride & claim payment'}
+                            {ride.actionState.endRide ? '⏳ Processing drop-off...' : '✅ End ride & request payment'}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={async () => {
+                               try {
+                                 let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
+                                 if (window.location.hostname === 'localhost') {
+                                   BACKEND_URL = 'http://localhost:3001'
+                                 } else if (BACKEND_URL.includes('localhost')) {
+                                   BACKEND_URL = 'https://gigo-dapp.onrender.com'
+                                 }
+                                 await fetch(`${BACKEND_URL}/api/rides/driver-cancel`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                       rideId: activeRide.rideId.toString(),
+                                       reason: 'Driver cancellation',
+                                       currentLat: driverLocation?.lat,
+                                       currentLng: driverLocation?.lng
+                                    })
+                                 })
+                                 await ride.refreshRides()
+                               } catch (e) {
+                                 console.error(e)
+                               }
+                            }}
+                            className="w-full mt-3 rounded-2xl bg-rose-500/10 py-3 text-sm font-bold text-rose-400 hover:bg-rose-500/20 transition border border-rose-500/20"
+                          >
+                            🚫 Cancel Ride
                           </button>
 
                           {!isNear && distKm !== null && (
@@ -650,6 +801,20 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                     </div>
                   )
                 })() : null}
+
+                {activeRide.status === RideStatus.DROPPED_OFF && activeRide.rider === ride.activeAddress ? (
+                  <div className="mt-5 rounded-[28px] border border-indigo-300/18 bg-indigo-300/10 p-4">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle2 className="mt-0.5 h-5 w-5 text-indigo-400" />
+                      <div>
+                        <p className="text-sm font-semibold text-white">Ride Ended — Waiting for Payment</p>
+                        <p className="mt-1 text-sm leading-6 text-white/62">
+                          You have marked the ride as ended. Waiting for the customer to confirm and release the escrow.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
 
                 {activeRide.status === RideStatus.RIDE_COMPLETED && activeRide.rider === ride.activeAddress ? (
                   <div className="mt-5 rounded-[28px] border border-emerald-300/18 bg-emerald-300/10 p-4">
@@ -731,6 +896,12 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
           <EarningsTab ride={ride} />
         )}
         <PWAInstallFooter />
+        
+        {selectedReceiptRide && (
+           <Web3ReceiptModal ride={selectedReceiptRide} onClose={() => setSelectedReceiptRide(null)} />
+        )}
+
+        <DemoPanel activeRide={activeRide || null} />
       </BottomSheet>
 
       <OTPModal

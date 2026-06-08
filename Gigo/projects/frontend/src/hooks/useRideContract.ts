@@ -218,7 +218,16 @@ export function useRideContract() {
             fareMicroAlgos: mongoRide.fareMicroAlgos ? BigInt(mongoRide.fareMicroAlgos) : (chainData.fareMicroAlgos || 0n),
             otp: mongoRide.otp,
             paymentLocked: mongoRide.paymentLocked,
-            vehicleType: mongoRide.vehicleType
+            vehicleType: mongoRide.vehicleType,
+            customerPressedImHere: mongoRide.customerPressedImHere,
+            driverArrivalAt: mongoRide.driverArrivalAt,
+            waitTimeFee: mongoRide.waitTimeFee,
+            receiptHash: mongoRide.receiptHash,
+            settlementReason: mongoRide.settlementReason,
+            weatherMultiplier: mongoRide.weatherMultiplier,
+            trafficDelayFee: mongoRide.trafficDelayFee,
+            settlementTxId: mongoRide.settlementTxId,
+            cancellationReason: mongoRide.cancellationReason
          };
       });
 
@@ -446,11 +455,35 @@ export function useRideContract() {
     formatAlgoAmount,
     createRide,
     releasePayment,
+    customerConfirmPayout: async (rideId: bigint) => {
+      if (!activeAddress) throw new Error('Connect wallet first.')
+      updateActionState('payout', true)
+      try {
+        const response = await axios.post(`${BACKEND_URL}/api/rides/end-ride`, {
+          rideId: rideId.toString(),
+        })
+        if (response.data?.payoutTxId) {
+          pushToast({
+            tone: 'success',
+            title: 'Payment Released',
+            description: `Payment released! TxID: ${response.data.payoutTxId.slice(0, 12)}...`,
+          })
+        }
+        await refreshRides()
+      } catch (error: any) {
+        const msg = error?.response?.data?.error || error?.message || 'Failed to confirm payout'
+        pushToast({ tone: 'error', title: 'Payout failed', description: msg })
+        throw error
+      } finally {
+        updateActionState('payout', false)
+      }
+    },
     refreshRides,
     checkAsaBalance,
     optInToAsa,
     optInContractToAsa,
     generateOtp,
+    pushToast,
     toasts,
     dismissToast,
     focusedRide,
@@ -460,12 +493,37 @@ export function useRideContract() {
       setRides([])
     },
     acceptRide: async (rideId: bigint) => {
+      if (!activeAddress) throw new Error('Connect wallet first.')
       updateActionState('acceptRide', true)
       try {
-        await axios.post(`${BACKEND_URL}/api/rides/update-status`, {
-           rideId: rideId.toString(),
-           status: RideStatus.RIDER_ASSIGNED,
-           rider: activeAddress
+        const rideIdBytes = algosdk.encodeUint64(rideId)
+        const boxes: algosdk.BoxReference[] = [
+          { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('c_'), ...rideIdBytes]) },
+          { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('d_'), ...rideIdBytes]) },
+        ]
+
+        await executeMethod({
+          method: rideAbiMethods.accept_ride,
+          args: [rideId, activeAddress],
+          sender: activeAddress,
+          boxes,
+        })
+
+        let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
+        if (window.location.hostname === 'localhost') {
+          BACKEND_URL = 'http://localhost:3001'
+        } else if (BACKEND_URL.includes('localhost')) {
+          BACKEND_URL = 'https://gigo-dapp.onrender.com'
+        }
+
+        await fetch(`${BACKEND_URL}/api/rides/update-status`, {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({
+             rideId: rideId.toString(),
+             status: RideStatus.RIDER_ASSIGNED,
+             rider: activeAddress
+           })
         });
         await refreshRides()
       } finally {
@@ -479,17 +537,17 @@ export function useRideContract() {
         if (!driverLocation) {
           throw new Error('Driver location is required to end the ride. Please enable location services.')
         }
-        const response = await axios.post(`${BACKEND_URL}/api/rides/end-ride`, {
+        const response = await axios.post(`${BACKEND_URL}/api/rides/driver-dropoff`, {
           rideId: rideId.toString(),
           driverAddress: activeAddress,
           driverLat: driverLocation.lat,
           driverLng: driverLocation.lng,
         })
-        if (response.data?.payoutTxId) {
+        if (response.data?.success) {
           pushToast({
             tone: 'success',
-            title: '💰 Payment Released!',
-            description: `GIGC sent to your wallet! TxID: ${response.data.payoutTxId.slice(0, 12)}...`,
+            title: 'Ride Ended',
+            description: `Waiting for customer to confirm payment...`,
           })
         }
         await refreshRides()

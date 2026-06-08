@@ -167,6 +167,7 @@
 [data-theme="light"] .bg-\[\#05060a\],
 [data-theme="light"] .bg-\[\#05070a\],
 [data-theme="light"] .bg-\[\#06080b\],
+[data-theme="light"] .bg-\[\#0a0c10\],
 [data-theme="light"] .bg-\[\#0b1117\],
 [data-theme="light"] .bg-\[\#0f111a\],
 [data-theme="light"] .bg-\[\#0f1118\],
@@ -177,12 +178,16 @@
     #f4f5f7 !important;
 }
 
+[data-theme="light"] .bg-black\/40,
 [data-theme="light"] .bg-black\/60,
 [data-theme="light"] .bg-black\/65,
 [data-theme="light"] .bg-black\/70,
 [data-theme="light"] .bg-black\/80,
-[data-theme="light"] .bg-black\/90 {
-  background-color: rgba(240, 249, 255, 0.70) !important;
+[data-theme="light"] .bg-black\/90,
+[data-theme="light"] .bg-slate-950\/95,
+[data-theme="light"] .bg-slate-900\/95,
+[data-theme="light"] .bg-slate-900\/80 {
+  background-color: rgba(240, 249, 255, 0.85) !important;
 }
 
 /* white/opacity cards → sky blue tinted ── */
@@ -214,12 +219,17 @@
   background-color: rgba(14, 165, 233, 0.14) !important;
 }
 
+[data-theme="light"] .bg-white\/\[0\.14\] {
+  background-color: rgba(14, 165, 233, 0.16) !important;
+}
+
 [data-theme="light"] .bg-white\/20 {
   background-color: rgba(14, 165, 233, 0.20) !important;
 }
 
-/* ── Backdrop tinted navbars ── */
+/* ── Backdrop tinted navbars and toasters ── */
 [data-theme="light"] .bg-\[\#05060a\]\/90,
+[data-theme="light"] .bg-\[\#0f111a\]\/95,
 [data-theme="light"] [class*="bg-[#05060a]/90"] {
   background-color: rgba(240, 249, 255, 0.96) !important;
 }

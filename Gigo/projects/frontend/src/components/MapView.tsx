@@ -13,9 +13,12 @@ const routeGlowByStatus: Record<RideStatus, string> = {
   IDLE: 'from-white/0 via-white/0 to-white/0',
   REQUESTED: 'from-amber-400/0 via-amber-300/60 to-amber-400/0',
   RIDER_ASSIGNED: 'from-emerald-400/0 via-emerald-300/80 to-emerald-400/0',
+  DRIVER_ARRIVED: 'from-emerald-400/0 via-emerald-300/85 to-emerald-400/0',
   RIDE_STARTED: 'from-sky-400/0 via-sky-300/80 to-sky-400/0',
+  DROPPED_OFF: 'from-sky-400/0 via-sky-300/90 to-sky-400/0',
   RIDE_COMPLETED: 'from-emerald-400/0 via-emerald-300/90 to-emerald-400/0',
   PAID: 'from-violet-400/0 via-violet-300/85 to-violet-400/0',
+  CANCELLED: 'from-red-400/0 via-red-400/60 to-red-400/0',
 }
 
 export function MapView({ status, pickup, drop, driverAssigned }: MapViewProps) {

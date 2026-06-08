@@ -4,9 +4,12 @@ export const RideStatus = {
   IDLE: 'IDLE',
   REQUESTED: 'REQUESTED',
   RIDER_ASSIGNED: 'RIDER_ASSIGNED',
+  DRIVER_ARRIVED: 'DRIVER_ARRIVED',
   RIDE_STARTED: 'RIDE_STARTED',
+  DROPPED_OFF: 'DROPPED_OFF',
   RIDE_COMPLETED: 'RIDE_COMPLETED',
   PAID: 'PAID',
+  CANCELLED: 'CANCELLED',
 } as const
 
 export type RideStatus = (typeof RideStatus)[keyof typeof RideStatus]
@@ -42,6 +45,15 @@ export interface RideRecord {
   paymentLocked: boolean
   otp?: string
   vehicleType?: string
+  customerPressedImHere?: boolean
+  driverArrivalAt?: string
+  waitTimeFee?: string
+  receiptHash?: string
+  settlementReason?: string
+  weatherMultiplier?: number
+  trafficDelayFee?: string
+  settlementTxId?: string
+  cancellationReason?: string
 }
 
 export interface ToastMessage {
