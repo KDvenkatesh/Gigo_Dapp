@@ -15,8 +15,8 @@ const icons = {
 
 const tones = {
   info: 'border-sky-500/30 bg-slate-900/95',
-  success: 'border-emerald-500/30 bg-slate-900/95',
-  error: 'border-rose-500/30 bg-slate-900/95',
+  success: 'border-white-500/30 bg-slate-900/95',
+  error: 'border-white-500/30 bg-slate-900/95',
 } as const
 
 export function ToastStack({ toasts, onDismiss }: ToastStackProps) {
@@ -41,8 +41,8 @@ export function ToastStack({ toasts, onDismiss }: ToastStackProps) {
                   <Icon className="h-4.5 w-4.5 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{toast.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-white/68">{toast.description}</p>
+                  <p className="text-sm font-semibold text-black">{toast.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-black/68">{toast.description}</p>
                 </div>
               </div>
             </motion.button>
