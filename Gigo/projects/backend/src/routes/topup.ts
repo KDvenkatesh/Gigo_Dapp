@@ -9,7 +9,7 @@ const ALGORAND_NODE = process.env.ALGORAND_NODE || 'https://testnet-api.algonode
 const algodClient = new algosdk.Algodv2('', ALGORAND_NODE, '');
 
 const TREASURY_ADDRESS = process.env.TREASURY_ADDRESS || 'FDSKCI2DHPIOTFR2CXHPESMLAUA4Y66B6KKGJ2CDKDY3UX34W43QVN52NA';
-const TREASURY_MNEMONIC = process.env.TREASURY_MNEMONIC || 'magic mushroom lazy turtle erode matter aspect morning butter join where inherit step guitar skull skill sentence family unveil fortune true bless collect able hazard';
+const TREASURY_MNEMONIC = process.env.TREASURY_MNEMONIC || '';
 const GIGC_ASSET_ID = Number(process.env.GIGC_ASSET_ID || '763011769');
 const CONVERSION_RATIO = Number(process.env.CONVERSION_RATIO || '100'); // 100 GIGC = 1 ALGO
 
