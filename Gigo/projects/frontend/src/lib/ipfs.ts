@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
-
-
+let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 const GATEWAY_URL = 'https://gateway.pinata.cloud/ipfs/';
 
 export const ipfs = {

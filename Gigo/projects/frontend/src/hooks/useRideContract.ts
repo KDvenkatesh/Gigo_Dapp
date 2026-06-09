@@ -10,8 +10,7 @@ import { formatAlgoAmount } from '../lib/location'
 import { RideStatus, type ContractNotice, type RideLocation, type RideRecord, type ToastMessage } from '../types/ride'
 import axios from 'axios'
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
-
+let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 type RideActionState = {
   createRide: boolean
   payout: boolean
@@ -160,8 +159,8 @@ export function useRideContract() {
       boxes,
     })
 
-    const populated = await populateAppCallResources(atc, algod)
-    return populated.execute(algod, 4)
+    // Bypass populateAppCallResources to prevent WalletConnect transaction ID mismatch bugs
+    return atc.execute(algod, 4)
   }
 
   async function refreshRides() {
@@ -220,7 +219,8 @@ export function useRideContract() {
             weatherMultiplier: mongoRide.weatherMultiplier,
             trafficDelayFee: mongoRide.trafficDelayFee,
             settlementTxId: mongoRide.settlementTxId,
-            cancellationReason: mongoRide.cancellationReason
+            cancellationReason: mongoRide.cancellationReason,
+            isSurge: mongoRide.isSurge
          };
       });
 
@@ -232,7 +232,7 @@ export function useRideContract() {
     }
   }
 
-  async function createRide(pickup: RideLocation, drop: RideLocation, fareMicroAlgos: bigint) {
+  async function createRide(pickup: RideLocation, drop: RideLocation, fareMicroAlgos: bigint, isSurge: boolean = false) {
     if (!activeAddress) throw new Error('Connect wallet first.')
     
     updateActionState('createRide', true)
@@ -279,7 +279,8 @@ export function useRideContract() {
          fareMicroAlgos: fareMicroAlgos.toString(),
          vehicleType: selectedVehicle.name,
          status: RideStatus.REQUESTED,
-         paymentLocked: true
+         paymentLocked: true,
+         isSurge
       });
 
       pushToast({
@@ -424,6 +425,47 @@ export function useRideContract() {
     return () => window.clearInterval(interval)
   }, [])
 
+    const cancelRide = async (rideId: bigint) => {
+    if (!activeAddress) return;
+    try {
+      setActionState(s => ({ ...s, endRide: true }))
+      // Assuming we need current lat/lng, but we can pass 0,0 if unavailable.
+      const response = await axios.post(`${BACKEND_URL}/api/rides/customer-cancel`, {
+        rideId: rideId.toString(),
+        currentLat: 0,
+        currentLng: 0
+      });
+      if (response.data.success) {
+        await refreshRides();
+        pushToast({ tone: 'success', title: 'Ride Cancelled', description: 'Ride cancelled successfully' });
+      }
+    } catch (error: any) {
+      console.error('Failed to cancel ride', error);
+      pushToast({ tone: 'error', title: 'Error', description: error?.response?.data?.error || 'Failed to cancel ride' });
+    } finally {
+      setActionState(s => ({ ...s, endRide: false }))
+    }
+  }
+
+  const reportCustomerNoShow = async (rideId: bigint) => {
+    if (!activeAddress) return;
+    try {
+      setActionState(s => ({ ...s, endRide: true }))
+      const response = await axios.post(`${BACKEND_URL}/api/rides/customer-no-show`, {
+        rideId: rideId.toString()
+      });
+      if (response.data.success) {
+        await refreshRides();
+        pushToast({ tone: 'success', title: 'Customer No-Show', description: 'Customer no-show recorded. Fare transferred.' });
+      }
+    } catch (error: any) {
+      console.error('Failed to report customer no-show', error);
+      pushToast({ tone: 'error', title: 'Error', description: error?.response?.data?.error || 'Failed to report customer no-show' });
+    } finally {
+      setActionState(s => ({ ...s, endRide: false }))
+    }
+  }
+
   return {
     activeAddress,
     appReady,
@@ -471,14 +513,16 @@ export function useRideContract() {
         updateActionState('payout', false)
       }
     },
-    refreshRides,
-    checkAsaBalance,
-    optInToAsa,
+    cancelRide,
+    reportCustomerNoShow,
     optInContractToAsa,
     generateOtp,
     pushToast,
     toasts,
     dismissToast,
+    refreshRides,
+    checkAsaBalance,
+    optInToAsa,
     focusedRide,
     focusedRideId,
     setFocusedRideId,
@@ -495,15 +539,23 @@ export function useRideContract() {
           { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('d_'), ...rideIdBytes]) },
         ]
 
+        const suggestedParams = await algod.getTransactionParams().do()
+        
+        // 19,300 microAlgos MBR required for the new d_ box
+        const mbrTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+          sender: activeAddress,
+          receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
+          amount: 19300,
+          suggestedParams,
+        })
+
         await executeMethod({
           method: rideAbiMethods.accept_ride,
           args: [rideId, activeAddress],
           sender: activeAddress,
+          extraTxns: [mbrTxn],
           boxes,
         })
-
-        const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com'
-
 
         await fetch(`${BACKEND_URL}/api/rides/update-status`, {
            method: 'POST',
@@ -515,6 +567,13 @@ export function useRideContract() {
            })
         });
         await refreshRides()
+      } catch (error: any) {
+        if (error?.message?.includes('another transaction request in progress') || error?.message?.includes('4100')) {
+          pushToast({ tone: 'error', title: 'Signature Pending', description: 'Please open Pera Wallet to sign the pending transaction.' });
+        } else {
+          pushToast({ tone: 'error', title: 'Accept Failed', description: getErrorMessage(error) });
+        }
+        throw error;
       } finally {
         updateActionState('acceptRide', false)
       }
@@ -594,6 +653,6 @@ export function useRideContract() {
       } finally {
         updateActionState('startRide', false)
       }
-    },
+    }
   }
 }

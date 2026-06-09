@@ -49,6 +49,7 @@ export interface RideRecord {
   driverArrivalAt?: string
   waitTimeFee?: string
   receiptHash?: string
+  isSurge?: boolean
   settlementReason?: string
   weatherMultiplier?: number
   trafficDelayFee?: string

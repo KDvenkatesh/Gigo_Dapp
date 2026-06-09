@@ -10,6 +10,10 @@ const customerSchema = new mongoose.Schema({
   profilePhotoBase64: {
     type: String, // Data URL
   },
+  outstandingDebt: {
+    type: Number,
+    default: 0,
+  },
 }, { timestamps: true });
 
 export const Customer = mongoose.model('Customer', customerSchema);

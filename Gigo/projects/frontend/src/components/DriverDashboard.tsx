@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, Timer, Trash2, FileText, LogOut, User, X, ShieldCheck } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, CheckCircle2, KeyRound, LoaderCircle, MapPinned, RefreshCw, Timer, Trash2, FileText, LogOut, User, X, ShieldCheck, Zap } from 'lucide-react'
 import { WalletConnectButton } from './WalletConnectButton'
 import { BottomSheet } from './BottomSheet'
 import { EarningsTab } from './ai/EarningsTab'
@@ -8,7 +8,6 @@ import { OTPModal } from './OTPModal'
 import { CarFront, Banknote } from 'lucide-react'
 import { PWAInstallFooter } from './PWAInstallFooter'
 import { Web3ReceiptModal } from './Web3ReceiptModal'
-import { DemoPanel } from './DemoPanel'
 
 import { cn } from '../lib/cn'
 import { RideStatus } from '../types/ride'
@@ -232,6 +231,12 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
   const [otpError, setOtpError] = useState('')
   const [endRideError, setEndRideError] = useState<string | null>(null)
   const [selectedReceiptRide, setSelectedReceiptRide] = useState<any>(null)
+  const [currentTime, setCurrentTime] = useState(Date.now())
+
+  useEffect(() => {
+    const interval = setInterval(() => setCurrentTime(Date.now()), 10000);
+    return () => clearInterval(interval);
+  }, []);
   
   const filteredRides = ride.driverRides.filter((item: any) => {
     if (vehicleType && item.vehicleType) {
@@ -452,7 +457,14 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                           <div className="glass-content p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-white">Ride #{item.rideId.toString()}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold text-white">Ride #{item.rideId.toString()}</p>
+                            {(item.isSurge || (item.weatherMultiplier && item.weatherMultiplier > 1.0) || (item.trafficDelayFee && Number(item.trafficDelayFee) > 0)) && (
+                               <span className="flex items-center gap-1 rounded-full border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 text-[8px] font-bold text-amber-400 uppercase tracking-wider">
+                                  <Zap className="h-2.5 w-2.5" /> Surge
+                               </span>
+                            )}
+                          </div>
                           <p className="mt-1 truncate text-xs text-white/48">{item.pickup.label} to {item.drop.label}</p>
                         </div>
                         <div className="shrink-0 rounded-full border border-white/8 bg-black/20 px-3 py-1 text-xs font-semibold text-white/72">
@@ -483,8 +495,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                                  type="button"
                                  onClick={async (event) => {
                                    event.stopPropagation()
-                                 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com'
-
+                                 let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
                                    await fetch(`${BACKEND_URL}/api/rides/update-status`, {
                                      method: 'POST',
                                      headers: { 'Content-Type': 'application/json' },
@@ -663,30 +674,59 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
 
 
 
-                {activeRide.status === RideStatus.RIDER_ASSIGNED || activeRide.status === RideStatus.DRIVER_ARRIVED ? (
-                  <div className="mt-5 rounded-[28px] border border-emerald-300/18 bg-emerald-300/10 p-4">
-                    <div className="flex items-start gap-3">
-                      <KeyRound className="mt-0.5 h-5 w-5 text-emerald-100" />
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-white">Pickup Location & OTP</p>
+                {activeRide.status === RideStatus.RIDER_ASSIGNED || activeRide.status === RideStatus.DRIVER_ARRIVED ? (() => {
+                  const hasArrived = activeRide.status === RideStatus.DRIVER_ARRIVED;
+                  const arrivedAt = hasArrived && activeRide.driverArrivalAt ? new Date(activeRide.driverArrivalAt).getTime() : 0;
+                  const canNoShow = arrivedAt > 0 && (currentTime - arrivedAt >= 10 * 60 * 1000);
+                  
+                  return (
+                    <div className="mt-5 rounded-[28px] border border-emerald-300/18 bg-emerald-300/10 p-4">
+                      <div className="flex items-start gap-3">
+                        <KeyRound className="mt-0.5 h-5 w-5 text-emerald-100" />
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-white">Pickup Location & OTP</p>
 
-                        {activeRide.customerPressedImHere && (
-                           <div className="mt-3 mb-3 rounded-xl border border-sky-500/30 bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-400">
-                              👋 Customer says they are here!
-                           </div>
-                        )}
+                          {activeRide.customerPressedImHere && (
+                             <div className="mt-3 mb-3 rounded-xl border border-sky-500/30 bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-400">
+                                👋 Customer says they are here!
+                             </div>
+                          )}
 
-                        {activeRide.driverArrivalAt && (
-                           <WaitTimerDisplay driverArrivalAt={activeRide.driverArrivalAt} waitTimeFee={Number(activeRide.waitTimeFee)} />
-                        )}
+                          {activeRide.driverArrivalAt && (
+                             <WaitTimerDisplay driverArrivalAt={activeRide.driverArrivalAt} waitTimeFee={Number(activeRide.waitTimeFee)} />
+                          )}
 
-                        <p className="mt-1 text-sm leading-6 text-white/62">
-                          Ask the customer to tell you the OTP displayed on their screen, then click "Verify customer OTP" to start the ride.
-                        </p>
+                          <p className="mt-1 text-sm leading-6 text-white/62">
+                            Ask the customer to tell you the OTP displayed on their screen, then click "Verify customer OTP" to start the ride.
+                          </p>
+                          
+                          <div className="mt-4 flex flex-col gap-3">
+                            <button
+                              type="button"
+                              onClick={() => setOtpOpen(true)}
+                              className="w-full clay-btn py-3 text-sm font-bold shadow-[0_4px_20px_rgba(16,185,129,0.3)] bg-emerald-500 hover:bg-emerald-600 text-white"
+                            >
+                              🔑 Verify Customer OTP
+                            </button>
+                            
+                            {hasArrived && (
+                              <button
+                                type="button"
+                                disabled={!canNoShow || ride.actionState.endRide}
+                                onClick={async () => {
+                                  await ride.reportCustomerNoShow(activeRide.rideId);
+                                }}
+                                className="w-full rounded-2xl py-3 text-sm font-bold border transition disabled:opacity-50 disabled:cursor-not-allowed border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20"
+                              >
+                                {canNoShow ? '⚠️ Customer No-Show (Claim Fare)' : '⏳ Wait 10 mins for Customer No-Show'}
+                              </button>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : null}
+                  );
+                })() : null}
 
                 {activeRide.status === RideStatus.RIDE_STARTED && activeRide.rider === ride.activeAddress ? (() => {
                   const dropLat = activeRide.drop?.lat
@@ -763,8 +803,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             type="button"
                             onClick={async () => {
                                try {
-                                 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com'
-
+                                 let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
                                  await fetch(`${BACKEND_URL}/api/rides/driver-cancel`, {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
@@ -893,7 +932,6 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
            <Web3ReceiptModal ride={selectedReceiptRide} onClose={() => setSelectedReceiptRide(null)} />
         )}
 
-        <DemoPanel activeRide={activeRide || null} />
       </BottomSheet>
 
       <OTPModal
