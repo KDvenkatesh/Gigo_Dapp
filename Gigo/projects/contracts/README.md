@@ -20,8 +20,15 @@ Here is the step-by-step journey of your money:
 3. **Payout (Releasing Funds):**
    Once the backend detects (via GPS) that the driver has dropped the passenger off at the destination, it sends an "unlock" signal to the smart contract. The contract immediately releases the locked GIGC tokens directly into the driver's wallet. Boom! Instant payout, no cash disputes.
 
-4. **Refunds (What if things go wrong?):**
-   If a driver never shows up, or the ride is cancelled before pickup, the passenger (or the automated backend system) can call the `cancel_and_refund` function. The smart contract instantly unlocks the vault and sends 100% of the GIGC tokens back to the passenger.
+4. **Refunds & Cancellations (What if things go wrong?):**
+   If a driver never shows up, or the ride is cancelled before pickup, the passenger (or the automated backend system) can call the `cancel_refund` function. The smart contract instantly unlocks the vault and sends the GIGC tokens back to the passenger.
+
+### 🏦 The Treasury Subsidy System (Handling Post-Ride Fees)
+Sometimes a ride changes dynamically *after* the customer has locked their escrow. For example:
+- The customer takes 5 minutes to come outside, incurring a **Wait Time Fee**.
+- The driver hits unexpected traffic that wasn't predicted.
+Because the Smart Contract cannot distribute *more* money than what the customer initially escrowed, the backend utilizes an **Atomic Transaction Group** to solve this. 
+During `release_payment`, the contract releases the locked escrow to the driver, and the **Platform Treasury** seamlessly transfers an additional subsidy to cover the extra Wait or Traffic fees in the exact same millisecond. The driver receives their full combined payout instantly!
 
 ### Why use Algorand instead of Cash or Mobile Money?
 - **No Cash Disputes:** Drivers don't need to carry change, and passengers don't need to argue over the price.
@@ -30,5 +37,5 @@ Here is the step-by-step journey of your money:
 
 ### For Developers 👨‍💻
 This project is built using **AlgoKit** and **Algorand Python (Puya)**.
-- `contract.py`: Contains the actual on-chain logic (`init_escrow`, `payout`, `cancel_and_refund`).
+- `contract.py`: Contains the actual on-chain logic (`initialize_escrow`, `accept_ride`, `release_payment`, `cancel_refund`).
 - `deploy_config.py`: Handles the compilation and deployment to the Algorand TestNet.

@@ -26,37 +26,19 @@ def deploy() -> None:
     factory = algorand.client.get_typed_app_factory(
         RideContractFactory, 
         default_sender=deployer_.address,
-        app_name="GigoRideApp_FINAL_V10" 
+        app_name="GigoRideApp_RECOVERY_V1" 
     )
 
     print("Starting deployment (V6)...", flush=True)
     app_client, result = factory.deploy(
-        on_update=algokit_utils.OnUpdate.ReplaceApp,
+        on_update=algokit_utils.OnUpdate.UpdateApp,
         on_schema_break=algokit_utils.OnSchemaBreak.ReplaceApp,
     )
     print(f"Deployment result: {result.operation_performed}", flush=True)
     print(f"App ID: {app_client.app_id}", flush=True)
     print(f"App Address: {app_client.app_address}", flush=True)
 
-    print("Funding contract account for MBR...", flush=True)
-    algorand.send.payment(
-        algokit_utils.PaymentParams(
-            amount=algokit_utils.AlgoAmount(algo=1),
-            sender=deployer_.address,
-            receiver=app_client.app_address,
-        )
-    )
-
-    try:
-        print("Opting contract in to GIGC Asset...", flush=True)
-        app_client.send.opt_in_to_asa(
-            algokit_utils.CommonAppCallParams(
-                static_fee=algokit_utils.AlgoAmount(micro_algo=2000)
-            )
-        )
-        print("Opt-in successful.", flush=True)
-    except Exception as e:
-        print(f"Opt-in note: {e}", flush=True)
+    print("App updated successfully!", flush=True)
 
 if __name__ == "__main__":
     deploy()

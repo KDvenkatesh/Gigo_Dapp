@@ -4,8 +4,8 @@ services:
       context: ./projects/frontend
       dockerfile: Dockerfile
       args:
-        VITE_RIDE_APP_ID: 763756954
-        VITE_BACKEND_URL: http://localhost:3001
+        VITE_RIDE_APP_ID: 764183368
+        VITE_BACKEND_URL: https://gigo-dapp.onrender.com
     ports:
       - "5173:80"
     restart: unless-stopped

@@ -7,6 +7,7 @@ import { BookingMap } from './BookingMap'
 import { PassPurchaseModal } from './PassPurchaseModal'
 import { type PassInfo } from '../hooks/useAlgorandAssets'
 import { PWAInstallFooter } from './PWAInstallFooter'
+import { Web3ReceiptModal } from './Web3ReceiptModal'
 
 import algosdk from 'algosdk'
 import axios from 'axios'
@@ -18,9 +19,9 @@ import { useAlgorandAssets, type PassTier } from '../hooks/useAlgorandAssets'
 import { usePlaceSearch, reverseGeocodeLocation } from '../hooks/usePlaceSearch'
 import { calculateDistanceKm } from '../lib/location'
 import { cn } from '../lib/cn'
-import { RideStatus, type PlaceSuggestion, type RideLocation, type AppRole } from '../types/ride'
+import { RideStatus, type PlaceSuggestion, type RideLocation, type AppRole, type RideRecord } from '../types/ride'
 import type { useRideContract } from '../hooks/useRideContract'
-import { useEffect, useMemo, useState, useCallback, useRef } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { ipfs } from '../lib/ipfs'
 
@@ -38,11 +39,9 @@ const vehicleIcons: Record<string, string> = {
 type RideHook = ReturnType<typeof useRideContract>
 
 export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHook; onBack: () => void; onSwitchRole: (role: AppRole) => void }) {
-   const { activeAddress, signTransactions } = useWallet()
    const { location, isLocating, locationError } = useGeolocation()
    const passData = useAlgorandAssets()
-   const [outstandingDebt, setOutstandingDebt] = useState<number>(0)
-   const [isClearingDebt, setIsClearingDebt] = useState(false)
+   const [refundedTxId, setRefundedTxId] = useState<string | null>(null)
    const [tab, setTab] = useState<'book' | 'history' | 'passes'>('book')
    const [mapSelectionMode, setMapSelectionMode] = useState<'pickup' | 'drop' | null>(null)
    const [pickupInput, setPickupInput] = useState(location.label)
@@ -65,36 +64,78 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
       }
     }, [location, pickupTouched])
 
-    const fetchCustomerDebt = useCallback(async () => {
-      if (!activeAddress) return;
-      try {
-         const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
-         const res = await axios.get(`${BACKEND_URL}/api/customers/${activeAddress}`)
-         setOutstandingDebt(res.data.outstandingDebt || 0)
-      } catch (e) {
-         console.error('Failed to fetch customer debt:', e)
-      }
-    }, [activeAddress])
+    // Refund timeout removed
+    const [surgeMultipliers, setSurgeMultipliers] = useState({ weather: 1.0, traffic: 1.0 })
+    const [surgeLoading, setSurgeLoading] = useState(false)
+    const [showCancelConfirm, setShowCancelConfirm] = useState<bigint | null>(null)
 
+    const activeRide = useMemo(
+       () => ride.customerRides.find(r =>
+          r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED
+       ),
+       [ride.customerRides],
+    )
+
+    const [waitTimerString, setWaitTimerString] = useState('')
+    const [selectedReceiptRide, setSelectedReceiptRide] = useState<RideRecord | null>(null)
+    
     useEffect(() => {
-       void fetchCustomerDebt()
-    }, [fetchCustomerDebt, ride.customerRides])
-
-    // 10-minute countdown timer state
-    const [minsRemaining, setMinsRemaining] = useState<number | null>(null)
-    const [refundedTxId, setRefundedTxId] = useState<string | null>(null)
-    const timeoutIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+       if (!activeRide?.driverArrivalAt) {
+          setWaitTimerString('')
+          return
+       }
+       const timerInterval = setInterval(() => {
+          const arrivalTime = new Date(activeRide.driverArrivalAt!).getTime()
+          const diff = Date.now() - arrivalTime
+          const graceMs = 3 * 60 * 1000 // 3 minutes grace period
+          
+          if (diff <= graceMs) {
+             const remaining = Math.max(0, graceMs - diff)
+             const m = Math.floor(remaining / 60000)
+             const s = Math.floor((remaining % 60000) / 1000)
+             setWaitTimerString(`Grace Period: ${m}:${s.toString().padStart(2, '0')} remaining`)
+          } else {
+             const chargeableMs = diff - graceMs
+             const m = Math.floor(chargeableMs / 60000)
+             const s = Math.floor((chargeableMs % 60000) / 1000)
+             setWaitTimerString(`Wait Fee applying (${m}:${s.toString().padStart(2, '0')})`)
+          }
+       }, 1000)
+       return () => clearInterval(timerInterval)
+    }, [activeRide?.driverArrivalAt])
 
     useEffect(() => {
        setDestinationInput(ride.selectedDestination.label)
        setDestinationLocation(ride.selectedDestination)
     }, [ride.selectedDestination])
 
+    useEffect(() => {
+       const fetchSurge = async () => {
+          setSurgeLoading(true)
+          try {
+             let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+             const res = await axios.get(`${BACKEND_URL}/api/rides/estimate-surge?pickupLat=${pickupLocation.lat}&pickupLng=${pickupLocation.lng}&dropLat=${destinationLocation.lat}&dropLng=${destinationLocation.lng}`)
+             setSurgeMultipliers({ weather: res.data.weatherMultiplier || 1.0, traffic: res.data.trafficMultiplier || 1.0 })
+          } catch (e) {
+             setSurgeMultipliers({ weather: 1.0, traffic: 1.0 })
+          } finally {
+             setSurgeLoading(false)
+          }
+       }
+       if (pickupLocation && destinationLocation) {
+          fetchSurge()
+       }
+    }, [pickupLocation.lat, pickupLocation.lng, destinationLocation.lat, destinationLocation.lng])
+
     const distanceKm = useMemo(
        () => calculateDistanceKm(pickupLocation, destinationLocation),
        [pickupLocation, destinationLocation],
     )
     const estimatedFare = useMemo(
+       () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18 * surgeMultipliers.weather * surgeMultipliers.traffic))),
+       [distanceKm, ride.selectedVehicle.multiplier, surgeMultipliers],
+    )
+    const baseEstimatedFare = useMemo(
        () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18))),
        [distanceKm, ride.selectedVehicle.multiplier],
     )
@@ -104,109 +145,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
     )
     const hasActivePass = Boolean(passData.activePass && passData.activePass.isActive)
 
-    const handleClearDebt = async () => {
-      if (!activeAddress || outstandingDebt <= 0) return;
-      try {
-         setIsClearingDebt(true);
-         const algodClient = new algosdk.Algodv2(algorandConfig.algodToken, algorandConfig.algodServer, algorandConfig.algodPort);
-         const suggestedParams = await algodClient.getTransactionParams().do();
-         const treasuryAddress = import.meta.env.VITE_TREASURY_ADDRESS || '6C2QYZ2JOSL3XMMF3Z2JWWZ23EGB6N2X3T2YI2J37XUXU3YIZW276BOGU4';
-         const assetId = Number(import.meta.env.VITE_GIGC_ASSET_ID || '763011769');
-         
-         const transferTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
-            sender: activeAddress,
-            receiver: treasuryAddress,
-            amount: outstandingDebt,
-            assetIndex: assetId,
-            suggestedParams,
-         });
 
-         const encodedTxn = algosdk.encodeUnsignedTransaction(transferTxn);
-         const signedTxns = (await signTransactions([encodedTxn])) as Uint8Array[];
-         const { txId } = await algodClient.sendRawTransaction(signedTxns).do() as any;
-         
-         const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
-         
-         let cleared = false;
-         for (let i = 0; i < 5; i++) {
-            await new Promise(r => setTimeout(r, 2000));
-            const res = await axios.post(`${BACKEND_URL}/api/customers/clear-debt`, {
-               walletAddress: activeAddress,
-               txId
-            }).catch(() => null);
-            
-            if (res?.data?.success) {
-               cleared = true;
-               break;
-            }
-         }
-         
-         if (cleared) {
-            setOutstandingDebt(0);
-         } else {
-            alert('Payment submitted but verification taking longer than expected. Please refresh in a moment.');
-         }
-      } catch (err) {
-         console.error('Failed to clear debt', err);
-         alert('Failed to process payment. Please ensure you have enough ALGO for gas and GIGC.');
-      } finally {
-         setIsClearingDebt(false);
-      }
-    };
-
-
-    const activeRide = useMemo(
-       () => ride.customerRides.find(r =>
-          r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED
-       ),
-       [ride.customerRides],
-    )
-
-    useEffect(() => {
-      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
-
-      const activeRideId = activeRide?.status === RideStatus.RIDE_STARTED ? activeRide.rideId : null
-
-      if (!activeRideId) {
-         setMinsRemaining(null)
-         if (timeoutIntervalRef.current) {
-            clearInterval(timeoutIntervalRef.current)
-            timeoutIntervalRef.current = null
-         }
-         return
-      }
-
-      const checkTimeout = async () => {
-         try {
-            const response = await axios.post(`${BACKEND_URL}/api/rides/check-timeout`, {
-               rideId: activeRideId.toString()
-            })
-            const data = response.data
-            if (data.timedOut) {
-               if (data.refunded) {
-                  setRefundedTxId(data.refundTxId || 'Simulated refund')
-                  void ride.refreshRides()
-               } else {
-                  console.error('Timed out but refund failed:', data.error)
-               }
-            } else if (data.minutesRemaining !== undefined) {
-               setMinsRemaining(data.minutesRemaining)
-            }
-         } catch (error) {
-            console.error('Error checking ride timeout:', error)
-         }
-      }
-
-      void checkTimeout()
-      timeoutIntervalRef.current = setInterval(checkTimeout, 15000)
-
-      return () => {
-         if (timeoutIntervalRef.current) {
-            clearInterval(timeoutIntervalRef.current)
-            timeoutIntervalRef.current = null
-         }
-      }
-    }, [activeRide?.status, activeRide?.rideId, ride])
 
    function selectPickup(suggestion: PlaceSuggestion | RideLocation) {
       setPickupTouched(true)
@@ -244,9 +183,10 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
     async function handleCreateRide() {
        try {
           const fareToCharge = hasActivePass ? discountedFare : estimatedFare
+          const isSurge = surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0;
           
           // 1. Trigger the on-chain Escrow IMMEDIATELY (Faster UX)
-          const rideId = await ride.createRide(pickupLocation, destinationLocation, fareToCharge)
+          const rideId = await ride.createRide(pickupLocation, destinationLocation, fareToCharge, isSurge)
           
           if (rideId) {
              setShowSuccess(true)
@@ -382,44 +322,12 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                   <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar bg-transparent pr-1">
                      <div className="mx-auto w-full max-w-3xl space-y-5 py-3 pb-20">
 
-                        {outstandingDebt > 0 && (
-                           <div className="glass-container glass-container--rounded glass-container--large mb-4 overflow-hidden">
-                              <div className="glass-filter" style={{ backdropFilter: 'blur(20px) saturate(120%)' }}></div>
-                              <div className="glass-overlay bg-gradient-to-b from-red-500/10 to-transparent"></div>
-                              <div className="glass-specular"></div>
-                              <div className="glass-content p-6 text-center space-y-5">
-                                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-500/20 text-red-400">
-                                    <Wallet className="h-7 w-7" />
-                                 </div>
-                                 <div>
-                                    <h3 className="text-lg font-bold text-white mb-2">Outstanding Balance</h3>
-                                    <p className="text-sm text-white/70">
-                                       You have an unpaid balance of <span className="font-bold text-red-400">{ride.formatAlgoAmount(BigInt(outstandingDebt))}</span> from wait fees or traffic delays on a previous ride.
-                                    </p>
-                                    <p className="text-xs text-white/50 mt-2">
-                                       Please clear this balance to unlock ride booking.
-                                    </p>
-                                 </div>
-                                 <button
-                                    onClick={handleClearDebt}
-                                    disabled={isClearingDebt}
-                                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-4 py-3.5 text-sm font-bold text-white shadow-[0_0_20px_rgba(239,68,68,0.3)] transition hover:from-red-400 hover:to-rose-500 disabled:opacity-50"
-                                 >
-                                    {isClearingDebt ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <Coins className="h-5 w-5" />}
-                                    {isClearingDebt ? 'Processing Payment...' : 'Pay Outstanding Balance'}
-                                 </button>
-                              </div>
-                           </div>
-                        )}
-
-                        {outstandingDebt <= 0 && locationError && (
+                        {locationError && (
                            <div className="rounded-2xl border border-amber-500/15 bg-amber-500/[0.06] p-4 text-sm text-amber-200/80">
                               {locationError}
                            </div>
                         )}
 
-                        {outstandingDebt <= 0 && (
-                        <>
                         {/* Pickup + Destination (Glassmorphic Container) */}
                         <div className="glass-container glass-container--rounded glass-container--large mb-4">
                            <div className="glass-filter"></div>
@@ -564,21 +472,65 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                                 <p className="text-sm font-black text-emerald-700">{ride.formatAlgoAmount(discountedFare)}</p>
                                                 <p className="text-[9px] opacity-40 line-through">{ride.formatAlgoAmount(estimatedFare)}</p>
                                                 <p className="text-[8px] font-bold text-emerald-700 uppercase tracking-tight block mt-0.5">{passData.activePass!.discount}% Pass applied</p>
+                                                {(surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0) && (
+                                                   <div className="mt-1 flex flex-col gap-0.5 border-t border-current/10 pt-1">
+                                                      <p className="text-[8px] font-medium opacity-60">Base: {ride.formatAlgoAmount(baseEstimatedFare)}</p>
+                                                      <p className="text-[8px] font-bold text-amber-400">+ Surge: {ride.formatAlgoAmount(estimatedFare - baseEstimatedFare)}</p>
+                                                   </div>
+                                                )}
                                              </div>
                                           ) : (
-                                             <p className="mt-1 text-sm font-black text-current">{ride.formatAlgoAmount(estimatedFare)}</p>
+                                             <div className="mt-0.5">
+                                                <p className="text-sm font-black text-current">{ride.formatAlgoAmount(estimatedFare)}</p>
+                                                {(surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0) && (
+                                                   <div className="mt-1 flex flex-col gap-0.5 border-t border-current/10 pt-1">
+                                                      <p className="text-[8px] font-medium opacity-60">Base: {ride.formatAlgoAmount(baseEstimatedFare)}</p>
+                                                      <p className="text-[8px] font-bold text-amber-400">+ Surge: {ride.formatAlgoAmount(estimatedFare - baseEstimatedFare)}</p>
+                                                   </div>
+                                                )}
+                                             </div>
                                           )}
                                        </div>
                                     </div>
                                  </div>
                               </div>
 
+                              {/* Surge Reason Block */}
+                              {(surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0) && (
+                                 <div className="col-span-12 glass-container glass-container--rounded border border-amber-500/20">
+                                    <div className="glass-filter"></div>
+                                    <div className="glass-overlay bg-amber-500/5"></div>
+                                    <div className="glass-specular"></div>
+                                    <div className="glass-content p-4 flex flex-col gap-2">
+                                       <div className="flex items-center gap-2 text-amber-400">
+                                          <Zap className="h-4 w-4" />
+                                          <p className="text-[10px] font-black uppercase tracking-widest opacity-90">Surge Pricing Active</p>
+                                       </div>
+                                       <p className="text-xs text-white/70 leading-relaxed font-medium">
+                                          {surgeMultipliers.weather > 1.0 && surgeMultipliers.traffic > 1.0 
+                                             ? "Fares are currently higher due to heavy traffic delays and poor weather conditions in your area."
+                                             : surgeMultipliers.weather > 1.0 
+                                             ? "Fares are currently higher due to poor weather conditions in your area."
+                                             : "Fares are currently higher due to heavy traffic delays on your selected route."}
+                                       </p>
+                                    </div>
+                                 </div>
+                              )}
+
                               {/* Vehicle options (Glassmorphic) */}
                               <div className="col-span-12 space-y-3.5">
-                                 <p className="text-[10px] font-black uppercase tracking-widest text-white/30 pl-1">Select Ride Mode</p>
+                                 <div className="flex items-center justify-between">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-white/30 pl-1">Select Ride Mode</p>
+                                    {(surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0) && (
+                                       <span className="flex items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-0.5 text-[9px] font-bold text-amber-400 uppercase tracking-wider">
+                                          {surgeLoading ? <LoaderCircle className="h-3 w-3 animate-spin" /> : <Zap className="h-3 w-3" />}
+                                          Surge Pricing Active
+                                       </span>
+                                    )}
+                                 </div>
                                  <div className="grid gap-3">
                                     {ride.vehicleOptions.map((vehicle) => {
-                                       const fare = BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * vehicle.multiplier * 0.18)))
+                                       const fare = BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * vehicle.multiplier * 0.18 * surgeMultipliers.weather * surgeMultipliers.traffic)))
                                        const selected = ride.selectedVehicleId === vehicle.id
                                        return (
                                           <button
@@ -644,9 +596,6 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                            </div>
                         )}
 
-                        </>
-                        )}
-
                         {refundedTxId && (
                            <div className="rounded-3xl border border-emerald-500/20 bg-emerald-500/[0.04] p-5 text-left mb-3 backdrop-blur-md">
                               <div className="flex items-start gap-4.5">
@@ -694,13 +643,67 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                        'shrink-0 rounded-xl border px-3 py-1.5 text-[9px] font-black uppercase tracking-wider',
                                        activeRide.status === RideStatus.REQUESTED && 'border-amber-500/20 bg-amber-500/10 text-amber-400',
                                        activeRide.status === RideStatus.RIDER_ASSIGNED && 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400',
+                                       activeRide.status === RideStatus.DRIVER_ARRIVED && 'border-purple-500/20 bg-purple-500/10 text-purple-400',
                                        activeRide.status === RideStatus.RIDE_STARTED && 'border-sky-500/20 bg-sky-500/10 text-sky-400',
+                                       activeRide.status === RideStatus.DROPPED_OFF && 'border-indigo-500/20 bg-indigo-500/10 text-indigo-400',
                                     )}>
                                        {activeRide.status}
                                     </span>
                                  </div>
-                                 {activeRide.status === RideStatus.RIDER_ASSIGNED && (
+                                 {(activeRide.status === RideStatus.REQUESTED || activeRide.status === RideStatus.RIDER_ASSIGNED || activeRide.status === RideStatus.DRIVER_ARRIVED) && (
+                                    <div className="mt-4 pt-4 border-t border-white/10 flex justify-end">
+                                       <button type="button" disabled={ride.actionState.endRide} onClick={() => setShowCancelConfirm(activeRide.rideId)}
+                                          className="clay-btn py-2.5 px-5 text-xs rounded-xl disabled:opacity-45 bg-rose-500 hover:bg-rose-600 text-white">
+                                          {ride.actionState.endRide ? 'Cancelling\u2026' : 'Cancel Ride'}
+                                       </button>
+                                    </div>
+                                 )}
+                                 {showCancelConfirm === activeRide.rideId && (
+                                    <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/75 p-4 backdrop-blur-md">
+                                       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-sm glass-container glass-container--rounded glass-container--large shadow-2xl p-6 relative">
+                                          <div className="glass-filter" style={{ backdropFilter: 'blur(32px) saturate(150%)' }}></div>
+                                          <div className="glass-overlay"></div>
+                                          <div className="glass-specular"></div>
+                                          <div className="glass-content relative">
+                                             <h3 className="text-lg font-bold text-white mb-2">Cancel Ride?</h3>
+                                             <div className="text-sm text-white/70 mb-6 leading-relaxed">
+                                                <p className="mb-2"><strong>Cancellation Policy:</strong></p>
+                                                <ul className="list-disc pl-5 space-y-1">
+                                                   <li><strong>Before driver arrival:</strong> You will receive a full refund.</li>
+                                                   <li><strong>After driver arrival:</strong> Your fare will not be refunded and will be paid to the driver.</li>
+                                                </ul>
+                                             </div>
+                                             <div className="flex gap-3">
+                                                <button onClick={() => setShowCancelConfirm(null)} className="flex-1 rounded-xl bg-white/10 py-2.5 text-sm font-semibold text-white hover:bg-white/20 transition">Go Back</button>
+                                                <button onClick={() => { setShowCancelConfirm(null); void ride.cancelRide(activeRide.rideId); }} className="flex-1 rounded-xl bg-rose-500 py-2.5 text-sm font-bold text-white hover:bg-rose-600 shadow-[0_4px_20px_rgba(244,63,94,0.3)] transition">Confirm Cancel</button>
+                                             </div>
+                                          </div>
+                                       </motion.div>
+                                    </div>
+                                 )}
+                                 {(activeRide.status === RideStatus.RIDER_ASSIGNED || activeRide.status === RideStatus.DRIVER_ARRIVED) && (
                                     <div className="mt-4 rounded-2xl bg-emerald-500/[0.04] border border-emerald-500/10 p-4">
+                                       {!activeRide.customerPressedImHere && (
+                                          <div className="mb-4">
+                                             <button type="button" onClick={async () => {
+                                                let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+                                                await fetch(`${BACKEND_URL}/api/rides/presence-event`, {
+                                                   method: 'POST',
+                                                   headers: { 'Content-Type': 'application/json' },
+                                                   body: JSON.stringify({ rideId: activeRide.rideId.toString(), event: 'IM_HERE_PRESSED' })
+                                                })
+                                                ride.refreshRides()
+                                             }} className="clay-btn py-2.5 px-5 text-xs rounded-xl bg-sky-500 hover:bg-sky-600 text-white w-full shadow-[0_4px_20px_rgba(14,165,233,0.3)] border border-sky-400/20">
+                                                I'm Here (Notify Driver)
+                                             </button>
+                                          </div>
+                                       )}
+                                       {activeRide.status === RideStatus.DRIVER_ARRIVED && (
+                                          <div className="mb-4 rounded-xl border border-purple-500/20 bg-purple-500/10 p-3 text-purple-300">
+                                             <p className="text-xs font-bold uppercase tracking-wider mb-1">Driver Has Arrived</p>
+                                             <p className="text-sm font-mono">{waitTimerString}</p>
+                                          </div>
+                                       )}
                                        <div className="flex items-center gap-2">
                                           <ShieldCheck className="h-4 w-4 text-emerald-400" />
                                           <p className="text-xs font-bold text-white uppercase tracking-wider">Share OTP with driver</p>
@@ -724,21 +727,20 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                           Ride in progress {'\u00B7'} Escrow locked
                                        </div>
 
-                                       {/* Arrival Timer */}
-                                       <div className="flex flex-col gap-2 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-4 text-left">
-                                          <div className="flex items-center gap-2 text-amber-400">
-                                             <Clock3 className="h-4 w-4 animate-pulse" />
-                                             <span className="text-[10px] font-bold uppercase tracking-wider">Refund Timeout Countdown</span>
-                                          </div>
-                                          {minsRemaining !== null ? (
-                                             <p className="text-xs text-white/70 leading-relaxed">
-                                                Driver has <strong className="text-amber-300 font-mono text-sm">{Math.floor(minsRemaining)}m {Math.floor((minsRemaining % 1) * 60)}s</strong> to drop you off. 
-                                                If they don't arrive within the allowed time limit (calculated based on ride distance), the escrow will be auto-refunded to your wallet.
-                                             </p>
-                                          ) : (
-                                             <p className="text-xs text-white/50">Calculating remaining ride time...</p>
-                                          )}
+
+                                    </div>
+                                 )}
+                                 {activeRide.status === RideStatus.DROPPED_OFF && (
+                                    <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-3">
+                                       <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/10 p-4">
+                                          <p className="text-sm font-semibold text-white">Ride Complete!</p>
+                                          <p className="mt-1 text-xs leading-5 text-indigo-200">The driver has dropped you off. Please release the payment from the smart contract escrow to complete this ride.</p>
                                        </div>
+                                       <button type="button" onClick={() => void ride.customerConfirmPayout(activeRide.rideId)}
+                                          disabled={ride.actionState.payout}
+                                          className="clay-btn py-3 px-5 text-sm font-bold w-full rounded-xl disabled:opacity-45 bg-emerald-500 hover:bg-emerald-600 text-white shadow-[0_4px_20px_rgba(16,185,129,0.3)]">
+                                          {ride.actionState.payout ? 'Processing Payment\u2026' : 'Release Payment'}
+                                       </button>
                                     </div>
                                  )}
                               </div>
@@ -799,8 +801,19 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                           : item.status}
                                     </div>
                                  </div>
-                                 {item.status === RideStatus.RIDER_ASSIGNED && (
+                                 {item.status === RideStatus.REQUESTED && (
+                                    <div className="mt-3 flex justify-end">
+                                       <button type="button" disabled={ride.actionState.endRide} onClick={(e) => { e.stopPropagation(); void ride.cancelRide(item.rideId); }}
+                                          className="text-xs text-rose-400 font-bold uppercase tracking-wider py-1.5 px-3 rounded-lg border border-rose-500/20 bg-rose-500/10 hover:bg-rose-500/20 transition">
+                                          {ride.actionState.endRide ? 'Cancelling\u2026' : 'Cancel Ride'}
+                                       </button>
+                                    </div>
+                                 )}
+                                 {(item.status === RideStatus.RIDER_ASSIGNED || item.status === RideStatus.DRIVER_ARRIVED) && (
                                     <div className="mt-3 rounded-lg border border-emerald-500/10 bg-emerald-500/[0.05] p-3">
+                                       {item.status === RideStatus.DRIVER_ARRIVED && (
+                                          <div className="mb-2 text-xs font-bold text-purple-400">Driver Arrived</div>
+                                       )}
                                        <p className="text-xs font-medium text-white">OTP: <span className="font-mono tracking-widest">{item.otp ?? 'Not generated'}</span></p>
                                        <button type="button" onClick={(e) => { e.stopPropagation(); void handleGenerateOtp(item.rideId) }}
                                           disabled={ride.actionState.storeOtp}
@@ -809,11 +822,17 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                        </button>
                                     </div>
                                  )}
-                                 {item.status === RideStatus.RIDE_COMPLETED && (
-                                    <button type="button" onClick={(e) => { e.stopPropagation(); void ride.releasePayment(item.rideId, item.rider || 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAY5HQC7V') }}
+                                 {item.status === RideStatus.DROPPED_OFF && (
+                                    <button type="button" onClick={(e) => { e.stopPropagation(); void ride.customerConfirmPayout(item.rideId) }}
                                        disabled={ride.actionState.payout || !item.rider}
-                                       className="mt-3 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-[#05060a] disabled:opacity-45">
+                                       className="mt-3 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-[#05060a] disabled:opacity-45 transition hover:bg-white/90">
                                        {ride.actionState.payout ? 'Paying...' : 'Release payment'}
+                                    </button>
+                                 )}
+                                 {['RIDE_COMPLETED', 'PAID', 'CANCELLED'].includes(item.status) && item.receiptHash && (
+                                    <button type="button" onClick={(e) => { e.stopPropagation(); setSelectedReceiptRide(item) }}
+                                       className="mt-3 rounded-lg bg-white/10 hover:bg-white/20 px-4 py-2 text-sm font-semibold text-white transition">
+                                       View Web3 Receipt
                                     </button>
                                  )}
                               </div>
@@ -865,6 +884,9 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
             document.body
          )}
 
+         {selectedReceiptRide && (
+            <Web3ReceiptModal ride={selectedReceiptRide} onClose={() => setSelectedReceiptRide(null)} />
+         )}
          <PWAInstallFooter />
       </div>
    )
@@ -1268,7 +1290,7 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
    const [localIsOptedIn, setLocalIsOptedIn] = useState(isOptedIn)
    const { transactionSigner } = useWallet()
 
-   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
+   let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
    const conversionRatio = 100 // 100 GIGC = 1 ALGO
    const gigcNum = parseFloat(gigcAmount) || 0
@@ -1291,6 +1313,10 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
    const parseTransactionError = (err: any, fallbackMessage: string): string => {
       const msg = err?.message || err?.response?.data?.error || '';
       if (!msg) return fallbackMessage;
+
+      if (msg === 'Network Error' || err?.code === 'ERR_NETWORK') {
+         return 'Cannot connect to the backend server. Please ensure the backend is running or check your connection.';
+      }
 
       const lower = msg.toLowerCase();
       if (lower.includes('below min') || lower.includes('minimum balance') || lower.includes('below minimum balance')) {

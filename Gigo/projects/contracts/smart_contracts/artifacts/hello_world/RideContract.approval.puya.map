@@ -3,7 +3,7 @@
   "sources": [
     "../../hello_world/contract.py"
   ],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAoBQ;AAAiC;;;;;;AAAjC;AANR;;AAAA;;;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;;;AAAA;;;;;;;;;AAYe;;AAAc;;AAAd;AAAP;AACA;AACe;AAAA;AAAA;AAAA;AACI;;AACF;;;;;;;AAHjB;;;AAIQ;;;AAJR;AAHH;AAAA;AAUA;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAMS;AACgC;AAA3B;AAAA;;AAAA;AAAA;AAAA;AAAA;;AAAJ;AAAP;AAGO;;AAAA;;AAA0B;;AAA1B;AAAP;AACO;;AAAA;;AAAyB;AAAA;AAAA;AAAA;AAAzB;AAAP;AACO;;AAAA;;AAAP;AAAA;AAG4B;;AAAA;;AAA5B;;AAAA;AAAA;AACA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAhBH;AAAA;AAkBA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAES;AACwC;AAAA;AAA3B;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AACnB;AAGQ;;AAAA;AAAD;;;AAA6B;;AAAc;;AAAd;AAA7B;;;;AAAP;AAEO;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEP;AACe;AAAA;AAAA;AAAA;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOA;;AAAA;;AACA;;AAEA;AAEW;;;;;;;AAFX;;;AAGQ;;;AAHR;AArBH;AAAA;;;;;AA2BA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAES;AACwC;AAAA;AAA3B;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;AACnB;AAGQ;;AAAA;AAAD;;;AAA6B;;AAAc;;AAAd;AAA7B;;;;AAAP;AAEO;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEP;AACe;AAAA;AAAA;AAAA;;;;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOA;;AAAA;;AACA;AAAA;;AAEA;AAEW;;;;;;AAFX;;;AAGQ;;;AAHR;AArBH;AAAA;;",
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAoBQ;AAAiC;;;;;;AAAjC;AANR;;AAAA;;;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;;;AAAA;;;;;;;;;;;;;;AAAA;;;;;;;;;AAce;;AAAc;;AAAd;AAAP;AACA;AACe;AAAA;AAAA;AAAA;AACI;;AACF;;;;;;;AAHjB;;;AAIQ;;;AAJR;AAHH;AAAA;AAUA;;;AAAA;AAAA;AAAA;;AAAA;AAAA;AAEU;;AAAc;;AAAd;AAAP;AACA;AAAA;AAAA;AAHH;AAAA;AAKA;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAMS;AACgC;AAA3B;AAAA;;AAAA;AAAA;AAAA;AAAA;;AAAJ;AAAP;AAGO;;AAAA;;AAA0B;;AAA1B;AAAP;AACO;;AAAA;;AAAyB;AAAA;AAAA;AAAA;AAAzB;AAAP;AACO;;AAAA;;AAAP;AAAA;AAG4B;;AAAA;;AAA5B;;AAAA;AAAA;AACA;;AAAA;;AAAA;AAAA;AAAA;AAAA;AAhBH;AAAA;AAkBA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;;AAAA;AAAA;AAKS;AAAA;AAC4B;AAA3B;AAAA;;AAAA;AAAA;AAAA;;AAAP;AACW;AAAA;AAAA;AAAA;AAAA;AAAA;;AAAJ;AAAP;AAEA;AAAA;AATH;AAAA;;;;;;AAWA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAAA;;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAKG;AACM;AACwC;AAAA;AAA3B;AAAA;AAAA;AAAA;AAAA;AACnB;AACO;;AAAc;;AAAd;AAAA;;;AAAwC;;AAAc;AAAA;AAAA;AAAA;AAAd;AAAxC;;;;AAAP;AAEO;;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AACC;;AAAA;AAAA;AAAA;;AAAuB;;AAAA;AAAA;AAAA;;AAAvB;;AAAA;AAAA;;AAAA;AAAR;AAER;;;AACY;AACe;AAAA;AAAA;AAAA;;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOZ;;AAAA;;;AACY;AACe;AAAA;AAAA;AAAA;;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAQJ;;AAAA;;AACA;;AAAA;;AACG;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;;AAAX;;;AACY;;AAAA;;AAGJ;AAEW;;;;;;;AAFX;;;AAGQ;;;AAHR;AArCH;AAAA;;;;;;;;;;AA2CA;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAAA;AAAA;;;AAAA;AAAA;AAAA;AAAA;;AAAA;AAAA;;AAAA;AAAA;AAAA;AAKG;AACM;AACwC;AAAA;AAA3B;AAAA;AAAA;AAAA;AAAA;AACnB;AACO;;AAAc;;AAAd;AAAA;;;AAAwC;;AAAc;AAAA;AAAA;AAAA;AAAd;AAAxC;;;;AAAP;AAEO;;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;AAAA;AACC;;AAAA;AAAA;AAAA;;AAAyB;;AAAA;AAAA;AAAA;;AAAzB;;AAAA;AAAA;;AAAA;AAAR;AAER;;;AACY;AACe;AAAA;AAAA;AAAA;;;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAOZ;;AAAA;;;AAC+B;AAAA;;AAAA;AAAA;AACnB;AACA;AACe;AAAA;AAAA;AAAA;;;;;;;;;AADf;;;AAIQ;;;AAJR;AAQJ;;AAAA;;AACA;;AAAA;;AACG;AAAA;;AAAA;AAAA;AAAA;;AAAA;AAAA;;AAAX;;;AACY;;AAAA;;AAGJ;AAEW;;;;;;;AAFX;;;AAGQ;;;AAHR;AAvCH;AAAA;;",
   "op_pc_offset": 0,
   "pc_events": {
     "1": {
@@ -11,12 +11,12 @@
       "params": {},
       "block": "main",
       "stack_in": [],
-      "op": "intcblock 0 1 4 8 29000"
+      "op": "intcblock 0 1 8 4 29000"
     },
     "10": {
-      "op": "bytecblock \"gigo_asset_id\" \"c_\" \"f_\""
+      "op": "bytecblock \"gigo_asset_id\" \"c_\" \"d_\" \"recovery_address\" \"f_\""
     },
-    "32": {
+    "52": {
       "op": "txn ApplicationID",
       "defined_out": [
         "tmp%0#0"
@@ -25,11 +25,11 @@
         "tmp%0#0"
       ]
     },
-    "34": {
+    "54": {
       "op": "bnz main_after_if_else@2",
       "stack_out": []
     },
-    "37": {
+    "57": {
       "op": "bytec_0 // \"gigo_asset_id\"",
       "defined_out": [
         "\"gigo_asset_id\""
@@ -38,7 +38,7 @@
         "\"gigo_asset_id\""
       ]
     },
-    "38": {
+    "58": {
       "op": "pushint 763011769",
       "defined_out": [
         "\"gigo_asset_id\"",
@@ -49,11 +49,11 @@
         "763011769"
       ]
     },
-    "44": {
+    "64": {
       "op": "app_global_put",
       "stack_out": []
     },
-    "45": {
+    "65": {
       "block": "main_after_if_else@2",
       "stack_in": [],
       "op": "txn NumAppArgs",
@@ -64,11 +64,11 @@
         "tmp%0#1"
       ]
     },
-    "47": {
-      "op": "bz main___algopy_default_create@13",
+    "67": {
+      "op": "bz main___algopy_default_create@15",
       "stack_out": []
     },
-    "50": {
+    "70": {
       "op": "txn OnCompletion",
       "defined_out": [
         "tmp%2#0"
@@ -77,7 +77,7 @@
         "tmp%2#0"
       ]
     },
-    "52": {
+    "72": {
       "op": "!",
       "defined_out": [
         "tmp%3#0"
@@ -86,11 +86,11 @@
         "tmp%3#0"
       ]
     },
-    "53": {
+    "73": {
       "op": "assert",
       "stack_out": []
     },
-    "54": {
+    "74": {
       "op": "txn ApplicationID",
       "defined_out": [
         "tmp%4#0"
@@ -99,51 +99,59 @@
         "tmp%4#0"
       ]
     },
-    "56": {
+    "76": {
       "op": "assert",
       "stack_out": []
     },
-    "57": {
-      "op": "pushbytess 0x53a7690d 0x6bde30f8 0x521a12c2 0x97d3bc18 // method \"opt_in_to_asa()void\", method \"init_escrow(axfer,uint64)void\", method \"payout(uint64,address)void\", method \"cancel_and_refund(uint64)void\"",
+    "77": {
+      "op": "pushbytess 0x53a7690d 0x1dc29d24 0x71931120 0x582e4859 0x382fe5c5 0xbae9d7a3 // method \"opt_in_to_asa()void\", method \"set_recovery_address(address)void\", method \"initialize_escrow(axfer,uint64)void\", method \"accept_ride(uint64,address)void\", method \"release_payment(uint64,address,uint64,uint64,string)void\", method \"cancel_refund(uint64,uint64,uint64,string)void\"",
       "defined_out": [
-        "Method(cancel_and_refund(uint64)void)",
-        "Method(init_escrow(axfer,uint64)void)",
+        "Method(accept_ride(uint64,address)void)",
+        "Method(cancel_refund(uint64,uint64,uint64,string)void)",
+        "Method(initialize_escrow(axfer,uint64)void)",
         "Method(opt_in_to_asa()void)",
-        "Method(payout(uint64,address)void)"
+        "Method(release_payment(uint64,address,uint64,uint64,string)void)",
+        "Method(set_recovery_address(address)void)"
       ],
       "stack_out": [
         "Method(opt_in_to_asa()void)",
-        "Method(init_escrow(axfer,uint64)void)",
-        "Method(payout(uint64,address)void)",
-        "Method(cancel_and_refund(uint64)void)"
+        "Method(set_recovery_address(address)void)",
+        "Method(initialize_escrow(axfer,uint64)void)",
+        "Method(accept_ride(uint64,address)void)",
+        "Method(release_payment(uint64,address,uint64,uint64,string)void)",
+        "Method(cancel_refund(uint64,uint64,uint64,string)void)"
       ]
     },
-    "79": {
+    "109": {
       "op": "txna ApplicationArgs 0",
       "defined_out": [
-        "Method(cancel_and_refund(uint64)void)",
-        "Method(init_escrow(axfer,uint64)void)",
+        "Method(accept_ride(uint64,address)void)",
+        "Method(cancel_refund(uint64,uint64,uint64,string)void)",
+        "Method(initialize_escrow(axfer,uint64)void)",
         "Method(opt_in_to_asa()void)",
-        "Method(payout(uint64,address)void)",
+        "Method(release_payment(uint64,address,uint64,uint64,string)void)",
+        "Method(set_recovery_address(address)void)",
         "tmp%6#0"
       ],
       "stack_out": [
         "Method(opt_in_to_asa()void)",
-        "Method(init_escrow(axfer,uint64)void)",
-        "Method(payout(uint64,address)void)",
-        "Method(cancel_and_refund(uint64)void)",
+        "Method(set_recovery_address(address)void)",
+        "Method(initialize_escrow(axfer,uint64)void)",
+        "Method(accept_ride(uint64,address)void)",
+        "Method(release_payment(uint64,address,uint64,uint64,string)void)",
+        "Method(cancel_refund(uint64,uint64,uint64,string)void)",
         "tmp%6#0"
       ]
     },
-    "82": {
-      "op": "match opt_in_to_asa init_escrow payout cancel_and_refund",
+    "112": {
+      "op": "match opt_in_to_asa set_recovery_address initialize_escrow accept_ride release_payment cancel_refund",
       "stack_out": []
     },
-    "92": {
+    "126": {
       "op": "err"
     },
-    "93": {
-      "block": "main___algopy_default_create@13",
+    "127": {
+      "block": "main___algopy_default_create@15",
       "stack_in": [],
       "op": "txn OnCompletion",
       "defined_out": [
@@ -153,7 +161,7 @@
         "tmp%7#0"
       ]
     },
-    "95": {
+    "129": {
       "op": "!",
       "defined_out": [
         "tmp%8#0"
@@ -162,7 +170,7 @@
         "tmp%8#0"
       ]
     },
-    "96": {
+    "130": {
       "op": "txn ApplicationID",
       "defined_out": [
         "tmp%8#0",
@@ -173,7 +181,7 @@
         "tmp%9#0"
       ]
     },
-    "98": {
+    "132": {
       "op": "!",
       "defined_out": [
         "tmp%10#0",
@@ -184,7 +192,7 @@
         "tmp%10#0"
       ]
     },
-    "99": {
+    "133": {
       "op": "&&",
       "defined_out": [
         "tmp%11#0"
@@ -193,12 +201,12 @@
         "tmp%11#0"
       ]
     },
-    "100": {
+    "134": {
       "op": "return",
       "defined_out": [],
       "stack_out": []
     },
-    "101": {
+    "135": {
       "subroutine": "smart_contracts.hello_world.contract.RideContract.opt_in_to_asa[routing]",
       "params": {},
       "block": "opt_in_to_asa",
@@ -211,7 +219,7 @@
         "tmp%0#0"
       ]
     },
-    "103": {
+    "137": {
       "op": "global CreatorAddress",
       "defined_out": [
         "tmp%0#0",
@@ -222,7 +230,7 @@
         "tmp%1#0"
       ]
     },
-    "105": {
+    "139": {
       "op": "==",
       "defined_out": [
         "tmp%2#0"
@@ -231,15 +239,15 @@
         "tmp%2#0"
       ]
     },
-    "106": {
+    "140": {
       "error": "only creator",
       "op": "assert // only creator",
       "stack_out": []
     },
-    "107": {
+    "141": {
       "op": "itxn_begin"
     },
-    "108": {
+    "142": {
       "op": "intc_0 // 0",
       "defined_out": [
         "0"
@@ -248,7 +256,7 @@
         "0"
       ]
     },
-    "109": {
+    "143": {
       "op": "bytec_0 // \"gigo_asset_id\"",
       "defined_out": [
         "\"gigo_asset_id\"",
@@ -259,7 +267,7 @@
         "\"gigo_asset_id\""
       ]
     },
-    "110": {
+    "144": {
       "op": "app_global_get_ex",
       "defined_out": [
         "maybe_exists%0#0",
@@ -270,14 +278,14 @@
         "maybe_exists%0#0"
       ]
     },
-    "111": {
+    "145": {
       "error": "check self.gigo_asset_id exists",
       "op": "assert // check self.gigo_asset_id exists",
       "stack_out": [
         "maybe_value%0#0"
       ]
     },
-    "112": {
+    "146": {
       "op": "global CurrentApplicationAddress",
       "defined_out": [
         "inner_txn_params%0%%param_AssetReceiver_idx_0#0",
@@ -288,7 +296,7 @@
         "inner_txn_params%0%%param_AssetReceiver_idx_0#0"
       ]
     },
-    "114": {
+    "148": {
       "op": "intc_0 // 0",
       "stack_out": [
         "maybe_value%0#0",
@@ -296,25 +304,25 @@
         "0"
       ]
     },
-    "115": {
+    "149": {
       "op": "itxn_field AssetAmount",
       "stack_out": [
         "maybe_value%0#0",
         "inner_txn_params%0%%param_AssetReceiver_idx_0#0"
       ]
     },
-    "117": {
+    "151": {
       "op": "itxn_field AssetReceiver",
       "stack_out": [
         "maybe_value%0#0"
       ]
     },
-    "119": {
+    "153": {
       "op": "itxn_field XferAsset",
       "stack_out": []
     },
-    "121": {
-      "op": "intc_2 // axfer",
+    "155": {
+      "op": "intc_3 // axfer",
       "defined_out": [
         "axfer"
       ],
@@ -322,24 +330,24 @@
         "axfer"
       ]
     },
-    "122": {
+    "156": {
       "op": "itxn_field TypeEnum",
       "stack_out": []
     },
-    "124": {
+    "158": {
       "op": "intc_0 // 0",
       "stack_out": [
         "0"
       ]
     },
-    "125": {
+    "159": {
       "op": "itxn_field Fee",
       "stack_out": []
     },
-    "127": {
+    "161": {
       "op": "itxn_submit"
     },
-    "128": {
+    "162": {
       "op": "intc_1 // 1",
       "defined_out": [
         "1"
@@ -348,14 +356,157 @@
         "1"
       ]
     },
-    "129": {
+    "163": {
       "op": "return",
       "stack_out": []
     },
-    "130": {
-      "subroutine": "smart_contracts.hello_world.contract.RideContract.init_escrow[routing]",
+    "164": {
+      "subroutine": "smart_contracts.hello_world.contract.RideContract.set_recovery_address[routing]",
       "params": {},
-      "block": "init_escrow",
+      "block": "set_recovery_address",
+      "stack_in": [],
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "recovery_addr#0"
+      ],
+      "stack_out": [
+        "recovery_addr#0"
+      ]
+    },
+    "167": {
+      "op": "dup",
+      "defined_out": [
+        "recovery_addr#0",
+        "recovery_addr#0 (copy)"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "recovery_addr#0 (copy)"
+      ]
+    },
+    "168": {
+      "op": "len",
+      "defined_out": [
+        "len%0#0",
+        "recovery_addr#0"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "len%0#0"
+      ]
+    },
+    "169": {
+      "op": "pushint 32",
+      "defined_out": [
+        "32",
+        "len%0#0",
+        "recovery_addr#0"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "len%0#0",
+        "32"
+      ]
+    },
+    "171": {
+      "op": "==",
+      "defined_out": [
+        "eq%0#0",
+        "recovery_addr#0"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "eq%0#0"
+      ]
+    },
+    "172": {
+      "error": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "op": "assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "stack_out": [
+        "recovery_addr#0"
+      ]
+    },
+    "173": {
+      "op": "txn Sender",
+      "defined_out": [
+        "recovery_addr#0",
+        "tmp%0#1"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "tmp%0#1"
+      ]
+    },
+    "175": {
+      "op": "global CreatorAddress",
+      "defined_out": [
+        "recovery_addr#0",
+        "tmp%0#1",
+        "tmp%1#1"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "tmp%0#1",
+        "tmp%1#1"
+      ]
+    },
+    "177": {
+      "op": "==",
+      "defined_out": [
+        "recovery_addr#0",
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "tmp%2#0"
+      ]
+    },
+    "178": {
+      "error": "only creator",
+      "op": "assert // only creator",
+      "stack_out": [
+        "recovery_addr#0"
+      ]
+    },
+    "179": {
+      "op": "bytec_3 // \"recovery_address\"",
+      "defined_out": [
+        "\"recovery_address\"",
+        "recovery_addr#0"
+      ],
+      "stack_out": [
+        "recovery_addr#0",
+        "\"recovery_address\""
+      ]
+    },
+    "180": {
+      "op": "swap",
+      "stack_out": [
+        "\"recovery_address\"",
+        "recovery_addr#0"
+      ]
+    },
+    "181": {
+      "op": "app_global_put",
+      "stack_out": []
+    },
+    "182": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "183": {
+      "op": "return",
+      "stack_out": []
+    },
+    "184": {
+      "subroutine": "smart_contracts.hello_world.contract.RideContract.initialize_escrow[routing]",
+      "params": {},
+      "block": "initialize_escrow",
       "stack_in": [],
       "op": "txn GroupIndex",
       "defined_out": [
@@ -365,7 +516,7 @@
         "tmp%0#0"
       ]
     },
-    "132": {
+    "186": {
       "op": "intc_1 // 1",
       "defined_out": [
         "1",
@@ -376,7 +527,7 @@
         "1"
       ]
     },
-    "133": {
+    "187": {
       "op": "-",
       "defined_out": [
         "pay_txn#0"
@@ -385,7 +536,7 @@
         "pay_txn#0"
       ]
     },
-    "134": {
+    "188": {
       "op": "dup",
       "defined_out": [
         "pay_txn#0",
@@ -396,7 +547,7 @@
         "pay_txn#0 (copy)"
       ]
     },
-    "135": {
+    "189": {
       "op": "gtxns TypeEnum",
       "defined_out": [
         "gtxn_type%0#0",
@@ -407,8 +558,8 @@
         "gtxn_type%0#0"
       ]
     },
-    "137": {
-      "op": "intc_2 // axfer",
+    "191": {
+      "op": "intc_3 // axfer",
       "defined_out": [
         "axfer",
         "gtxn_type%0#0",
@@ -420,7 +571,7 @@
         "axfer"
       ]
     },
-    "138": {
+    "192": {
       "op": "==",
       "defined_out": [
         "gtxn_type_matches%0#0",
@@ -431,14 +582,14 @@
         "gtxn_type_matches%0#0"
       ]
     },
-    "139": {
+    "193": {
       "error": "transaction type is axfer",
       "op": "assert // transaction type is axfer",
       "stack_out": [
         "pay_txn#0"
       ]
     },
-    "140": {
+    "194": {
       "op": "txna ApplicationArgs 1",
       "defined_out": [
         "pay_txn#0",
@@ -449,7 +600,7 @@
         "ride_id#0"
       ]
     },
-    "143": {
+    "197": {
       "op": "dup",
       "defined_out": [
         "pay_txn#0",
@@ -462,7 +613,7 @@
         "ride_id#0 (copy)"
       ]
     },
-    "144": {
+    "198": {
       "op": "len",
       "defined_out": [
         "len%0#0",
@@ -475,8 +626,8 @@
         "len%0#0"
       ]
     },
-    "145": {
-      "op": "intc_3 // 8",
+    "199": {
+      "op": "intc_2 // 8",
       "defined_out": [
         "8",
         "len%0#0",
@@ -490,7 +641,7 @@
         "8"
       ]
     },
-    "146": {
+    "200": {
       "op": "==",
       "defined_out": [
         "eq%0#0",
@@ -503,7 +654,7 @@
         "eq%0#0"
       ]
     },
-    "147": {
+    "201": {
       "error": "invalid number of bytes for arc4.uint64",
       "op": "assert // invalid number of bytes for arc4.uint64",
       "stack_out": [
@@ -511,7 +662,7 @@
         "ride_id#0"
       ]
     },
-    "148": {
+    "202": {
       "op": "btoi",
       "defined_out": [
         "pay_txn#0",
@@ -522,7 +673,7 @@
         "rid#0"
       ]
     },
-    "149": {
+    "203": {
       "op": "itob",
       "defined_out": [
         "encoded_value%0#0",
@@ -533,7 +684,7 @@
         "encoded_value%0#0"
       ]
     },
-    "150": {
+    "204": {
       "op": "bytec_1 // \"c_\"",
       "defined_out": [
         "\"c_\"",
@@ -546,7 +697,7 @@
         "\"c_\""
       ]
     },
-    "151": {
+    "205": {
       "op": "dig 1",
       "defined_out": [
         "\"c_\"",
@@ -561,7 +712,7 @@
         "encoded_value%0#0 (copy)"
       ]
     },
-    "153": {
+    "207": {
       "op": "concat",
       "defined_out": [
         "encoded_value%0#0",
@@ -574,7 +725,7 @@
         "map_prefixed_key%0#0"
       ]
     },
-    "154": {
+    "208": {
       "op": "dup",
       "defined_out": [
         "encoded_value%0#0",
@@ -589,7 +740,7 @@
         "map_prefixed_key%0#0 (copy)"
       ]
     },
-    "155": {
+    "209": {
       "op": "box_len",
       "defined_out": [
         "encoded_value%0#0",
@@ -606,7 +757,7 @@
         "maybe_exists%0#0"
       ]
     },
-    "156": {
+    "210": {
       "op": "bury 1",
       "stack_out": [
         "pay_txn#0",
@@ -615,7 +766,7 @@
         "maybe_exists%0#0"
       ]
     },
-    "158": {
+    "212": {
       "op": "!",
       "defined_out": [
         "encoded_value%0#0",
@@ -630,7 +781,7 @@
         "tmp%1#1"
       ]
     },
-    "159": {
+    "213": {
       "error": "ride_id already exists",
       "op": "assert // ride_id already exists",
       "stack_out": [
@@ -639,7 +790,7 @@
         "map_prefixed_key%0#0"
       ]
     },
-    "160": {
+    "214": {
       "op": "dig 2",
       "stack_out": [
         "pay_txn#0",
@@ -648,7 +799,7 @@
         "pay_txn#0 (copy)"
       ]
     },
-    "162": {
+    "216": {
       "op": "gtxns AssetReceiver",
       "defined_out": [
         "encoded_value%0#0",
@@ -663,7 +814,7 @@
         "tmp%2#0"
       ]
     },
-    "164": {
+    "218": {
       "op": "global CurrentApplicationAddress",
       "defined_out": [
         "encoded_value%0#0",
@@ -680,7 +831,7 @@
         "tmp%3#0"
       ]
     },
-    "166": {
+    "220": {
       "op": "==",
       "defined_out": [
         "encoded_value%0#0",
@@ -695,7 +846,7 @@
         "tmp%4#0"
       ]
     },
-    "167": {
+    "221": {
       "error": "wrong receiver",
       "op": "assert // wrong receiver",
       "stack_out": [
@@ -704,7 +855,7 @@
         "map_prefixed_key%0#0"
       ]
     },
-    "168": {
+    "222": {
       "op": "dig 2",
       "stack_out": [
         "pay_txn#0",
@@ -713,7 +864,7 @@
         "pay_txn#0 (copy)"
       ]
     },
-    "170": {
+    "224": {
       "op": "gtxns XferAsset",
       "defined_out": [
         "encoded_value%0#0",
@@ -728,7 +879,7 @@
         "tmp%5#0"
       ]
     },
-    "172": {
+    "226": {
       "op": "intc_0 // 0",
       "defined_out": [
         "0",
@@ -745,7 +896,7 @@
         "0"
       ]
     },
-    "173": {
+    "227": {
       "op": "bytec_0 // \"gigo_asset_id\"",
       "defined_out": [
         "\"gigo_asset_id\"",
@@ -764,7 +915,7 @@
         "\"gigo_asset_id\""
       ]
     },
-    "174": {
+    "228": {
       "op": "app_global_get_ex",
       "defined_out": [
         "encoded_value%0#0",
@@ -783,7 +934,7 @@
         "maybe_exists%1#0"
       ]
     },
-    "175": {
+    "229": {
       "error": "check self.gigo_asset_id exists",
       "op": "assert // check self.gigo_asset_id exists",
       "stack_out": [
@@ -794,7 +945,7 @@
         "maybe_value%1#0"
       ]
     },
-    "176": {
+    "230": {
       "op": "==",
       "defined_out": [
         "encoded_value%0#0",
@@ -809,7 +960,7 @@
         "tmp%6#0"
       ]
     },
-    "177": {
+    "231": {
       "error": "wrong asset",
       "op": "assert // wrong asset",
       "stack_out": [
@@ -818,7 +969,7 @@
         "map_prefixed_key%0#0"
       ]
     },
-    "178": {
+    "232": {
       "op": "dig 2",
       "stack_out": [
         "pay_txn#0",
@@ -827,7 +978,7 @@
         "pay_txn#0 (copy)"
       ]
     },
-    "180": {
+    "234": {
       "op": "gtxns AssetAmount",
       "defined_out": [
         "encoded_value%0#0",
@@ -842,7 +993,7 @@
         "tmp%7#0"
       ]
     },
-    "182": {
+    "236": {
       "op": "dup",
       "defined_out": [
         "encoded_value%0#0",
@@ -859,7 +1010,7 @@
         "tmp%7#0 (copy)"
       ]
     },
-    "183": {
+    "237": {
       "error": "amount must be > 0",
       "op": "assert // amount must be > 0",
       "stack_out": [
@@ -869,7 +1020,7 @@
         "tmp%7#0"
       ]
     },
-    "184": {
+    "238": {
       "op": "uncover 3",
       "stack_out": [
         "encoded_value%0#0",
@@ -878,7 +1029,7 @@
         "pay_txn#0"
       ]
     },
-    "186": {
+    "240": {
       "op": "gtxns Sender",
       "defined_out": [
         "encoded_value%0#0",
@@ -893,7 +1044,7 @@
         "tmp%9#0"
       ]
     },
-    "188": {
+    "242": {
       "op": "uncover 2",
       "stack_out": [
         "encoded_value%0#0",
@@ -902,7 +1053,7 @@
         "map_prefixed_key%0#0"
       ]
     },
-    "190": {
+    "244": {
       "op": "swap",
       "stack_out": [
         "encoded_value%0#0",
@@ -911,15 +1062,15 @@
         "tmp%9#0"
       ]
     },
-    "191": {
+    "245": {
       "op": "box_put",
       "stack_out": [
         "encoded_value%0#0",
         "tmp%7#0"
       ]
     },
-    "192": {
-      "op": "bytec_2 // \"f_\"",
+    "246": {
+      "op": "bytec 4 // \"f_\"",
       "defined_out": [
         "\"f_\"",
         "encoded_value%0#0",
@@ -931,7 +1082,7 @@
         "\"f_\""
       ]
     },
-    "193": {
+    "248": {
       "op": "uncover 2",
       "stack_out": [
         "tmp%7#0",
@@ -939,7 +1090,7 @@
         "encoded_value%0#0"
       ]
     },
-    "195": {
+    "250": {
       "op": "concat",
       "defined_out": [
         "map_prefixed_key%2#0",
@@ -950,14 +1101,14 @@
         "map_prefixed_key%2#0"
       ]
     },
-    "196": {
+    "251": {
       "op": "swap",
       "stack_out": [
         "map_prefixed_key%2#0",
         "tmp%7#0"
       ]
     },
-    "197": {
+    "252": {
       "op": "itob",
       "defined_out": [
         "encoded_value%3#0",
@@ -968,24 +1119,24 @@
         "encoded_value%3#0"
       ]
     },
-    "198": {
+    "253": {
       "op": "box_put",
       "stack_out": []
     },
-    "199": {
+    "254": {
       "op": "intc_1 // 1",
       "stack_out": [
         "1"
       ]
     },
-    "200": {
+    "255": {
       "op": "return",
       "stack_out": []
     },
-    "201": {
-      "subroutine": "smart_contracts.hello_world.contract.RideContract.payout[routing]",
+    "256": {
+      "subroutine": "smart_contracts.hello_world.contract.RideContract.accept_ride[routing]",
       "params": {},
-      "block": "payout",
+      "block": "accept_ride",
       "stack_in": [],
       "op": "txna ApplicationArgs 1",
       "defined_out": [
@@ -995,7 +1146,7 @@
         "ride_id#0"
       ]
     },
-    "204": {
+    "259": {
       "op": "dup",
       "defined_out": [
         "ride_id#0",
@@ -1006,7 +1157,7 @@
         "ride_id#0 (copy)"
       ]
     },
-    "205": {
+    "260": {
       "op": "len",
       "defined_out": [
         "len%0#0",
@@ -1017,8 +1168,8 @@
         "len%0#0"
       ]
     },
-    "206": {
-      "op": "intc_3 // 8",
+    "261": {
+      "op": "intc_2 // 8",
       "defined_out": [
         "8",
         "len%0#0",
@@ -1030,7 +1181,7 @@
         "8"
       ]
     },
-    "207": {
+    "262": {
       "op": "==",
       "defined_out": [
         "eq%0#0",
@@ -1041,350 +1192,1401 @@
         "eq%0#0"
       ]
     },
-    "208": {
+    "263": {
       "error": "invalid number of bytes for arc4.uint64",
       "op": "assert // invalid number of bytes for arc4.uint64",
       "stack_out": [
         "ride_id#0"
       ]
     },
-    "209": {
-      "op": "txna ApplicationArgs 2"
+    "264": {
+      "op": "txna ApplicationArgs 2",
+      "defined_out": [
+        "driver#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "ride_id#0",
+        "driver#0"
+      ]
     },
-    "212": {
+    "267": {
+      "op": "dup",
+      "defined_out": [
+        "driver#0",
+        "driver#0 (copy)",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "ride_id#0",
+        "driver#0",
+        "driver#0 (copy)"
+      ]
+    },
+    "268": {
+      "op": "len",
+      "defined_out": [
+        "driver#0",
+        "len%1#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "ride_id#0",
+        "driver#0",
+        "len%1#0"
+      ]
+    },
+    "269": {
+      "op": "pushint 32",
+      "defined_out": [
+        "32",
+        "driver#0",
+        "len%1#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "ride_id#0",
+        "driver#0",
+        "len%1#0",
+        "32"
+      ]
+    },
+    "271": {
+      "op": "==",
+      "defined_out": [
+        "driver#0",
+        "eq%1#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "ride_id#0",
+        "driver#0",
+        "eq%1#0"
+      ]
+    },
+    "272": {
+      "error": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "op": "assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
+      "stack_out": [
+        "ride_id#0",
+        "driver#0"
+      ]
+    },
+    "273": {
+      "op": "swap",
+      "stack_out": [
+        "driver#0",
+        "ride_id#0"
+      ]
+    },
+    "274": {
+      "op": "btoi",
+      "defined_out": [
+        "driver#0",
+        "rid#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "rid#0"
+      ]
+    },
+    "275": {
+      "op": "itob",
+      "defined_out": [
+        "driver#0",
+        "encoded_value%0#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0"
+      ]
+    },
+    "276": {
+      "op": "bytec_1 // \"c_\"",
+      "defined_out": [
+        "\"c_\"",
+        "driver#0",
+        "encoded_value%0#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "\"c_\""
+      ]
+    },
+    "277": {
+      "op": "dig 1",
+      "defined_out": [
+        "\"c_\"",
+        "driver#0",
+        "encoded_value%0#0",
+        "encoded_value%0#0 (copy)"
+      ],
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "\"c_\"",
+        "encoded_value%0#0 (copy)"
+      ]
+    },
+    "279": {
+      "op": "concat",
+      "defined_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0"
+      ]
+    },
+    "280": {
+      "op": "box_len",
+      "defined_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "maybe_exists%0#0",
+        "maybe_value%0#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "maybe_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "281": {
+      "op": "bury 1",
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "283": {
+      "error": "escrow not found",
+      "op": "assert // escrow not found",
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0"
+      ]
+    },
+    "284": {
+      "op": "bytec_2 // \"d_\"",
+      "defined_out": [
+        "\"d_\"",
+        "driver#0",
+        "encoded_value%0#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "\"d_\""
+      ]
+    },
+    "285": {
+      "op": "swap",
+      "stack_out": [
+        "driver#0",
+        "\"d_\"",
+        "encoded_value%0#0"
+      ]
+    },
+    "286": {
+      "op": "concat",
+      "defined_out": [
+        "driver#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "287": {
+      "op": "dup",
+      "defined_out": [
+        "driver#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%1#0 (copy)"
+      ],
+      "stack_out": [
+        "driver#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%1#0 (copy)"
+      ]
+    },
+    "288": {
+      "op": "box_len",
+      "defined_out": [
+        "driver#0",
+        "map_prefixed_key%1#0",
+        "maybe_exists%1#0",
+        "maybe_value%1#0"
+      ],
+      "stack_out": [
+        "driver#0",
+        "map_prefixed_key%1#0",
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "289": {
+      "op": "bury 1",
+      "stack_out": [
+        "driver#0",
+        "map_prefixed_key%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "291": {
+      "op": "!",
+      "defined_out": [
+        "driver#0",
+        "map_prefixed_key%1#0",
+        "tmp%1#1"
+      ],
+      "stack_out": [
+        "driver#0",
+        "map_prefixed_key%1#0",
+        "tmp%1#1"
+      ]
+    },
+    "292": {
+      "error": "driver already assigned",
+      "op": "assert // driver already assigned",
+      "stack_out": [
+        "driver#0",
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "293": {
+      "op": "swap",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "driver#0"
+      ]
+    },
+    "294": {
+      "op": "box_put",
+      "stack_out": []
+    },
+    "295": {
+      "op": "intc_1 // 1",
+      "defined_out": [
+        "1"
+      ],
+      "stack_out": [
+        "1"
+      ]
+    },
+    "296": {
+      "op": "return",
+      "stack_out": []
+    },
+    "297": {
+      "subroutine": "smart_contracts.hello_world.contract.RideContract.release_payment[routing]",
+      "params": {},
+      "block": "release_payment",
+      "stack_in": [],
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "298": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0"
+      ]
+    },
+    "299": {
+      "op": "pushbytes \"\"",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0"
+      ]
+    },
+    "301": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ]
+    },
+    "302": {
+      "op": "txna ApplicationArgs 1",
+      "defined_out": [
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "ride_id#0"
+      ]
+    },
+    "305": {
       "op": "dup",
       "defined_out": [
         "ride_id#0",
-        "rider#0"
+        "ride_id#0 (copy)"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
         "ride_id#0",
-        "rider#0",
-        "rider#0"
+        "ride_id#0 (copy)"
       ]
     },
-    "213": {
-      "op": "cover 2",
-      "defined_out": [
-        "ride_id#0",
-        "rider#0"
-      ],
-      "stack_out": [
-        "rider#0",
-        "ride_id#0",
-        "rider#0"
-      ]
-    },
-    "215": {
+    "306": {
       "op": "len",
       "defined_out": [
-        "len%1#0",
-        "ride_id#0",
-        "rider#0"
+        "len%0#0",
+        "ride_id#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "ride_id#0",
+        "len%0#0"
+      ]
+    },
+    "307": {
+      "op": "intc_2 // 8",
+      "defined_out": [
+        "8",
+        "len%0#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "ride_id#0",
+        "len%0#0",
+        "8"
+      ]
+    },
+    "308": {
+      "op": "==",
+      "defined_out": [
+        "eq%0#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "ride_id#0",
+        "eq%0#0"
+      ]
+    },
+    "309": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "ride_id#0"
+      ]
+    },
+    "310": {
+      "op": "txna ApplicationArgs 2"
+    },
+    "313": {
+      "op": "dup",
+      "defined_out": [
+        "driver#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "ride_id#0",
+        "driver#0",
+        "driver#0"
+      ]
+    },
+    "314": {
+      "op": "cover 2",
+      "defined_out": [
+        "driver#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "ride_id#0",
+        "driver#0"
+      ]
+    },
+    "316": {
+      "op": "len",
+      "defined_out": [
+        "driver#0",
+        "len%1#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
         "ride_id#0",
         "len%1#0"
       ]
     },
-    "216": {
+    "317": {
       "op": "pushint 32",
       "defined_out": [
         "32",
+        "driver#0",
         "len%1#0",
-        "ride_id#0",
-        "rider#0"
+        "ride_id#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
         "ride_id#0",
         "len%1#0",
         "32"
       ]
     },
-    "218": {
+    "319": {
       "op": "==",
       "defined_out": [
+        "driver#0",
         "eq%1#0",
-        "ride_id#0",
-        "rider#0"
+        "ride_id#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
         "ride_id#0",
         "eq%1#0"
       ]
     },
-    "219": {
+    "320": {
       "error": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
       "op": "assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
         "ride_id#0"
       ]
     },
-    "220": {
-      "op": "btoi",
+    "321": {
+      "op": "txna ApplicationArgs 3"
+    },
+    "324": {
+      "op": "dup",
       "defined_out": [
-        "rid#0",
-        "rider#0"
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "ride_id#0",
+        "driver_amount#0",
+        "driver_amount#0"
+      ]
+    },
+    "325": {
+      "op": "cover 2",
+      "defined_out": [
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "driver_amount#0"
+      ]
+    },
+    "327": {
+      "op": "len",
+      "defined_out": [
+        "driver#0",
+        "driver_amount#0",
+        "len%2#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "len%2#0"
+      ]
+    },
+    "328": {
+      "op": "intc_2 // 8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "len%2#0",
+        "8"
+      ]
+    },
+    "329": {
+      "op": "==",
+      "defined_out": [
+        "driver#0",
+        "driver_amount#0",
+        "eq%2#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "eq%2#0"
+      ]
+    },
+    "330": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ]
+    },
+    "331": {
+      "op": "txna ApplicationArgs 4"
+    },
+    "334": {
+      "op": "dup",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "customer_amount#0",
+        "customer_amount#0"
+      ]
+    },
+    "335": {
+      "op": "cover 2",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "customer_amount#0"
+      ]
+    },
+    "337": {
+      "op": "len",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "len%3#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "len%3#0"
+      ]
+    },
+    "338": {
+      "op": "intc_2 // 8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "len%3#0",
+        "8"
+      ]
+    },
+    "339": {
+      "op": "==",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "eq%3#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "eq%3#0"
+      ]
+    },
+    "340": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0"
+      ]
+    },
+    "341": {
+      "op": "txna ApplicationArgs 5",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0"
+      ]
+    },
+    "344": {
+      "op": "dup",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "receipt_hash#0 (copy)",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "receipt_hash#0 (copy)"
+      ]
+    },
+    "345": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "receipt_hash#0 (copy)",
+        "0"
+      ]
+    },
+    "346": {
+      "error": "invalid array length header",
+      "op": "extract_uint16 // on error: invalid array length header",
+      "defined_out": [
+        "aggregate%array_length%0#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "aggregate%array_length%0#0"
+      ]
+    },
+    "347": {
+      "op": "pushint 2",
+      "defined_out": [
+        "2",
+        "aggregate%array_length%0#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "aggregate%array_length%0#0",
+        "2"
+      ]
+    },
+    "349": {
+      "op": "+",
+      "defined_out": [
+        "add%0#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "add%0#0"
+      ]
+    },
+    "350": {
+      "op": "dig 1",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "add%0#0",
+        "receipt_hash#0 (copy)"
+      ]
+    },
+    "352": {
+      "op": "len",
+      "defined_out": [
+        "add%0#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "len%4#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "add%0#0",
+        "len%4#0"
+      ]
+    },
+    "353": {
+      "op": "==",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "eq%4#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "eq%4#0"
+      ]
+    },
+    "354": {
+      "error": "invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "op": "assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "receipt_hash#0"
+      ]
+    },
+    "355": {
+      "op": "log",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "ride_id#0"
+      ]
+    },
+    "356": {
+      "op": "btoi",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "rid#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "rid#0"
       ]
     },
-    "221": {
+    "357": {
       "op": "itob",
       "defined_out": [
-        "encoded_value%0#0",
-        "rider#0"
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0"
       ]
     },
-    "222": {
+    "358": {
       "op": "dup",
       "defined_out": [
-        "encoded_value%0#0",
-        "rider#0"
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "encoded_value%0#0"
       ]
     },
-    "223": {
+    "359": {
       "op": "bytec_1 // \"c_\"",
       "defined_out": [
         "\"c_\"",
-        "encoded_value%0#0",
-        "rider#0"
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "encoded_value%0#0",
         "\"c_\""
       ]
     },
-    "224": {
+    "360": {
       "op": "swap",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "\"c_\"",
         "encoded_value%0#0"
       ]
     },
-    "225": {
+    "361": {
       "op": "concat",
       "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
         "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "rider#0"
+        "map_prefixed_key%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0"
       ]
     },
-    "226": {
+    "362": {
       "op": "dup",
       "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
         "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "rider#0"
+        "map_prefixed_key%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%0#0"
       ]
     },
-    "227": {
+    "363": {
       "op": "box_get",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "exists#0",
-        "map_prefixed_key%0#0",
-        "rider#0"
+        "map_prefixed_key%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "exists#0"
       ]
     },
-    "228": {
-      "op": "swap",
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "exists#0",
-        "customer#0"
-      ]
-    },
-    "229": {
-      "op": "dup",
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "exists#0",
-        "customer#0",
-        "customer#0 (copy)"
-      ]
-    },
-    "230": {
-      "op": "uncover 2",
-      "defined_out": [
-        "customer#0",
-        "encoded_value%0#0",
-        "exists#0",
-        "map_prefixed_key%0#0",
-        "rider#0"
-      ],
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "customer#0",
-        "exists#0"
-      ]
-    },
-    "232": {
+    "364": {
       "error": "escrow not found",
       "op": "assert // escrow not found",
       "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "customer#0"
-      ]
-    },
-    "233": {
-      "op": "txn Sender",
-      "defined_out": [
-        "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "rider#0",
-        "tmp%1#1"
-      ],
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "customer#0",
-        "tmp%1#1"
-      ]
-    },
-    "235": {
-      "op": "==",
-      "defined_out": [
-        "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "rider#0",
-        "tmp%2#1"
-      ],
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "tmp%2#1"
-      ]
-    },
-    "236": {
-      "op": "bnz payout_bool_true@3",
-      "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "239": {
+    "365": {
       "op": "txn Sender",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "rider#0",
-        "tmp%3#0"
+        "tmp%1#1"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "tmp%3#0"
+        "tmp%1#1"
       ]
     },
-    "241": {
+    "367": {
       "op": "global CreatorAddress",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "rider#0",
-        "tmp%3#0",
-        "tmp%4#0"
+        "tmp%1#1",
+        "tmp%2#1"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "tmp%3#0",
-        "tmp%4#0"
+        "tmp%1#1",
+        "tmp%2#1"
       ]
     },
-    "243": {
+    "369": {
       "op": "==",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "rider#0",
-        "tmp%5#0"
+        "tmp%3#1"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "tmp%5#0"
+        "tmp%3#1"
       ]
     },
-    "244": {
-      "op": "bz payout_bool_false@4",
+    "370": {
+      "op": "bnz release_payment_bool_true@3",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "247": {
-      "block": "payout_bool_true@3",
+    "373": {
+      "op": "txn Sender",
+      "defined_out": [
+        "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%4#1"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#1"
+      ]
+    },
+    "375": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#1",
+        "0"
+      ]
+    },
+    "376": {
+      "op": "bytec_3 // \"recovery_address\"",
+      "defined_out": [
+        "\"recovery_address\"",
+        "0",
+        "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%4#1"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#1",
+        "0",
+        "\"recovery_address\""
+      ]
+    },
+    "377": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "maybe_exists%1#0",
+        "maybe_value%1#0",
+        "tmp%4#1"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#1",
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "378": {
+      "error": "check self.recovery_address exists",
+      "op": "assert // check self.recovery_address exists",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#1",
+        "maybe_value%1#0"
+      ]
+    },
+    "379": {
+      "op": "==",
+      "defined_out": [
+        "customer#0",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%5#1"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%5#1"
+      ]
+    },
+    "380": {
+      "op": "bz release_payment_bool_false@4",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "383": {
+      "block": "release_payment_bool_true@3",
       "stack_in": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
@@ -1394,53 +2596,83 @@
         "or_result%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "or_result%0#0"
       ]
     },
-    "248": {
-      "error": "only customer or admin can release payment",
-      "block": "payout_bool_merge@5",
+    "384": {
+      "error": "unauthorized",
+      "block": "release_payment_bool_merge@5",
       "stack_in": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "or_result%0#0"
       ],
-      "op": "assert // only customer or admin can release payment",
+      "op": "assert // unauthorized",
       "defined_out": [],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "249": {
-      "op": "bytec_2 // \"f_\"",
+    "385": {
+      "op": "bytec 4 // \"f_\"",
       "defined_out": [
         "\"f_\""
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "\"f_\""
       ]
     },
-    "250": {
+    "387": {
       "op": "dig 3",
       "defined_out": [
         "\"f_\"",
         "encoded_value%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
@@ -1448,37 +2680,64 @@
         "encoded_value%0#0"
       ]
     },
-    "252": {
+    "389": {
       "op": "concat",
       "defined_out": [
         "encoded_value%0#0",
         "map_prefixed_key%1#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "253": {
+    "390": {
       "op": "dup",
-      "defined_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%1#0",
-        "map_prefixed_key%1#0 (copy)"
-      ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "map_prefixed_key%1#0",
-        "map_prefixed_key%1#0 (copy)"
+        "map_prefixed_key%1#0"
       ]
     },
-    "254": {
+    "391": {
+      "op": "bury 11",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "393": {
       "op": "box_get",
       "defined_out": [
         "aggregate%box_get%0#0",
@@ -1487,28 +2746,38 @@
         "map_prefixed_key%1#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
         "aggregate%box_get%0#0",
         "aggregate%box_get%1#0"
       ]
     },
-    "255": {
+    "394": {
       "error": "check self.escrow_fare entry exists",
       "op": "assert // check self.escrow_fare entry exists",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
         "aggregate%box_get%0#0"
       ]
     },
-    "256": {
+    "395": {
       "op": "btoi",
       "defined_out": [
         "encoded_value%0#0",
@@ -1516,396 +2785,1411 @@
         "map_prefixed_key%1#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
         "fare#0"
       ]
     },
-    "257": {
-      "op": "itxn_begin"
-    },
-    "258": {
-      "op": "intc_0 // 0",
-      "defined_out": [
-        "0",
-        "encoded_value%0#0",
-        "fare#0",
-        "map_prefixed_key%1#0"
-      ],
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "fare#0",
-        "0"
-      ]
-    },
-    "259": {
-      "op": "bytec_0 // \"gigo_asset_id\"",
-      "defined_out": [
-        "\"gigo_asset_id\"",
-        "0",
-        "encoded_value%0#0",
-        "fare#0",
-        "map_prefixed_key%1#0"
-      ],
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "fare#0",
-        "0",
-        "\"gigo_asset_id\""
-      ]
-    },
-    "260": {
-      "op": "app_global_get_ex",
-      "defined_out": [
-        "encoded_value%0#0",
-        "fare#0",
-        "map_prefixed_key%1#0",
-        "maybe_exists%1#0",
-        "maybe_value%1#0"
-      ],
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "fare#0",
-        "maybe_value%1#0",
-        "maybe_exists%1#0"
-      ]
-    },
-    "261": {
-      "error": "check self.gigo_asset_id exists",
-      "op": "assert // check self.gigo_asset_id exists",
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "fare#0",
-        "maybe_value%1#0"
-      ]
-    },
-    "262": {
-      "op": "swap",
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0",
-        "fare#0"
-      ]
-    },
-    "263": {
-      "op": "itxn_field AssetAmount",
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0"
-      ]
-    },
-    "265": {
+    "396": {
       "op": "dig 5",
       "defined_out": [
+        "driver_amount#0",
         "encoded_value%0#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0",
-        "rider#0"
+        "fare#0",
+        "map_prefixed_key%1#0"
       ],
       "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
         "map_prefixed_key%1#0",
-        "maybe_value%1#0",
-        "rider#0"
-      ]
-    },
-    "267": {
-      "op": "itxn_field AssetReceiver",
-      "stack_out": [
-        "rider#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0"
+        "fare#0",
+        "driver_amount#0"
       ]
     },
-    "269": {
-      "op": "itxn_field XferAsset",
-      "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0"
-      ]
-    },
-    "271": {
-      "op": "intc_2 // axfer",
+    "398": {
+      "op": "btoi",
       "defined_out": [
-        "axfer",
+        "driver_amount#0",
         "encoded_value%0#0",
+        "fare#0",
         "map_prefixed_key%1#0",
-        "rider#0"
+        "tmp%6#0"
       ],
       "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
         "map_prefixed_key%1#0",
-        "axfer"
-      ]
-    },
-    "272": {
-      "op": "itxn_field TypeEnum",
-      "stack_out": [
-        "rider#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0"
+        "fare#0",
+        "tmp%6#0"
       ]
     },
-    "274": {
-      "op": "intc_0 // 0",
+    "399": {
+      "op": "dup",
       "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
         "map_prefixed_key%1#0",
-        "0"
-      ]
-    },
-    "275": {
-      "op": "itxn_field Fee",
-      "stack_out": [
-        "rider#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0"
+        "fare#0",
+        "tmp%6#0",
+        "tmp%6#0"
       ]
     },
-    "277": {
-      "op": "itxn_submit"
-    },
-    "278": {
-      "op": "dig 2",
+    "400": {
+      "op": "bury 10",
       "defined_out": [
+        "driver_amount#0",
         "encoded_value%0#0",
-        "map_prefixed_key%0#0",
+        "fare#0",
         "map_prefixed_key%1#0",
-        "rider#0"
+        "tmp%6#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "map_prefixed_key%0#0"
+        "fare#0",
+        "tmp%6#0"
       ]
     },
-    "280": {
-      "op": "box_del",
+    "402": {
+      "op": "dig 5",
       "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
-        "map_prefixed_key%0#0",
+        "fare#0",
         "map_prefixed_key%1#0",
-        "rider#0",
-        "{box_del}"
+        "tmp%6#0"
       ],
       "stack_out": [
-        "rider#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
         "map_prefixed_key%1#0",
-        "{box_del}"
-      ]
-    },
-    "281": {
-      "op": "pop",
-      "stack_out": [
-        "rider#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0"
+        "fare#0",
+        "tmp%6#0",
+        "customer_amount#0"
       ]
     },
-    "282": {
-      "op": "box_del",
+    "404": {
+      "op": "btoi",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "{box_del}"
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0"
       ]
     },
-    "283": {
-      "op": "pop",
+    "405": {
+      "op": "dup",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%7#0"
+      ]
+    },
+    "406": {
+      "op": "bury 10",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ]
+    },
+    "408": {
+      "op": "dig 1",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%6#0 (copy)",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%6#0 (copy)"
+      ]
+    },
+    "410": {
+      "op": "+",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%8#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%8#0"
+      ]
+    },
+    "411": {
+      "op": "uncover 2",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%6#0",
+        "tmp%8#0",
+        "fare#0"
+      ]
+    },
+    "413": {
+      "op": "<=",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%9#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%6#0",
+        "tmp%9#0"
+      ]
+    },
+    "414": {
+      "error": "amounts exceed escrowed fare",
+      "op": "assert // amounts exceed escrowed fare",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%6#0"
+      ]
+    },
+    "415": {
+      "op": "bz release_payment_after_if_else@8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "284": {
+    "418": {
       "op": "itxn_begin"
     },
-    "285": {
-      "op": "intc 4 // 29000",
-      "defined_out": [
-        "29000",
+    "419": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "rider#0"
+        "customer#0",
+        "0"
+      ]
+    },
+    "420": {
+      "op": "bytec_0 // \"gigo_asset_id\"",
+      "defined_out": [
+        "\"gigo_asset_id\"",
+        "0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "0",
+        "\"gigo_asset_id\""
+      ]
+    },
+    "421": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "maybe_exists%2#0",
+        "maybe_value%2#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%2#0",
+        "maybe_exists%2#0"
+      ]
+    },
+    "422": {
+      "error": "check self.gigo_asset_id exists",
+      "op": "assert // check self.gigo_asset_id exists",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%2#0"
+      ]
+    },
+    "423": {
+      "op": "dig 8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%2#0",
+        "tmp%6#0"
+      ]
+    },
+    "425": {
+      "op": "itxn_field AssetAmount",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%2#0"
+      ]
+    },
+    "427": {
+      "op": "dig 6",
+      "defined_out": [
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "maybe_value%2#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%2#0",
+        "driver#0"
+      ]
+    },
+    "429": {
+      "op": "itxn_field AssetReceiver",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%2#0"
+      ]
+    },
+    "431": {
+      "op": "itxn_field XferAsset",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "433": {
+      "op": "intc_3 // axfer",
+      "defined_out": [
+        "axfer",
+        "customer_amount#0",
+        "driver#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "axfer"
+      ]
+    },
+    "434": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "436": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "0"
+      ]
+    },
+    "437": {
+      "op": "itxn_field Fee",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "439": {
+      "op": "itxn_submit"
+    },
+    "440": {
+      "block": "release_payment_after_if_else@8",
+      "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ],
+      "op": "dig 6",
+      "defined_out": [
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%7#0"
+      ]
+    },
+    "442": {
+      "op": "bz release_payment_after_if_else@11",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "445": {
+      "op": "itxn_begin"
+    },
+    "446": {
+      "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "0"
+      ]
+    },
+    "447": {
+      "op": "bytec_0 // \"gigo_asset_id\"",
+      "defined_out": [
+        "\"gigo_asset_id\"",
+        "0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "0",
+        "\"gigo_asset_id\""
+      ]
+    },
+    "448": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "maybe_exists%3#0",
+        "maybe_value%3#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%3#0",
+        "maybe_exists%3#0"
+      ]
+    },
+    "449": {
+      "error": "check self.gigo_asset_id exists",
+      "op": "assert // check self.gigo_asset_id exists",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%3#0"
+      ]
+    },
+    "450": {
+      "op": "dig 7",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%3#0",
+        "tmp%7#0"
+      ]
+    },
+    "452": {
+      "op": "itxn_field AssetAmount",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%3#0"
+      ]
+    },
+    "454": {
+      "op": "dig 1",
+      "defined_out": [
+        "customer#0",
+        "maybe_value%3#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%3#0",
+        "customer#0"
+      ]
+    },
+    "456": {
+      "op": "itxn_field AssetReceiver",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%3#0"
+      ]
+    },
+    "458": {
+      "op": "itxn_field XferAsset",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "460": {
+      "op": "intc_3 // axfer",
+      "defined_out": [
+        "axfer",
+        "customer#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "axfer"
+      ]
+    },
+    "461": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "463": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "0"
+      ]
+    },
+    "464": {
+      "op": "itxn_field Fee",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "466": {
+      "op": "itxn_submit"
+    },
+    "467": {
+      "block": "release_payment_after_if_else@11",
+      "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ],
+      "op": "dig 1",
+      "defined_out": [
+        "map_prefixed_key%0#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%0#0"
+      ]
+    },
+    "469": {
+      "op": "box_del",
+      "defined_out": [
+        "map_prefixed_key%0#0",
+        "{box_del}"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "{box_del}"
+      ]
+    },
+    "470": {
+      "op": "pop",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "471": {
+      "op": "dig 9",
+      "defined_out": [
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "473": {
+      "op": "box_del",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "{box_del}"
+      ]
+    },
+    "474": {
+      "op": "pop",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "475": {
+      "op": "bytec_2 // \"d_\"",
+      "defined_out": [
+        "\"d_\"",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "\"d_\""
+      ]
+    },
+    "476": {
+      "op": "dig 3",
+      "defined_out": [
+        "\"d_\"",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "\"d_\"",
+        "encoded_value%0#0"
+      ]
+    },
+    "478": {
+      "op": "concat",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%4#0"
+      ]
+    },
+    "479": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%4#0",
+        "map_prefixed_key%4#0"
+      ]
+    },
+    "480": {
+      "op": "bury 10",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%4#0"
+      ]
+    },
+    "482": {
+      "op": "box_len",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "maybe_exists%4#0",
+        "maybe_value%4#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%4#0",
+        "maybe_exists%4#0"
+      ]
+    },
+    "483": {
+      "op": "bury 1",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_exists%4#0"
+      ]
+    },
+    "485": {
+      "op": "bz release_payment_after_if_else@13",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "488": {
+      "op": "dig 8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%4#0"
+      ]
+    },
+    "490": {
+      "op": "box_del",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "{box_del}"
+      ]
+    },
+    "491": {
+      "op": "pop",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "492": {
+      "block": "release_payment_after_if_else@13",
+      "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ],
+      "op": "itxn_begin"
+    },
+    "493": {
+      "op": "intc 4 // 29000",
+      "defined_out": [
+        "29000"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "29000"
       ]
     },
-    "287": {
+    "495": {
       "op": "itxn_field Amount",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "289": {
+    "497": {
       "op": "dup",
       "defined_out": [
-        "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "rider#0"
+        "customer#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "customer#0"
       ]
     },
-    "290": {
+    "498": {
       "op": "itxn_field Receiver",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "292": {
+    "500": {
       "op": "intc_1 // pay",
       "defined_out": [
         "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "pay",
-        "rider#0"
+        "pay"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "pay"
       ]
     },
-    "293": {
+    "501": {
       "op": "itxn_field TypeEnum",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "295": {
+    "503": {
       "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "customer#0"
+      ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "0"
       ]
     },
-    "296": {
+    "504": {
       "op": "itxn_field Fee",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "298": {
+    "506": {
       "op": "itxn_submit"
     },
-    "299": {
+    "507": {
       "op": "intc_1 // 1",
       "defined_out": [
         "1",
-        "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "rider#0"
+        "customer#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "1"
       ]
     },
-    "300": {
+    "508": {
       "op": "return",
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "301": {
-      "block": "payout_bool_false@4",
+    "509": {
+      "block": "release_payment_bool_false@4",
       "stack_in": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
@@ -1915,310 +4199,950 @@
         "or_result%0#0"
       ],
       "stack_out": [
-        "rider#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%4#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "driver#0",
+        "driver_amount#0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "or_result%0#0"
       ]
     },
-    "302": {
-      "op": "b payout_bool_merge@5"
+    "510": {
+      "op": "b release_payment_bool_merge@5"
     },
-    "305": {
-      "subroutine": "smart_contracts.hello_world.contract.RideContract.cancel_and_refund[routing]",
+    "513": {
+      "subroutine": "smart_contracts.hello_world.contract.RideContract.cancel_refund[routing]",
       "params": {},
-      "block": "cancel_and_refund",
+      "block": "cancel_refund",
       "stack_in": [],
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "514": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0"
+      ]
+    },
+    "515": {
+      "op": "pushbytes \"\"",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0"
+      ]
+    },
+    "517": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ]
+    },
+    "518": {
       "op": "txna ApplicationArgs 1",
       "defined_out": [
         "ride_id#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
         "ride_id#0"
       ]
     },
-    "308": {
+    "521": {
       "op": "dup",
       "defined_out": [
         "ride_id#0",
         "ride_id#0 (copy)"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
         "ride_id#0",
         "ride_id#0 (copy)"
       ]
     },
-    "309": {
+    "522": {
       "op": "len",
       "defined_out": [
         "len%0#0",
         "ride_id#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
         "ride_id#0",
         "len%0#0"
       ]
     },
-    "310": {
-      "op": "intc_3 // 8",
+    "523": {
+      "op": "intc_2 // 8",
       "defined_out": [
         "8",
         "len%0#0",
         "ride_id#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
         "ride_id#0",
         "len%0#0",
         "8"
       ]
     },
-    "311": {
+    "524": {
       "op": "==",
       "defined_out": [
         "eq%0#0",
         "ride_id#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
         "ride_id#0",
         "eq%0#0"
       ]
     },
-    "312": {
+    "525": {
       "error": "invalid number of bytes for arc4.uint64",
       "op": "assert // invalid number of bytes for arc4.uint64",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
         "ride_id#0"
       ]
     },
-    "313": {
-      "op": "btoi",
-      "defined_out": [
-        "rid#0"
-      ],
-      "stack_out": [
-        "rid#0"
-      ]
+    "526": {
+      "op": "txna ApplicationArgs 2"
     },
-    "314": {
-      "op": "itob",
-      "defined_out": [
-        "encoded_value%0#0"
-      ],
-      "stack_out": [
-        "encoded_value%0#0"
-      ]
-    },
-    "315": {
+    "529": {
       "op": "dup",
       "defined_out": [
+        "customer_amount#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "ride_id#0",
+        "customer_amount#0",
+        "customer_amount#0"
+      ]
+    },
+    "530": {
+      "op": "cover 2",
+      "defined_out": [
+        "customer_amount#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "customer_amount#0"
+      ]
+    },
+    "532": {
+      "op": "len",
+      "defined_out": [
+        "customer_amount#0",
+        "len%1#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "len%1#0"
+      ]
+    },
+    "533": {
+      "op": "intc_2 // 8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "len%1#0",
+        "8"
+      ]
+    },
+    "534": {
+      "op": "==",
+      "defined_out": [
+        "customer_amount#0",
+        "eq%1#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "eq%1#0"
+      ]
+    },
+    "535": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "ride_id#0"
+      ]
+    },
+    "536": {
+      "op": "txna ApplicationArgs 3"
+    },
+    "539": {
+      "op": "dup",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "ride_id#0",
+        "driver_amount#0",
+        "driver_amount#0"
+      ]
+    },
+    "540": {
+      "op": "cover 2",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "driver_amount#0"
+      ]
+    },
+    "542": {
+      "op": "len",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "len%2#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "len%2#0"
+      ]
+    },
+    "543": {
+      "op": "intc_2 // 8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "len%2#0",
+        "8"
+      ]
+    },
+    "544": {
+      "op": "==",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "eq%2#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "eq%2#0"
+      ]
+    },
+    "545": {
+      "error": "invalid number of bytes for arc4.uint64",
+      "op": "assert // invalid number of bytes for arc4.uint64",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ]
+    },
+    "546": {
+      "op": "txna ApplicationArgs 4",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0"
+      ]
+    },
+    "549": {
+      "op": "dup",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "receipt_hash#0 (copy)",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "receipt_hash#0 (copy)"
+      ]
+    },
+    "550": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "receipt_hash#0 (copy)",
+        "0"
+      ]
+    },
+    "551": {
+      "error": "invalid array length header",
+      "op": "extract_uint16 // on error: invalid array length header",
+      "defined_out": [
+        "aggregate%array_length%0#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "aggregate%array_length%0#0"
+      ]
+    },
+    "552": {
+      "op": "pushint 2",
+      "defined_out": [
+        "2",
+        "aggregate%array_length%0#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "aggregate%array_length%0#0",
+        "2"
+      ]
+    },
+    "554": {
+      "op": "+",
+      "defined_out": [
+        "add%0#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "add%0#0"
+      ]
+    },
+    "555": {
+      "op": "dig 1",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "add%0#0",
+        "receipt_hash#0 (copy)"
+      ]
+    },
+    "557": {
+      "op": "len",
+      "defined_out": [
+        "add%0#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "len%3#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "add%0#0",
+        "len%3#0"
+      ]
+    },
+    "558": {
+      "op": "==",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "eq%3#0",
+        "receipt_hash#0",
+        "ride_id#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0",
+        "eq%3#0"
+      ]
+    },
+    "559": {
+      "error": "invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "op": "assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0",
+        "receipt_hash#0"
+      ]
+    },
+    "560": {
+      "op": "log",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "ride_id#0"
+      ]
+    },
+    "561": {
+      "op": "btoi",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "rid#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "rid#0"
+      ]
+    },
+    "562": {
+      "op": "itob",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0"
+      ]
+    },
+    "563": {
+      "op": "dup",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "encoded_value%0#0"
       ]
     },
-    "316": {
+    "564": {
       "op": "bytec_1 // \"c_\"",
       "defined_out": [
         "\"c_\"",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "encoded_value%0#0",
         "\"c_\""
       ]
     },
-    "317": {
+    "565": {
       "op": "swap",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "\"c_\"",
         "encoded_value%0#0"
       ]
     },
-    "318": {
+    "566": {
       "op": "concat",
       "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0"
       ]
     },
-    "319": {
+    "567": {
       "op": "dup",
       "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "map_prefixed_key%0#0"
       ]
     },
-    "320": {
+    "568": {
       "op": "box_get",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "exists#0",
         "map_prefixed_key%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "exists#0"
       ]
     },
-    "321": {
-      "op": "swap",
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "exists#0",
-        "customer#0"
-      ]
-    },
-    "322": {
-      "op": "dup",
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "exists#0",
-        "customer#0",
-        "customer#0 (copy)"
-      ]
-    },
-    "323": {
-      "op": "uncover 2",
-      "defined_out": [
-        "customer#0",
-        "encoded_value%0#0",
-        "exists#0",
-        "map_prefixed_key%0#0"
-      ],
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "customer#0",
-        "exists#0"
-      ]
-    },
-    "325": {
+    "569": {
       "error": "escrow not found",
       "op": "assert // escrow not found",
       "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "customer#0"
-      ]
-    },
-    "326": {
-      "op": "txn Sender",
-      "defined_out": [
-        "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "tmp%1#0"
-      ],
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "customer#0",
-        "tmp%1#0"
-      ]
-    },
-    "328": {
-      "op": "==",
-      "defined_out": [
-        "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "tmp%2#0"
-      ],
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "tmp%2#0"
-      ]
-    },
-    "329": {
-      "op": "bnz cancel_and_refund_bool_true@3",
-      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "332": {
+    "570": {
       "op": "txn Sender",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "tmp%3#0"
+        "tmp%1#1"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "tmp%3#0"
+        "tmp%1#1"
       ]
     },
-    "334": {
+    "572": {
       "op": "global CreatorAddress",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "tmp%3#0",
-        "tmp%4#0"
+        "tmp%1#1",
+        "tmp%2#1"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "tmp%3#0",
-        "tmp%4#0"
+        "tmp%1#1",
+        "tmp%2#1"
       ]
     },
-    "336": {
+    "574": {
       "op": "==",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "tmp%5#0"
+        "tmp%3#1"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "tmp%5#0"
+        "tmp%3#1"
       ]
     },
-    "337": {
-      "op": "bz cancel_and_refund_bool_false@4",
+    "575": {
+      "op": "bnz cancel_refund_bool_true@3",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "340": {
-      "block": "cancel_and_refund_bool_true@3",
+    "578": {
+      "op": "txn Sender",
+      "defined_out": [
+        "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#0"
+      ]
+    },
+    "580": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#0",
+        "0"
+      ]
+    },
+    "581": {
+      "op": "bytec_3 // \"recovery_address\"",
+      "defined_out": [
+        "\"recovery_address\"",
+        "0",
+        "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#0",
+        "0",
+        "\"recovery_address\""
+      ]
+    },
+    "582": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "maybe_exists%1#0",
+        "maybe_value%1#0",
+        "tmp%4#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#0",
+        "maybe_value%1#0",
+        "maybe_exists%1#0"
+      ]
+    },
+    "583": {
+      "error": "check self.recovery_address exists",
+      "op": "assert // check self.recovery_address exists",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%4#0",
+        "maybe_value%1#0"
+      ]
+    },
+    "584": {
+      "op": "==",
+      "defined_out": [
+        "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "tmp%5#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%5#0"
+      ]
+    },
+    "585": {
+      "op": "bz cancel_refund_bool_false@4",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "588": {
+      "block": "cancel_refund_bool_true@3",
       "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
@@ -2228,48 +5152,78 @@
         "or_result%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "or_result%0#0"
       ]
     },
-    "341": {
-      "error": "only customer or admin can refund",
-      "block": "cancel_and_refund_bool_merge@5",
+    "589": {
+      "error": "unauthorized",
+      "block": "cancel_refund_bool_merge@5",
       "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "or_result%0#0"
       ],
-      "op": "assert // only customer or admin can refund",
+      "op": "assert // unauthorized",
       "defined_out": [],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "342": {
-      "op": "bytec_2 // \"f_\"",
+    "590": {
+      "op": "bytec 4 // \"f_\"",
       "defined_out": [
         "\"f_\""
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "\"f_\""
       ]
     },
-    "343": {
+    "592": {
       "op": "dig 3",
       "defined_out": [
         "\"f_\"",
         "encoded_value%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
@@ -2277,35 +5231,61 @@
         "encoded_value%0#0"
       ]
     },
-    "345": {
+    "594": {
       "op": "concat",
       "defined_out": [
         "encoded_value%0#0",
         "map_prefixed_key%1#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "map_prefixed_key%1#0"
       ]
     },
-    "346": {
+    "595": {
       "op": "dup",
-      "defined_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%1#0",
-        "map_prefixed_key%1#0 (copy)"
-      ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "map_prefixed_key%1#0",
-        "map_prefixed_key%1#0 (copy)"
+        "map_prefixed_key%1#0"
       ]
     },
-    "347": {
+    "596": {
+      "op": "bury 10",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "598": {
       "op": "box_get",
       "defined_out": [
         "aggregate%box_get%0#0",
@@ -2314,26 +5294,36 @@
         "map_prefixed_key%1#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
         "aggregate%box_get%0#0",
         "aggregate%box_get%1#0"
       ]
     },
-    "348": {
+    "599": {
       "error": "check self.escrow_fare entry exists",
       "op": "assert // check self.escrow_fare entry exists",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
         "aggregate%box_get%0#0"
       ]
     },
-    "349": {
+    "600": {
       "op": "btoi",
       "defined_out": [
         "encoded_value%0#0",
@@ -2341,403 +5331,1414 @@
         "map_prefixed_key%1#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
         "fare#0"
       ]
     },
-    "350": {
-      "op": "itxn_begin"
-    },
-    "351": {
-      "op": "intc_0 // 0",
+    "601": {
+      "op": "dig 5",
       "defined_out": [
-        "0",
+        "customer_amount#0",
         "encoded_value%0#0",
         "fare#0",
         "map_prefixed_key%1#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
         "fare#0",
+        "customer_amount#0"
+      ]
+    },
+    "603": {
+      "op": "btoi",
+      "defined_out": [
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0"
+      ]
+    },
+    "604": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%6#0"
+      ]
+    },
+    "605": {
+      "op": "bury 9",
+      "defined_out": [
+        "customer_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0"
+      ]
+    },
+    "607": {
+      "op": "dig 5",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "driver_amount#0"
+      ]
+    },
+    "609": {
+      "op": "btoi",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ]
+    },
+    "610": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%7#0"
+      ]
+    },
+    "611": {
+      "op": "bury 9",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0"
+      ]
+    },
+    "613": {
+      "op": "dig 1",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%6#0 (copy)",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%6#0 (copy)"
+      ]
+    },
+    "615": {
+      "op": "+",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "fare#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%8#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "fare#0",
+        "tmp%6#0",
+        "tmp%8#0"
+      ]
+    },
+    "616": {
+      "op": "uncover 2",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%6#0",
+        "tmp%8#0",
+        "fare#0"
+      ]
+    },
+    "618": {
+      "op": "<=",
+      "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "tmp%9#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%6#0",
+        "tmp%9#0"
+      ]
+    },
+    "619": {
+      "error": "amounts exceed escrowed fare",
+      "op": "assert // amounts exceed escrowed fare",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%6#0"
+      ]
+    },
+    "620": {
+      "op": "bz cancel_refund_after_if_else@8",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "623": {
+      "op": "itxn_begin"
+    },
+    "624": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
         "0"
       ]
     },
-    "352": {
+    "625": {
       "op": "bytec_0 // \"gigo_asset_id\"",
       "defined_out": [
         "\"gigo_asset_id\"",
         "0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
-        "fare#0",
-        "map_prefixed_key%1#0"
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "fare#0",
         "0",
         "\"gigo_asset_id\""
       ]
     },
-    "353": {
+    "626": {
       "op": "app_global_get_ex",
       "defined_out": [
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
-        "fare#0",
         "map_prefixed_key%1#0",
-        "maybe_exists%1#0",
-        "maybe_value%1#0"
+        "maybe_exists%2#0",
+        "maybe_value%2#0",
+        "tmp%6#0",
+        "tmp%7#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "fare#0",
-        "maybe_value%1#0",
-        "maybe_exists%1#0"
+        "maybe_value%2#0",
+        "maybe_exists%2#0"
       ]
     },
-    "354": {
+    "627": {
       "error": "check self.gigo_asset_id exists",
       "op": "assert // check self.gigo_asset_id exists",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "fare#0",
-        "maybe_value%1#0"
+        "maybe_value%2#0"
       ]
     },
-    "355": {
-      "op": "swap",
+    "628": {
+      "op": "dig 7",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0",
-        "fare#0"
+        "maybe_value%2#0",
+        "tmp%6#0"
       ]
     },
-    "356": {
+    "630": {
       "op": "itxn_field AssetAmount",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0"
+        "maybe_value%2#0"
       ]
     },
-    "358": {
-      "op": "dig 2",
+    "632": {
+      "op": "dig 1",
       "defined_out": [
         "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%1#0",
-        "maybe_value%1#0"
+        "maybe_value%2#0",
+        "tmp%6#0",
+        "tmp%7#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0",
+        "maybe_value%2#0",
         "customer#0"
       ]
     },
-    "360": {
-      "op": "dup",
-      "defined_out": [
-        "customer#0",
-        "customer#0 (copy)",
-        "encoded_value%0#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0"
-      ],
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "maybe_value%1#0",
-        "customer#0 (copy)",
-        "customer#0 (copy)"
-      ]
-    },
-    "361": {
-      "op": "cover 2",
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
-        "customer#0",
-        "maybe_value%1#0",
-        "customer#0 (copy)"
-      ]
-    },
-    "363": {
+    "634": {
       "op": "itxn_field AssetReceiver",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "customer#0",
-        "maybe_value%1#0"
+        "maybe_value%2#0"
       ]
     },
-    "365": {
+    "636": {
       "op": "itxn_field XferAsset",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
         "customer#0"
       ]
     },
-    "367": {
-      "op": "intc_2 // axfer",
+    "638": {
+      "op": "intc_3 // axfer",
       "defined_out": [
         "axfer",
         "customer#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
-        "map_prefixed_key%1#0"
+        "map_prefixed_key%1#0",
+        "tmp%6#0",
+        "tmp%7#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
         "customer#0",
         "axfer"
       ]
     },
-    "368": {
+    "639": {
       "op": "itxn_field TypeEnum",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
         "customer#0"
       ]
     },
-    "370": {
+    "641": {
       "op": "intc_0 // 0",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
         "customer#0",
         "0"
       ]
     },
-    "371": {
+    "642": {
       "op": "itxn_field Fee",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
-        "customer#0",
-        "map_prefixed_key%1#0",
         "customer#0"
       ]
     },
-    "373": {
+    "644": {
       "op": "itxn_submit"
     },
-    "374": {
+    "645": {
+      "block": "cancel_refund_after_if_else@8",
+      "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ],
+      "op": "dig 5",
+      "defined_out": [
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "tmp%7#0"
+      ]
+    },
+    "647": {
+      "op": "bz cancel_refund_after_if_else@11",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "650": {
+      "op": "bytec_2 // \"d_\"",
+      "defined_out": [
+        "\"d_\"",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "\"d_\""
+      ]
+    },
+    "651": {
       "op": "dig 3",
       "defined_out": [
-        "customer#0",
+        "\"d_\"",
         "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0"
+        "tmp%7#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "map_prefixed_key%1#0",
-        "customer#0",
-        "map_prefixed_key%0#0"
+        "\"d_\"",
+        "encoded_value%0#0"
       ]
     },
-    "376": {
-      "op": "box_del",
+    "653": {
+      "op": "concat",
       "defined_out": [
-        "customer#0",
         "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "map_prefixed_key%1#0",
-        "{box_del}"
+        "map_prefixed_key%2#0",
+        "tmp%7#0"
       ],
       "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
         "map_prefixed_key%1#0",
-        "customer#0",
-        "{box_del}"
-      ]
-    },
-    "377": {
-      "op": "pop",
-      "stack_out": [
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
+        "map_prefixed_key%2#0"
+      ]
+    },
+    "654": {
+      "op": "box_get",
+      "defined_out": [
+        "d_exists#0",
+        "driver#0",
+        "encoded_value%0#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
         "map_prefixed_key%1#0",
-        "customer#0"
-      ]
-    },
-    "378": {
-      "op": "swap",
-      "stack_out": [
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "customer#0",
-        "map_prefixed_key%1#0"
+        "driver#0",
+        "d_exists#0"
       ]
     },
-    "379": {
-      "op": "box_del",
+    "655": {
+      "error": "driver not found",
+      "op": "assert // driver not found",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
-        "customer#0",
-        "{box_del}"
+        "driver#0"
       ]
     },
-    "380": {
-      "op": "pop",
-      "stack_out": [
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
-        "customer#0",
-        "customer#0"
-      ]
-    },
-    "381": {
+    "656": {
       "op": "itxn_begin"
     },
-    "382": {
-      "op": "intc 4 // 29000",
+    "657": {
+      "op": "intc_0 // 0",
       "defined_out": [
-        "29000",
-        "customer#0",
+        "0",
+        "driver#0",
         "encoded_value%0#0",
-        "map_prefixed_key%0#0"
+        "tmp%7#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
+        "driver#0",
+        "0"
+      ]
+    },
+    "658": {
+      "op": "bytec_0 // \"gigo_asset_id\"",
+      "defined_out": [
+        "\"gigo_asset_id\"",
+        "0",
+        "driver#0",
+        "encoded_value%0#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "driver#0",
+        "0",
+        "\"gigo_asset_id\""
+      ]
+    },
+    "659": {
+      "op": "app_global_get_ex",
+      "defined_out": [
+        "driver#0",
+        "encoded_value%0#0",
+        "maybe_exists%4#0",
+        "maybe_value%4#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "driver#0",
+        "maybe_value%4#0",
+        "maybe_exists%4#0"
+      ]
+    },
+    "660": {
+      "error": "check self.gigo_asset_id exists",
+      "op": "assert // check self.gigo_asset_id exists",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "driver#0",
+        "maybe_value%4#0"
+      ]
+    },
+    "661": {
+      "op": "dig 7",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "driver#0",
+        "maybe_value%4#0",
+        "tmp%7#0"
+      ]
+    },
+    "663": {
+      "op": "itxn_field AssetAmount",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "driver#0",
+        "maybe_value%4#0"
+      ]
+    },
+    "665": {
+      "op": "itxn_field XferAsset"
+    },
+    "667": {
+      "op": "itxn_field AssetReceiver",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "669": {
+      "op": "intc_3 // axfer",
+      "defined_out": [
+        "axfer",
+        "encoded_value%0#0",
+        "tmp%7#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "axfer"
+      ]
+    },
+    "670": {
+      "op": "itxn_field TypeEnum",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "672": {
+      "op": "intc_0 // 0",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "0"
+      ]
+    },
+    "673": {
+      "op": "itxn_field Fee",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "675": {
+      "op": "itxn_submit"
+    },
+    "676": {
+      "block": "cancel_refund_after_if_else@11",
+      "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ],
+      "op": "dig 1",
+      "defined_out": [
+        "map_prefixed_key%0#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%0#0"
+      ]
+    },
+    "678": {
+      "op": "box_del",
+      "defined_out": [
+        "map_prefixed_key%0#0",
+        "{box_del}"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "{box_del}"
+      ]
+    },
+    "679": {
+      "op": "pop",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "680": {
+      "op": "dig 8",
+      "defined_out": [
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%1#0"
+      ]
+    },
+    "682": {
+      "op": "box_del",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "{box_del}"
+      ]
+    },
+    "683": {
+      "op": "pop",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "684": {
+      "op": "bytec_2 // \"d_\"",
+      "defined_out": [
+        "\"d_\"",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "\"d_\""
+      ]
+    },
+    "685": {
+      "op": "dig 3",
+      "defined_out": [
+        "\"d_\"",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "\"d_\"",
+        "encoded_value%0#0"
+      ]
+    },
+    "687": {
+      "op": "concat",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%5#0"
+      ]
+    },
+    "688": {
+      "op": "dup",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%5#0",
+        "map_prefixed_key%5#0"
+      ]
+    },
+    "689": {
+      "op": "bury 9",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%5#0"
+      ]
+    },
+    "691": {
+      "op": "box_len",
+      "defined_out": [
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "maybe_exists%5#0",
+        "maybe_value%5#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_value%5#0",
+        "maybe_exists%5#0"
+      ]
+    },
+    "692": {
+      "op": "bury 1",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "maybe_exists%5#0"
+      ]
+    },
+    "694": {
+      "op": "bz cancel_refund_after_if_else@13",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "697": {
+      "op": "dig 7",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "map_prefixed_key%5#0"
+      ]
+    },
+    "699": {
+      "op": "box_del",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0",
+        "{box_del}"
+      ]
+    },
+    "700": {
+      "op": "pop",
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "701": {
+      "block": "cancel_refund_after_if_else@13",
+      "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ],
+      "op": "itxn_begin"
+    },
+    "702": {
+      "op": "intc 4 // 29000",
+      "defined_out": [
+        "29000"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
         "customer#0",
         "29000"
       ]
     },
-    "384": {
+    "704": {
       "op": "itxn_field Amount",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
+        "encoded_value%0#0",
+        "map_prefixed_key%0#0",
+        "customer#0"
+      ]
+    },
+    "706": {
+      "op": "dup",
+      "defined_out": [
+        "customer#0"
+      ],
+      "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "customer#0"
       ]
     },
-    "386": {
+    "707": {
       "op": "itxn_field Receiver",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "388": {
+    "709": {
       "op": "intc_1 // pay",
       "defined_out": [
         "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0",
         "pay"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "pay"
       ]
     },
-    "389": {
+    "710": {
       "op": "itxn_field TypeEnum",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "391": {
+    "712": {
       "op": "intc_0 // 0",
+      "defined_out": [
+        "0",
+        "customer#0"
+      ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "0"
       ]
     },
-    "392": {
+    "713": {
       "op": "itxn_field Fee",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "394": {
+    "715": {
       "op": "itxn_submit"
     },
-    "395": {
+    "716": {
       "op": "intc_1 // 1",
       "defined_out": [
         "1",
-        "customer#0",
-        "encoded_value%0#0",
-        "map_prefixed_key%0#0"
+        "customer#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "1"
       ]
     },
-    "396": {
+    "717": {
       "op": "return",
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
       ]
     },
-    "397": {
-      "block": "cancel_and_refund_bool_false@4",
+    "718": {
+      "block": "cancel_refund_bool_false@4",
       "stack_in": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0"
@@ -2747,14 +6748,20 @@
         "or_result%0#0"
       ],
       "stack_out": [
+        "map_prefixed_key%1#0",
+        "map_prefixed_key%5#0",
+        "tmp%6#0",
+        "tmp%7#0",
+        "customer_amount#0",
+        "driver_amount#0",
         "encoded_value%0#0",
         "map_prefixed_key%0#0",
         "customer#0",
         "or_result%0#0"
       ]
     },
-    "398": {
-      "op": "b cancel_and_refund_bool_merge@5"
+    "719": {
+      "op": "b cancel_refund_bool_merge@5"
     }
   }
 }

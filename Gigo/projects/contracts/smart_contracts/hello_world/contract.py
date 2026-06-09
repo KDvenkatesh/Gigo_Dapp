@@ -10,17 +10,19 @@ from algopy import (
     itxn,
     arc4,
 )
-
+import algopy
 
 class RideContract(ARC4Contract):
     """
-    Optimized Ride-Sharing Escrow Contract (V5 - Robust Verification).
+    Optimized Ride-Sharing Escrow Contract (V6 - Settlement Support).
     """
 
     def __init__(self) -> None:
         self.gigo_asset_id = GlobalState(UInt64(763011769))
+        self.recovery_address = GlobalState(Account)
         self.escrow_customer = BoxMap(UInt64, Account, key_prefix="c_")
         self.escrow_fare = BoxMap(UInt64, UInt64, key_prefix="f_")
+        self.escrow_driver = BoxMap(UInt64, Account, key_prefix="d_")
 
     @arc4.abimethod
     def opt_in_to_asa(self) -> None:
@@ -33,7 +35,12 @@ class RideContract(ARC4Contract):
         ).submit()
 
     @arc4.abimethod
-    def init_escrow(self, pay_txn: gtxn.AssetTransferTransaction, ride_id: arc4.UInt64) -> None:
+    def set_recovery_address(self, recovery_addr: Account) -> None:
+        assert Txn.sender == Global.creator_address, "only creator"
+        self.recovery_address.value = recovery_addr
+
+    @arc4.abimethod
+    def initialize_escrow(self, pay_txn: gtxn.AssetTransferTransaction, ride_id: arc4.UInt64) -> None:
         """
         Locks GIGC payment. The pay_txn is verified by the network to be an asset transfer
         to this contract for the correct GIGC asset.
@@ -51,26 +58,53 @@ class RideContract(ARC4Contract):
         self.escrow_fare[rid] = pay_txn.asset_amount
 
     @arc4.abimethod
-    def payout(self, ride_id: arc4.UInt64, rider: Account) -> None:
+    def accept_ride(self, ride_id: arc4.UInt64, driver: Account) -> None:
+        """
+        Records the driver for a ride.
+        """
+        rid = ride_id.native
+        assert self.escrow_customer.maybe(rid)[1], "escrow not found"
+        assert not self.escrow_driver.maybe(rid)[1], "driver already assigned"
+        
+        self.escrow_driver[rid] = driver
+
+    @arc4.abimethod
+    def release_payment(self, ride_id: arc4.UInt64, driver: Account, driver_amount: arc4.UInt64, customer_amount: arc4.UInt64, receipt_hash: arc4.String) -> None:
+        """
+        Distributes the escrowed funds according to backend calculations.
+        """
+        algopy.log(receipt_hash.bytes)
         rid = ride_id.native
         customer, exists = self.escrow_customer.maybe(rid)
         assert exists, "escrow not found"
-        # Allow either the customer themselves OR the platform admin (creator) to release payment.
-        # The admin releases payment automatically after GPS-verified ride completion.
-        assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can release payment"
-
+        assert Txn.sender == Global.creator_address or Txn.sender == self.recovery_address.value, "unauthorized"
+        
         fare = self.escrow_fare[rid]
+        assert (driver_amount.native + customer_amount.native) <= fare, "amounts exceed escrowed fare"
 
-        itxn.AssetTransfer(
-            xfer_asset=self.gigo_asset_id.value,
-            asset_receiver=rider,
-            asset_amount=fare,
-            fee=0
-        ).submit()
+        if driver_amount.native > UInt64(0):
+            itxn.AssetTransfer(
+                xfer_asset=self.gigo_asset_id.value,
+                asset_receiver=driver,
+                asset_amount=driver_amount.native,
+                fee=0
+            ).submit()
 
+        if customer_amount.native > UInt64(0):
+            itxn.AssetTransfer(
+                xfer_asset=self.gigo_asset_id.value,
+                asset_receiver=customer,
+                asset_amount=customer_amount.native,
+                fee=0
+            ).submit()
+
+        # Delete state
         del self.escrow_customer[rid]
         del self.escrow_fare[rid]
+        if self.escrow_driver.maybe(rid)[1]:
+            del self.escrow_driver[rid]
 
+        # Refund MBR
         itxn.Payment(
             receiver=customer,
             amount=29_000,
@@ -78,26 +112,44 @@ class RideContract(ARC4Contract):
         ).submit()
 
     @arc4.abimethod
-    def cancel_and_refund(self, ride_id: arc4.UInt64) -> None:
+    def cancel_refund(self, ride_id: arc4.UInt64, customer_amount: arc4.UInt64, driver_amount: arc4.UInt64, receipt_hash: arc4.String) -> None:
+        """
+        Distributes funds during cancellation flows.
+        """
+        algopy.log(receipt_hash.bytes)
         rid = ride_id.native
         customer, exists = self.escrow_customer.maybe(rid)
         assert exists, "escrow not found"
-        # Allow either the customer themselves OR the platform admin (creator) to refund.
-        # The admin triggers auto-refund when driver doesn't arrive within 10 minutes.
-        assert (Txn.sender == customer) or (Txn.sender == Global.creator_address), "only customer or admin can refund"
+        assert Txn.sender == Global.creator_address or Txn.sender == self.recovery_address.value, "unauthorized"
 
         fare = self.escrow_fare[rid]
+        assert (customer_amount.native + driver_amount.native) <= fare, "amounts exceed escrowed fare"
 
-        itxn.AssetTransfer(
-            xfer_asset=self.gigo_asset_id.value,
-            asset_receiver=customer,
-            asset_amount=fare,
-            fee=0
-        ).submit()
+        if customer_amount.native > UInt64(0):
+            itxn.AssetTransfer(
+                xfer_asset=self.gigo_asset_id.value,
+                asset_receiver=customer,
+                asset_amount=customer_amount.native,
+                fee=0
+            ).submit()
 
+        if driver_amount.native > UInt64(0):
+            driver, d_exists = self.escrow_driver.maybe(rid)
+            assert d_exists, "driver not found"
+            itxn.AssetTransfer(
+                xfer_asset=self.gigo_asset_id.value,
+                asset_receiver=driver,
+                asset_amount=driver_amount.native,
+                fee=0
+            ).submit()
+
+        # Delete state
         del self.escrow_customer[rid]
         del self.escrow_fare[rid]
+        if self.escrow_driver.maybe(rid)[1]:
+            del self.escrow_driver[rid]
 
+        # Refund MBR
         itxn.Payment(
             receiver=customer,
             amount=29_000,

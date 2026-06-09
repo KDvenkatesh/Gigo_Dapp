@@ -51,7 +51,7 @@ export function PassPurchaseModal({ pass, ride, onClose, onSuccess }: PassPurcha
   const [status, setStatus] = useState<'idle' | 'awaiting-sig' | 'processing' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState<string>('')
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://gigo-dapp.onrender.com';
+  let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
   const priceGigc = PASS_PRICES[pass.tier]
 
@@ -154,6 +154,8 @@ export function PassPurchaseModal({ pass, ride, onClose, onSuccess }: PassPurcha
       let finalError = err?.response?.data?.error || err?.message || 'Purchase failed.'
       if (finalError.includes('4100') || finalError.includes('pending')) {
         finalError = 'You have a pending transaction in your wallet. Please open your Pera Wallet app to approve or reject it before trying again.'
+      } else if (finalError === 'Network Error' || err?.code === 'ERR_NETWORK') {
+        finalError = 'Cannot connect to the backend server. Please ensure the backend is running or check your connection.'
       }
       setErrorMsg(finalError)
       setStatus('error')
