@@ -178,6 +178,12 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
    async function handleGenerateOtp(rideId: bigint) {
       const nextOtp = ride.generateOtp()
       await ride.storeOtp(rideId, nextOtp)
+     let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+      fetch(`${BACKEND_URL}/api/rides/presence-event`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ rideId: rideId.toString(), event: 'OTP_VIEWED' })
+      }).catch(console.error)
    }
 
     async function handleCreateRide() {
@@ -191,7 +197,12 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
           if (rideId) {
              setShowSuccess(true)
              setTimeout(() => setShowSuccess(false), 3000)
-
+              let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+            fetch(`${BACKEND_URL}/api/rides/presence-event`, {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ rideId: rideId.toString(), event: 'RIDE_SCREEN_OPENED' })
+            }).catch(console.error)
              // 2. Metadata is now synced immediately inside createRide via MongoDB!
           }
        } catch (err) {
