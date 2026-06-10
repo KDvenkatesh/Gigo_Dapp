@@ -503,6 +503,8 @@ export function useRideContract() {
             title: 'Payment Released',
             description: `Payment released! TxID: ${response.data.payoutTxId.slice(0, 12)}...`,
           })
+          // Optimistically update the UI to avoid waiting for a full refresh
+          setRides(prev => prev.map(r => r.rideId === rideId ? { ...r, status: RideStatus.RIDE_COMPLETED } : r))
         }
         await refreshRides()
       } catch (error: any) {
