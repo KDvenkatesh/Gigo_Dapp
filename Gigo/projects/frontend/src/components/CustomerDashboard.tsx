@@ -174,6 +174,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
    }
 
    const [showSuccess, setShowSuccess] = useState(false)
+   const [showOptInPopup, setShowOptInPopup] = useState(false)
 
    async function handleGenerateOtp(rideId: bigint) {
       const nextOtp = ride.generateOtp()
@@ -188,6 +189,13 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
 
     async function handleCreateRide() {
        try {
+         if (ride.activeAddress) {
+            const { optedIn } = await ride.checkAsaBalance(ride.activeAddress);
+            if (!optedIn) {
+               setShowOptInPopup(true);
+               return;
+            }
+         }
           const fareToCharge = hasActivePass ? discountedFare : estimatedFare
           const isSurge = surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0;
           
@@ -899,6 +907,38 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
             <Web3ReceiptModal ride={selectedReceiptRide} onClose={() => setSelectedReceiptRide(null)} />
          )}
          <PWAInstallFooter />
+        
+         {typeof document !== 'undefined' && createPortal(
+            <AnimatePresence>
+               {showOptInPopup && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                     className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#05060a]/90 backdrop-blur-md px-4">
+                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+                        className="w-full max-w-sm glass-container glass-container--rounded glass-container--large p-6 relative">
+                        <div className="glass-filter" style={{ backdropFilter: 'blur(32px) saturate(150%)' }}></div>
+                        <div className="glass-overlay"></div>
+                        <div className="glass-specular"></div>
+                        <div className="glass-content text-center">
+                           <div className="mx-auto w-12 h-12 flex items-center justify-center rounded-full bg-rose-500/10 text-rose-400 mb-4">
+                              <Zap className="h-6 w-6" />
+                           </div>
+                           <h3 className="text-lg font-bold text-white mb-2">Not Opted In</h3>
+                           <p className="text-sm text-white/60 mb-6">
+                              You have not opted into GIGC. Go to profile {'\u2192'} topup-GIGC to opt in before booking a ride.
+                           </p>
+                           <div className="flex gap-3 justify-center">
+                              <button type="button" onClick={() => setShowOptInPopup(false)}
+                                 className="rounded-xl border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/5">
+                                 Close
+                              </button>
+                           </div>
+                        </div>
+                     </motion.div>
+                  </motion.div>
+               )}
+            </AnimatePresence>,
+            document.body
+         )}
       </div>
    )
 }
