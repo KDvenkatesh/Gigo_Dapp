@@ -540,7 +540,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                              className={cn(
                                                 'transition-all active:scale-[0.99] glass-container glass-container--rounded block',
                                                 selected
-                                                   ? 'bg-white/[0.14] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
+                                                   ? 'bg-white/[1] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
                                                    : 'bg-white/[0.05] border-white/10 opacity-70 hover:opacity-100',
                                              )}
                                           >
