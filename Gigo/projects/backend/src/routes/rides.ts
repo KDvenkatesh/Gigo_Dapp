@@ -603,7 +603,7 @@ router.post('/end-ride', async (req, res) => {
       atc.addTransaction({ txn: subsidyTxn, signer: algosdk.makeBasicAccountTransactionSigner(treasuryAccount) });
     }
 
-    let txId = 'ALREADY_SETTLED';
+     let txId = 'ALREADY_SETTLED';
     try {
       await algodClient.getApplicationBoxByName(APP_ID, getBoxKey('c_', BigInt(rideId))).do();
       const result = await atc.execute(algodClient, 4);

@@ -71,7 +71,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
 
     const activeRide = useMemo(
        () => ride.customerRides.find(r =>
-          r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED
+         r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED && r.status !== RideStatus.CANCELLED
        ),
        [ride.customerRides],
     )
@@ -174,14 +174,28 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
    }
 
    const [showSuccess, setShowSuccess] = useState(false)
+   const [showOptInPopup, setShowOptInPopup] = useState(false)
 
    async function handleGenerateOtp(rideId: bigint) {
       const nextOtp = ride.generateOtp()
       await ride.storeOtp(rideId, nextOtp)
+     let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+      fetch(`${BACKEND_URL}/api/rides/presence-event`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ rideId: rideId.toString(), event: 'OTP_VIEWED' })
+      }).catch(console.error)
    }
 
     async function handleCreateRide() {
        try {
+         if (ride.activeAddress) {
+            const { optedIn } = await ride.checkAsaBalance(ride.activeAddress);
+            if (!optedIn) {
+               setShowOptInPopup(true);
+               return;
+            }
+         }
           const fareToCharge = hasActivePass ? discountedFare : estimatedFare
           const isSurge = surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0;
           
@@ -191,7 +205,12 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
           if (rideId) {
              setShowSuccess(true)
              setTimeout(() => setShowSuccess(false), 3000)
-
+              let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+            fetch(`${BACKEND_URL}/api/rides/presence-event`, {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ rideId: rideId.toString(), event: 'RIDE_SCREEN_OPENED' })
+            }).catch(console.error)
              // 2. Metadata is now synced immediately inside createRide via MongoDB!
           }
        } catch (err) {
@@ -540,7 +559,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                              className={cn(
                                                 'transition-all active:scale-[0.99] glass-container glass-container--rounded block',
                                                 selected
-                                                   ? 'bg-white/[0.14] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
+                                                   ? 'bg-white/[1] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
                                                    : 'bg-white/[0.05] border-white/10 opacity-70 hover:opacity-100',
                                              )}
                                           >
@@ -888,6 +907,38 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
             <Web3ReceiptModal ride={selectedReceiptRide} onClose={() => setSelectedReceiptRide(null)} />
          )}
          <PWAInstallFooter />
+        
+         {typeof document !== 'undefined' && createPortal(
+            <AnimatePresence>
+               {showOptInPopup && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                     className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#05060a]/90 backdrop-blur-md px-4">
+                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+                        className="w-full max-w-sm glass-container glass-container--rounded glass-container--large p-6 relative">
+                        <div className="glass-filter" style={{ backdropFilter: 'blur(32px) saturate(150%)' }}></div>
+                        <div className="glass-overlay"></div>
+                        <div className="glass-specular"></div>
+                        <div className="glass-content text-center">
+                           <div className="mx-auto w-12 h-12 flex items-center justify-center rounded-full bg-rose-500/10 text-rose-400 mb-4">
+                              <Zap className="h-6 w-6" />
+                           </div>
+                           <h3 className="text-lg font-bold text-white mb-2">Not Opted In</h3>
+                           <p className="text-sm text-white/60 mb-6">
+                              You have not opted into GIGC. Go to profile {'\u2192'} topup-GIGC to opt in before booking a ride.
+                           </p>
+                           <div className="flex gap-3 justify-center">
+                              <button type="button" onClick={() => setShowOptInPopup(false)}
+                                 className="rounded-xl border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/5">
+                                 Close
+                              </button>
+                           </div>
+                        </div>
+                     </motion.div>
+                  </motion.div>
+               )}
+            </AnimatePresence>,
+            document.body
+         )}
       </div>
    )
 }

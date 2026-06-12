@@ -239,8 +239,14 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
   }, []);
   
   const filteredRides = ride.driverRides.filter((item: any) => {
-    if (vehicleType && item.vehicleType) {
-      return item.vehicleType.toLowerCase() === vehicleType.toLowerCase();
+   const isMyRide = item.rider === ride.activeAddress;
+    
+    if (!active && !isMyRide) return false;
+    
+    if (!isMyRide) {
+      if (vehicleType && item.vehicleType) {
+        return item.vehicleType.toLowerCase() === vehicleType.toLowerCase();
+      }
     }
     return true;
   });
@@ -687,7 +693,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                           <p className="text-sm font-semibold text-white">Pickup Location & OTP</p>
 
                           {activeRide.customerPressedImHere && (
-                             <div className="mt-3 mb-3 rounded-xl border border-sky-500/30 bg-sky-500/20 px-3 py-2 text-xs font-bold text-sky-400">
+                             <div className="mt-3 mb-3 rounded-xl border border-sky-500/30 bg-sky-500/20 px-3 py-2 text-xs font-bold text-white-400">
                                 👋 Customer says they are here!
                              </div>
                           )}
@@ -764,7 +770,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                             <p className="mt-2 text-xs text-amber-400">⚠️ {gpsError}</p>
                           )}
 
-                          {/* Distance UI removed per user request */}
+                          {/* Distance UI removed*/}
 
                           {/* Backend / network error display */}
                           {endRideError && (
@@ -839,7 +845,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                       <CheckCircle2 className="mt-0.5 h-5 w-5 text-indigo-400" />
                       <div>
                         <p className="text-sm font-semibold text-white">Ride Ended — Waiting for Payment</p>
-                        <p className="mt-1 text-sm leading-6 text-white/62">
+                        <p className="mt-1 text-sm leading-6 text-black">
                           You have marked the ride as ended. Waiting for the customer to confirm and release the escrow.
                         </p>
                       </div>
@@ -853,8 +859,8 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                       <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-400" />
                       <div>
                         <p className="text-sm font-semibold text-white">🎉 Ride Complete — Payment Sent!</p>
-                        <p className="mt-1 text-sm leading-6 text-white/62">
-                          GPS verified. The GIGC fare has been automatically released to your wallet from the escrow. Check your wallet balance!
+                        <p className="mt-1 text-sm leading-6 text-black">
+                          Customer Confirmed .The GIGC fare has been automatically released to your wallet from the escrow. Check your wallet balance!
                         </p>
                       </div>
                     </div>
@@ -913,7 +919,7 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   <AlertTriangle className="mt-1 h-5 w-5 text-amber-100" />
                   <div>
                     <p className="text-lg font-semibold text-white">No focused ride selected</p>
-                    <p className="mt-2 text-sm leading-6 text-white/56">
+                    <p className="mt-2 text-sm leading-6 text-black">
                       Refresh the feed after a customer creates a ride, then select it here to view the pickup map and driver actions.
                     </p>
                   </div>
