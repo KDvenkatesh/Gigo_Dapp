@@ -631,13 +631,13 @@ router.post('/end-ride', async (req, res) => {
       customerRefund: customerAmount.toString(),
       settlementReason: 'RIDE_COMPLETED',
       receiptHash: hash,
-      algorandTxId: result.txIDs[0]
+      algorandTxId: txId
     });
     
     await Ride.findOneAndUpdate(
       { rideId },
       { 
-        status: 'RIDE_COMPLETED', paymentLocked: false, settlementTxId: result.txIDs[0], receiptHash: hash,
+        status: 'RIDE_COMPLETED', paymentLocked: false, settlementTxId: txId, receiptHash: hash,
         settlementReason: 'RIDE_COMPLETED',
         driverReputation: updateReputation(ride.driverReputation, +5), // +5 for completed ride
         reputationReason: 'Completed ride safely',
@@ -648,7 +648,7 @@ router.post('/end-ride', async (req, res) => {
       }
     );
 
-    res.json({ success: true, payoutTxId: result.txIDs[0], receiptHash: hash });
+    res.json({ success: true, payoutTxId: txId, receiptHash: hash });
 
   } catch (error: any) {
     res.status(500).json({ error: error.message || 'Failed to end ride' });
