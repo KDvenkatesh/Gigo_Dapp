@@ -1449,14 +1449,14 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
     }
 
    return (
-      <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/75 p-4 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/65 p-4 backdrop-blur-xl overflow-y-auto">
          <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="w-full max-w-md overflow-y-auto max-h-[90vh] glass-container glass-container--rounded glass-container--large shadow-2xl"
          >
-            <div className="glass-filter" style={{ backdropFilter: 'blur(32px) saturate(150%)' }}></div>
+            <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
             <div className="glass-overlay"></div>
             <div className="glass-specular"></div>
             <div className="glass-content p-6 relative">
@@ -1476,7 +1476,7 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
                      style={{ borderRadius: '9999px' }}
                   >
                      <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
-                     <div className="glass-overlay"></div>
+                     <div className="glass-overlay" style={{ borderRadius: '9999px' }}></div>
                      <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
                      <div className="glass-content p-2 flex items-center justify-center">
                         <X className="w-4 h-4" />
@@ -1487,20 +1487,15 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
                {status === 'idle' && (
                   <div className="space-y-5 text-left">
                      {!localIsOptedIn ? (
-                        <div className="rounded-2xl border border-amber-500/15 bg-amber-500/[0.04] p-4 text-sm text-amber-200/80">
-                           <div className="flex items-start gap-2.5">
-                              <Wallet className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                              <div>
-                                 <p className="font-semibold text-white">Opt-In Required</p>
-                                 <p className="mt-1 text-xs text-white/50 leading-relaxed">
-                                    To hold and receive GIGC ride credits (ASA), you must opt-in your account first. This requires a small on-chain transaction.
-                                 </p>
-                               </div>
-                           </div>
+                        <div className="rounded-xl border border-amber-500/15 bg-amber-500/[0.04] p-3 text-xs text-amber-200/80">
+                           <p className="font-semibold text-white flex items-center gap-1.5"><Wallet className="w-4 h-4 text-amber-400" /> Opt-In Required</p>
+                           <p className="mt-1 text-white/50 leading-relaxed">
+                              To hold and receive GIGC ride credits (ASA), you must opt-in your account first. This requires a small on-chain transaction.
+                           </p>
                            <button
                               onClick={handleOptIn}
                               disabled={optInLoading}
-                              className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black py-2.5 font-bold text-xs uppercase tracking-wider transition"
+                              className="mt-4 w-full flex items-center justify-center gap-2 clay-btn clay-btn-brand py-2.5 text-xs font-bold uppercase tracking-wider transition"
                            >
                               {optInLoading ? (
                                  <Loader2 className="w-4 h-4 animate-spin" />
@@ -1560,7 +1555,7 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
                      )}
 
                      {errorMsg && (
-                        <div className="rounded-xl border border-red-500/15 bg-red-500/[0.05] p-3 text-xs text-red-400">
+                        <div className="rounded-xl border border-red-500/15 bg-red-500/[0.05] p-3 text-xs text-red-400 text-center font-mono">
                            {errorMsg}
                         </div>
                      )}
@@ -1573,8 +1568,8 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
                               style={{ borderRadius: '9999px' }}
                            >
                               <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
-                              <div className="glass-overlay"></div>
-                              <div className="glass-specular"></div>
+                              <div className="glass-overlay" style={{ borderRadius: '9999px' }}></div>
+                              <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
                               <div className="glass-content py-3 text-sm font-semibold flex items-center justify-center">
                                  Cancel
                               </div>
@@ -1643,7 +1638,7 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
 
                      <button
                         onClick={() => setStatus('idle')}
-                        className="w-full rounded-xl bg-white/10 hover:bg-white/20 py-3 text-sm font-semibold text-white transition"
+                        className="w-full clay-btn clay-btn-brand py-3 text-sm font-semibold"
                      >
                         Try Again
                      </button>
