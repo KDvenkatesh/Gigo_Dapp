@@ -603,15 +603,26 @@ router.post('/end-ride', async (req, res) => {
       atc.addTransaction({ txn: subsidyTxn, signer: algosdk.makeBasicAccountTransactionSigner(treasuryAccount) });
     }
 
-    const result = await atc.execute(algodClient, 4);
-    
-    // Track debt for customer if treasury subsidized the ride
-    if (subsidyAmount > 0) {
-      await Customer.findOneAndUpdate(
-        { walletAddress: ride.rider.toLowerCase() },
-        { $inc: { outstandingDebt: subsidyAmount } },
-        { upsert: true, new: true }
-      );
+     let txId = 'ALREADY_SETTLED';
+    try {
+      await algodClient.getApplicationBoxByName(APP_ID, getBoxKey('c_', BigInt(rideId))).do();
+      const result = await atc.execute(algodClient, 4);
+      txId = result.txIDs[0];
+      
+      // Track debt for customer if treasury subsidized the ride
+      if (subsidyAmount > 0) {
+        await Customer.findOneAndUpdate(
+          { walletAddress: ride.rider.toLowerCase() },
+          { $inc: { outstandingDebt: subsidyAmount } },
+          { upsert: true, new: true }
+        );
+      }
+    } catch (e: any) {
+      if (e?.response?.status === 404 || (e.message && e.message.includes('box not found'))) {
+        console.log(`Escrow box for ride ${rideId} not found. Likely already processed on-chain.`);
+      } else {
+        throw e;
+      }
     }
 
     await SettlementAudit.create({
