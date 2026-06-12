@@ -239,8 +239,14 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
   }, []);
   
   const filteredRides = ride.driverRides.filter((item: any) => {
-    if (vehicleType && item.vehicleType) {
-      return item.vehicleType.toLowerCase() === vehicleType.toLowerCase();
+   const isMyRide = item.rider === ride.activeAddress;
+    
+    if (!active && !isMyRide) return false;
+    
+    if (!isMyRide) {
+      if (vehicleType && item.vehicleType) {
+        return item.vehicleType.toLowerCase() === vehicleType.toLowerCase();
+      }
     }
     return true;
   });
