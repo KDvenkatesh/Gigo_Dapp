@@ -603,15 +603,26 @@ router.post('/end-ride', async (req, res) => {
       atc.addTransaction({ txn: subsidyTxn, signer: algosdk.makeBasicAccountTransactionSigner(treasuryAccount) });
     }
 
-    const result = await atc.execute(algodClient, 4);
-    
-    // Track debt for customer if treasury subsidized the ride
-    if (subsidyAmount > 0) {
-      await Customer.findOneAndUpdate(
-        { walletAddress: ride.rider.toLowerCase() },
-        { $inc: { outstandingDebt: subsidyAmount } },
-        { upsert: true, new: true }
-      );
+    let txId = 'ALREADY_SETTLED';
+    try {
+      await algodClient.getApplicationBoxByName(APP_ID, getBoxKey('c_', BigInt(rideId))).do();
+      const result = await atc.execute(algodClient, 4);
+      txId = result.txIDs[0];
+      
+      // Track debt for customer if treasury subsidized the ride
+      if (subsidyAmount > 0) {
+        await Customer.findOneAndUpdate(
+          { walletAddress: ride.rider.toLowerCase() },
+          { $inc: { outstandingDebt: subsidyAmount } },
+          { upsert: true, new: true }
+        );
+      }
+    } catch (e: any) {
+      if (e?.response?.status === 404 || (e.message && e.message.includes('box not found'))) {
+        console.log(`Escrow box for ride ${rideId} not found. Likely already processed on-chain.`);
+      } else {
+        throw e;
+      }
     }
 
     await SettlementAudit.create({
@@ -620,13 +631,13 @@ router.post('/end-ride', async (req, res) => {
       customerRefund: customerAmount.toString(),
       settlementReason: 'RIDE_COMPLETED',
       receiptHash: hash,
-      algorandTxId: result.txIDs[0]
+      algorandTxId: txId
     });
     
     await Ride.findOneAndUpdate(
       { rideId },
       { 
-        status: 'RIDE_COMPLETED', paymentLocked: false, settlementTxId: result.txIDs[0], receiptHash: hash,
+        status: 'RIDE_COMPLETED', paymentLocked: false, settlementTxId: txId, receiptHash: hash,
         settlementReason: 'RIDE_COMPLETED',
         driverReputation: updateReputation(ride.driverReputation, +5), // +5 for completed ride
         reputationReason: 'Completed ride safely',
@@ -637,7 +648,7 @@ router.post('/end-ride', async (req, res) => {
       }
     );
 
-    res.json({ success: true, payoutTxId: result.txIDs[0], receiptHash: hash });
+    res.json({ success: true, payoutTxId: txId, receiptHash: hash });
 
   } catch (error: any) {
     res.status(500).json({ error: error.message || 'Failed to end ride' });
