@@ -220,7 +220,9 @@ export function useRideContract() {
             trafficDelayFee: mongoRide.trafficDelayFee,
             settlementTxId: mongoRide.settlementTxId,
             cancellationReason: mongoRide.cancellationReason,
-            isSurge: mongoRide.isSurge
+            isSurge: mongoRide.isSurge,
+            updatedAt: mongoRide.updatedAt,
+            presenceEvidence: mongoRide.presenceEvidence
          };
       });
 
