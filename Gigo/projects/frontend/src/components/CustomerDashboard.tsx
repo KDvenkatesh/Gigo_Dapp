@@ -71,7 +71,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
 
     const activeRide = useMemo(
        () => ride.customerRides.find(r =>
-          r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED
+         r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED && r.status !== RideStatus.CANCELLED
        ),
        [ride.customerRides],
     )
