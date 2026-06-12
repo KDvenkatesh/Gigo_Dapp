@@ -30,9 +30,9 @@ import carIcon from '../assets/Car.png'
 import autoIcon from '../assets/Auto.png'
 
 const vehicleIcons: Record<string, string> = {
-  boda: bodaIcon,
-  car: carIcon,
-  auto: autoIcon,
+   boda: bodaIcon,
+   car: carIcon,
+   auto: autoIcon,
 }
 
 
@@ -57,93 +57,93 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
       destinationTouched,
    )
 
-    useEffect(() => {
+   useEffect(() => {
       if (!pickupTouched) {
          setPickupInput(location.label)
          setPickupLocation(location)
       }
-    }, [location, pickupTouched])
+   }, [location, pickupTouched])
 
-    // Refund timeout removed
-    const [surgeMultipliers, setSurgeMultipliers] = useState({ weather: 1.0, traffic: 1.0 })
-    const [surgeLoading, setSurgeLoading] = useState(false)
-    const [showCancelConfirm, setShowCancelConfirm] = useState<bigint | null>(null)
+   // Refund timeout removed
+   const [surgeMultipliers, setSurgeMultipliers] = useState({ weather: 1.0, traffic: 1.0 })
+   const [surgeLoading, setSurgeLoading] = useState(false)
+   const [showCancelConfirm, setShowCancelConfirm] = useState<bigint | null>(null)
 
-    const activeRide = useMemo(
-       () => ride.customerRides.find(r =>
-          r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED
-       ),
-       [ride.customerRides],
-    )
+   const activeRide = useMemo(
+      () => ride.customerRides.find(r =>
+         r.status !== RideStatus.PAID && r.status !== RideStatus.RIDE_COMPLETED && r.status !== RideStatus.CANCELLED
+      ),
+      [ride.customerRides],
+   )
 
-    const [waitTimerString, setWaitTimerString] = useState('')
-    const [selectedReceiptRide, setSelectedReceiptRide] = useState<RideRecord | null>(null)
-    
-    useEffect(() => {
-       if (!activeRide?.driverArrivalAt) {
-          setWaitTimerString('')
-          return
-       }
-       const timerInterval = setInterval(() => {
-          const arrivalTime = new Date(activeRide.driverArrivalAt!).getTime()
-          const diff = Date.now() - arrivalTime
-          const graceMs = 3 * 60 * 1000 // 3 minutes grace period
-          
-          if (diff <= graceMs) {
-             const remaining = Math.max(0, graceMs - diff)
-             const m = Math.floor(remaining / 60000)
-             const s = Math.floor((remaining % 60000) / 1000)
-             setWaitTimerString(`Grace Period: ${m}:${s.toString().padStart(2, '0')} remaining`)
-          } else {
-             const chargeableMs = diff - graceMs
-             const m = Math.floor(chargeableMs / 60000)
-             const s = Math.floor((chargeableMs % 60000) / 1000)
-             setWaitTimerString(`Wait Fee applying (${m}:${s.toString().padStart(2, '0')})`)
-          }
-       }, 1000)
-       return () => clearInterval(timerInterval)
-    }, [activeRide?.driverArrivalAt])
+   const [waitTimerString, setWaitTimerString] = useState('')
+   const [selectedReceiptRide, setSelectedReceiptRide] = useState<RideRecord | null>(null)
 
-    useEffect(() => {
-       setDestinationInput(ride.selectedDestination.label)
-       setDestinationLocation(ride.selectedDestination)
-    }, [ride.selectedDestination])
+   useEffect(() => {
+      if (!activeRide?.driverArrivalAt) {
+         setWaitTimerString('')
+         return
+      }
+      const timerInterval = setInterval(() => {
+         const arrivalTime = new Date(activeRide.driverArrivalAt!).getTime()
+         const diff = Date.now() - arrivalTime
+         const graceMs = 3 * 60 * 1000 // 3 minutes grace period
 
-    useEffect(() => {
-       const fetchSurge = async () => {
-          setSurgeLoading(true)
-          try {
-             let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
-             const res = await axios.get(`${BACKEND_URL}/api/rides/estimate-surge?pickupLat=${pickupLocation.lat}&pickupLng=${pickupLocation.lng}&dropLat=${destinationLocation.lat}&dropLng=${destinationLocation.lng}`)
-             setSurgeMultipliers({ weather: res.data.weatherMultiplier || 1.0, traffic: res.data.trafficMultiplier || 1.0 })
-          } catch (e) {
-             setSurgeMultipliers({ weather: 1.0, traffic: 1.0 })
-          } finally {
-             setSurgeLoading(false)
-          }
-       }
-       if (pickupLocation && destinationLocation) {
-          fetchSurge()
-       }
-    }, [pickupLocation.lat, pickupLocation.lng, destinationLocation.lat, destinationLocation.lng])
+         if (diff <= graceMs) {
+            const remaining = Math.max(0, graceMs - diff)
+            const m = Math.floor(remaining / 60000)
+            const s = Math.floor((remaining % 60000) / 1000)
+            setWaitTimerString(`Grace Period: ${m}:${s.toString().padStart(2, '0')} remaining`)
+         } else {
+            const chargeableMs = diff - graceMs
+            const m = Math.floor(chargeableMs / 60000)
+            const s = Math.floor((chargeableMs % 60000) / 1000)
+            setWaitTimerString(`Wait Fee applying (${m}:${s.toString().padStart(2, '0')})`)
+         }
+      }, 1000)
+      return () => clearInterval(timerInterval)
+   }, [activeRide?.driverArrivalAt])
 
-    const distanceKm = useMemo(
-       () => calculateDistanceKm(pickupLocation, destinationLocation),
-       [pickupLocation, destinationLocation],
-    )
-    const estimatedFare = useMemo(
-       () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18 * surgeMultipliers.weather * surgeMultipliers.traffic))),
-       [distanceKm, ride.selectedVehicle.multiplier, surgeMultipliers],
-    )
-    const baseEstimatedFare = useMemo(
-       () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18))),
-       [distanceKm, ride.selectedVehicle.multiplier],
-    )
-    const discountedFare = useMemo(
-       () => passData.applyDiscount(estimatedFare),
-       [estimatedFare, passData.applyDiscount],
-    )
-    const hasActivePass = Boolean(passData.activePass && passData.activePass.isActive)
+   useEffect(() => {
+      setDestinationInput(ride.selectedDestination.label)
+      setDestinationLocation(ride.selectedDestination)
+   }, [ride.selectedDestination])
+
+   useEffect(() => {
+      const fetchSurge = async () => {
+         setSurgeLoading(true)
+         try {
+            let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+            const res = await axios.get(`${BACKEND_URL}/api/rides/estimate-surge?pickupLat=${pickupLocation.lat}&pickupLng=${pickupLocation.lng}&dropLat=${destinationLocation.lat}&dropLng=${destinationLocation.lng}`)
+            setSurgeMultipliers({ weather: res.data.weatherMultiplier || 1.0, traffic: res.data.trafficMultiplier || 1.0 })
+         } catch (e) {
+            setSurgeMultipliers({ weather: 1.0, traffic: 1.0 })
+         } finally {
+            setSurgeLoading(false)
+         }
+      }
+      if (pickupLocation && destinationLocation) {
+         fetchSurge()
+      }
+   }, [pickupLocation.lat, pickupLocation.lng, destinationLocation.lat, destinationLocation.lng])
+
+   const distanceKm = useMemo(
+      () => calculateDistanceKm(pickupLocation, destinationLocation),
+      [pickupLocation, destinationLocation],
+   )
+   const estimatedFare = useMemo(
+      () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18 * surgeMultipliers.weather * surgeMultipliers.traffic))),
+      [distanceKm, ride.selectedVehicle.multiplier, surgeMultipliers],
+   )
+   const baseEstimatedFare = useMemo(
+      () => BigInt(Math.max(100000, Math.round(distanceKm * 1000000 * ride.selectedVehicle.multiplier * 0.18))),
+      [distanceKm, ride.selectedVehicle.multiplier],
+   )
+   const discountedFare = useMemo(
+      () => passData.applyDiscount(estimatedFare),
+      [estimatedFare, passData.applyDiscount],
+   )
+   const hasActivePass = Boolean(passData.activePass && passData.activePass.isActive)
 
 
 
@@ -174,30 +174,51 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
    }
 
    const [showSuccess, setShowSuccess] = useState(false)
+   const [showOptInPopup, setShowOptInPopup] = useState(false)
 
    async function handleGenerateOtp(rideId: bigint) {
       const nextOtp = ride.generateOtp()
       await ride.storeOtp(rideId, nextOtp)
+      let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+      fetch(`${BACKEND_URL}/api/rides/presence-event`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ rideId: rideId.toString(), event: 'OTP_VIEWED' })
+      }).catch(console.error)
    }
 
-    async function handleCreateRide() {
-       try {
-          const fareToCharge = hasActivePass ? discountedFare : estimatedFare
-          const isSurge = surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0;
-          
-          // 1. Trigger the on-chain Escrow IMMEDIATELY (Faster UX)
-          const rideId = await ride.createRide(pickupLocation, destinationLocation, fareToCharge, isSurge)
-          
-          if (rideId) {
-             setShowSuccess(true)
-             setTimeout(() => setShowSuccess(false), 3000)
+   async function handleCreateRide() {
+      try {
+         if (ride.activeAddress) {
+            const { optedIn } = await ride.checkAsaBalance(ride.activeAddress);
+            if (!optedIn) {
+               setShowOptInPopup(true);
+               return;
+            }
+         }
 
-             // 2. Metadata is now synced immediately inside createRide via MongoDB!
-          }
-       } catch (err) {
-          console.error('Ride creation failed:', err)
-       }
-    }
+         const fareToCharge = hasActivePass ? discountedFare : estimatedFare
+         const isSurge = surgeMultipliers.weather > 1.0 || surgeMultipliers.traffic > 1.0;
+
+         // 1. Trigger the on-chain Escrow IMMEDIATELY (Faster UX)
+         const rideId = await ride.createRide(pickupLocation, destinationLocation, fareToCharge, isSurge)
+
+         if (rideId) {
+            setShowSuccess(true)
+            setTimeout(() => setShowSuccess(false), 3000)
+
+            let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+            fetch(`${BACKEND_URL}/api/rides/presence-event`, {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ rideId: rideId.toString(), event: 'RIDE_SCREEN_OPENED' })
+            }).catch(console.error)
+            // 2. Metadata is now synced immediately inside createRide via MongoDB!
+         }
+      } catch (err) {
+         console.error('Ride creation failed:', err)
+      }
+   }
 
    const showSuggestions = activeInput !== null && (
       (activeInput === 'pickup' && (pickupSuggestions.length > 0 || pickupSearchLoading)) ||
@@ -273,49 +294,49 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                >
                   {/* Map — left side on desktop, fixed height on mobile — styled same as Driver Dashboard */}
                   <div className="relative h-[260px] sm:h-[300px] lg:h-full shrink-0">
-                  <div className="map-container relative h-full w-full overflow-hidden rounded-[32px] border border-white/10 glass-container glass-container--rounded">
-                     <div className="glass-filter" style={{ backdropFilter: 'blur(20px) saturate(120%)' }}></div>
-                     <div className="glass-overlay"></div>
-                     <div className="glass-specular"></div>
-                     <div className="glass-content h-full">
-                     <BookingMap
-                        pickup={pickupLocation}
-                        drop={destinationLocation}
-                        selectionMode={mapSelectionMode}
-                        onPickLocation={handleMapPick}
-                     />
-                     {mapSelectionMode && (
-                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center" style={{ zIndex: 900 }}>
-                           <div className="rounded-lg bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur-xl" style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
-                              Tap map to set {mapSelectionMode}
-                           </div>
+                     <div className="map-container relative h-full w-full overflow-hidden rounded-[32px] border border-white/10 glass-container glass-container--rounded">
+                        <div className="glass-filter" style={{ backdropFilter: 'blur(20px) saturate(120%)' }}></div>
+                        <div className="glass-overlay"></div>
+                        <div className="glass-specular"></div>
+                        <div className="glass-content h-full">
+                           <BookingMap
+                              pickup={pickupLocation}
+                              drop={destinationLocation}
+                              selectionMode={mapSelectionMode}
+                              onPickLocation={handleMapPick}
+                           />
+                           {mapSelectionMode && (
+                              <div className="pointer-events-none absolute inset-0 flex items-center justify-center" style={{ zIndex: 900 }}>
+                                 <div className="rounded-lg bg-black/70 px-4 py-2 text-sm font-medium text-white backdrop-blur-xl" style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
+                                    Tap map to set {mapSelectionMode}
+                                 </div>
+                              </div>
+                           )}
+                           {mapSelectionMode && (
+                              <button type="button" onClick={() => setMapSelectionMode(null)}
+                                 className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg bg-black/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-xl transition hover:bg-black/90"
+                                 style={{ zIndex: 900 }}>
+                                 <X className="h-3.5 w-3.5" /> Cancel
+                              </button>
+                           )}
+                           {!mapSelectionMode && (
+                              <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2" style={{ zIndex: 900 }}>
+                                 <button type="button" onClick={() => setMapSelectionMode('pickup')}
+                                    className="flex items-center gap-2 rounded-lg bg-black/70 px-3.5 py-1.5 text-xs font-medium text-white backdrop-blur-xl transition hover:bg-emerald-600/80"
+                                    style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
+                                    <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-emerald-400 text-[9px] font-bold text-slate-950">A</span>
+                                    Pickup
+                                 </button>
+                                 <button type="button" onClick={() => setMapSelectionMode('drop')}
+                                    className="flex items-center gap-2 rounded-lg bg-black/70 px-3.5 py-1.5 text-xs font-medium text-white backdrop-blur-xl transition hover:bg-blue-600/80"
+                                    style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
+                                    <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-blue-400 text-[9px] font-bold text-slate-950">B</span>
+                                    Drop
+                                 </button>
+                              </div>
+                           )}
                         </div>
-                     )}
-                     {mapSelectionMode && (
-                        <button type="button" onClick={() => setMapSelectionMode(null)}
-                           className="absolute right-3 top-3 flex items-center gap-1.5 rounded-lg bg-black/70 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-xl transition hover:bg-black/90"
-                           style={{ zIndex: 900 }}>
-                           <X className="h-3.5 w-3.5" /> Cancel
-                        </button>
-                     )}
-                     {!mapSelectionMode && (
-                        <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2" style={{ zIndex: 900 }}>
-                           <button type="button" onClick={() => setMapSelectionMode('pickup')}
-                              className="flex items-center gap-2 rounded-lg bg-black/70 px-3.5 py-1.5 text-xs font-medium text-white backdrop-blur-xl transition hover:bg-emerald-600/80"
-                              style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
-                              <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-emerald-400 text-[9px] font-bold text-slate-950">A</span>
-                              Pickup
-                           </button>
-                           <button type="button" onClick={() => setMapSelectionMode('drop')}
-                              className="flex items-center gap-2 rounded-lg bg-black/70 px-3.5 py-1.5 text-xs font-medium text-white backdrop-blur-xl transition hover:bg-blue-600/80"
-                              style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
-                              <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-blue-400 text-[9px] font-bold text-slate-950">B</span>
-                              Drop
-                           </button>
-                        </div>
-                     )}
                      </div>
-                  </div>
                   </div>
 
                   {/* Booking form — always scrollable */}
@@ -335,96 +356,96 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                            <div className="glass-specular"></div>
                            <div className="glass-content p-6 space-y-4">
                               <div
-                              className={cn('flex cursor-text items-center gap-4 p-3 rounded-2xl transition', activeInput === 'pickup' ? 'bg-white/[0.05]' : 'hover:bg-white/[0.02]')}
-                              onClick={() => setActiveInput('pickup')}
-                           >
-                              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-[10px] font-black text-slate-950 shadow-[0_0_12px_rgba(52,211,153,0.4)]">A</div>
-                              <div className="flex-1 min-w-0">
-                                 <span className="text-[10px] font-black uppercase tracking-wider text-white/30 block">Pickup Location</span>
-                                 <input
-                                    value={pickupInput}
-                                    onChange={(e) => { setPickupTouched(true); setPickupInput(e.target.value) }}
-                                    onFocus={() => setActiveInput('pickup')}
-                                    placeholder={isLocating ? 'Detecting location\u2026' : 'Pickup location'}
-                                    className="w-full bg-transparent text-sm font-bold text-white placeholder-white/30 outline-none mt-0.5"
-                                 />
+                                 className={cn('flex cursor-text items-center gap-4 p-3 rounded-2xl transition', activeInput === 'pickup' ? 'bg-white/[0.05]' : 'hover:bg-white/[0.02]')}
+                                 onClick={() => setActiveInput('pickup')}
+                              >
+                                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-400 text-[10px] font-black text-slate-950 shadow-[0_0_12px_rgba(52,211,153,0.4)]">A</div>
+                                 <div className="flex-1 min-w-0">
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-white/30 block">Pickup Location</span>
+                                    <input
+                                       value={pickupInput}
+                                       onChange={(e) => { setPickupTouched(true); setPickupInput(e.target.value) }}
+                                       onFocus={() => setActiveInput('pickup')}
+                                       placeholder={isLocating ? 'Detecting location\u2026' : 'Pickup location'}
+                                       className="w-full bg-transparent text-sm font-bold text-white placeholder-white/30 outline-none mt-0.5"
+                                    />
+                                 </div>
+                                 {pickupInput && activeInput === 'pickup' && (
+                                    <button type="button" onClick={(e) => { e.stopPropagation(); setPickupInput(''); setPickupTouched(false) }}>
+                                       <X className="h-4 w-4 text-white/30 hover:text-white" />
+                                    </button>
+                                 )}
                               </div>
-                              {pickupInput && activeInput === 'pickup' && (
-                                 <button type="button" onClick={(e) => { e.stopPropagation(); setPickupInput(''); setPickupTouched(false) }}>
-                                    <X className="h-4 w-4 text-white/30 hover:text-white" />
-                                 </button>
-                              )}
-                           </div>
-                           <div className="h-px bg-white/[0.06] mx-3" />
-                           <div
-                              className={cn('flex cursor-text items-center gap-4 p-3 rounded-2xl transition', activeInput === 'drop' ? 'bg-white/[0.05]' : 'hover:bg-white/[0.02]')}
-                              onClick={() => setActiveInput('drop')}
-                           >
-                              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-400 text-[10px] font-black text-slate-950 shadow-[0_0_12px_rgba(96,165,250,0.4)]">B</div>
-                              <div className="flex-1 min-w-0">
-                                 <span className="text-[10px] font-black uppercase tracking-wider text-white/30 block">Destination</span>
-                                 <input
-                                    value={destinationInput}
-                                    onChange={(e) => { setDestinationTouched(true); setDestinationInput(e.target.value) }}
-                                    onFocus={() => { setActiveInput('drop'); setDestinationTouched(true) }}
-                                    placeholder="Where to?"
-                                    className="w-full bg-transparent text-sm font-bold text-white placeholder-white/30 outline-none mt-0.5"
-                                 />
+                              <div className="h-px bg-white/[0.06] mx-3" />
+                              <div
+                                 className={cn('flex cursor-text items-center gap-4 p-3 rounded-2xl transition', activeInput === 'drop' ? 'bg-white/[0.05]' : 'hover:bg-white/[0.02]')}
+                                 onClick={() => setActiveInput('drop')}
+                              >
+                                 <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-400 text-[10px] font-black text-slate-950 shadow-[0_0_12px_rgba(96,165,250,0.4)]">B</div>
+                                 <div className="flex-1 min-w-0">
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-white/30 block">Destination</span>
+                                    <input
+                                       value={destinationInput}
+                                       onChange={(e) => { setDestinationTouched(true); setDestinationInput(e.target.value) }}
+                                       onFocus={() => { setActiveInput('drop'); setDestinationTouched(true) }}
+                                       placeholder="Where to?"
+                                       className="w-full bg-transparent text-sm font-bold text-white placeholder-white/30 outline-none mt-0.5"
+                                    />
+                                 </div>
+                                 {destinationInput && activeInput === 'drop' && (
+                                    <button type="button" onClick={(e) => { e.stopPropagation(); setDestinationInput(''); setDestinationTouched(false) }}>
+                                       <X className="h-4 w-4 text-white/30 hover:text-white" />
+                                    </button>
+                                 )}
                               </div>
-                              {destinationInput && activeInput === 'drop' && (
-                                 <button type="button" onClick={(e) => { e.stopPropagation(); setDestinationInput(''); setDestinationTouched(false) }}>
-                                    <X className="h-4 w-4 text-white/30 hover:text-white" />
-                                 </button>
-                              )}
-                           </div>
 
-                           {showSuggestions && (
-                              <div className="rounded-2xl border border-white/[0.06] bg-black/40 px-2 py-2 backdrop-blur-md">
-                                 {activeInput === 'pickup' && (
-                                    <>
-                                       {pickupSearchLoading && (
-                                          <div className="flex items-center gap-2 px-3 py-2 text-xs text-white/40">
-                                             <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> Searching{'\u2026'}
-                                          </div>
-                                       )}
-                                       <button type="button" onClick={() => selectPickup(location)}
-                                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
-                                          <div className="rounded-full bg-emerald-400/10 p-1.5 text-emerald-400"><MapPin className="h-4 w-4" /></div>
-                                          <p className="text-sm font-medium text-white">Use my current location</p>
-                                       </button>
-                                       {pickupSuggestions.map(option => (
-                                          <button key={option.id} type="button" onClick={() => selectPickup(option)}
-                                             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
-                                             <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><MapPin className="h-4 w-4" /></div>
-                                             <div className="min-w-0">
-                                                <p className="truncate text-sm font-medium text-white">{option.label}</p>
-                                                <p className="truncate text-xs text-white/45">{option.secondaryLabel}</p>
+                              {showSuggestions && (
+                                 <div className="rounded-2xl border border-white/[0.06] bg-black/40 px-2 py-2 backdrop-blur-md">
+                                    {activeInput === 'pickup' && (
+                                       <>
+                                          {pickupSearchLoading && (
+                                             <div className="flex items-center gap-2 px-3 py-2 text-xs text-white/40">
+                                                <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> Searching{'\u2026'}
                                              </div>
-                                          </button>
-                                       ))}
-                                    </>
-                                 )}
-                                 {activeInput === 'drop' && (
-                                    <>
-                                       {destinationSearchLoading && (
-                                          <div className="flex items-center gap-2 px-3 py-2 text-xs text-white/40">
-                                             <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> Searching{'\u2026'}
-                                          </div>
-                                       )}
-                                       {destinationSuggestions.map(option => (
-                                          <button key={option.id} type="button" onClick={() => selectDestination(option)}
+                                          )}
+                                          <button type="button" onClick={() => selectPickup(location)}
                                              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
-                                             <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><Search className="h-4 w-4" /></div>
-                                             <div className="min-w-0">
-                                                <p className="truncate text-sm font-medium text-white">{option.label}</p>
-                                                <p className="truncate text-xs text-white/45">{option.secondaryLabel}</p>
-                                             </div>
+                                             <div className="rounded-full bg-emerald-400/10 p-1.5 text-emerald-400"><MapPin className="h-4 w-4" /></div>
+                                             <p className="text-sm font-medium text-white">Use my current location</p>
                                           </button>
-                                       ))}
-                                    </>
-                                 )}
-                              </div>
-                           )}
+                                          {pickupSuggestions.map(option => (
+                                             <button key={option.id} type="button" onClick={() => selectPickup(option)}
+                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
+                                                <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><MapPin className="h-4 w-4" /></div>
+                                                <div className="min-w-0">
+                                                   <p className="truncate text-sm font-medium text-white">{option.label}</p>
+                                                   <p className="truncate text-xs text-white/45">{option.secondaryLabel}</p>
+                                                </div>
+                                             </button>
+                                          ))}
+                                       </>
+                                    )}
+                                    {activeInput === 'drop' && (
+                                       <>
+                                          {destinationSearchLoading && (
+                                             <div className="flex items-center gap-2 px-3 py-2 text-xs text-white/40">
+                                                <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> Searching{'\u2026'}
+                                             </div>
+                                          )}
+                                          {destinationSuggestions.map(option => (
+                                             <button key={option.id} type="button" onClick={() => selectDestination(option)}
+                                                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-white/[0.04]">
+                                                <div className="rounded-full bg-white/[0.06] p-1.5 text-white/40"><Search className="h-4 w-4" /></div>
+                                                <div className="min-w-0">
+                                                   <p className="truncate text-sm font-medium text-white">{option.label}</p>
+                                                   <p className="truncate text-xs text-white/45">{option.secondaryLabel}</p>
+                                                </div>
+                                             </button>
+                                          ))}
+                                       </>
+                                    )}
+                                 </div>
+                              )}
                            </div>
                         </div>
 
@@ -507,11 +528,11 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                           <p className="text-[10px] font-black uppercase tracking-widest opacity-90">Surge Pricing Active</p>
                                        </div>
                                        <p className="text-xs text-white/70 leading-relaxed font-medium">
-                                          {surgeMultipliers.weather > 1.0 && surgeMultipliers.traffic > 1.0 
+                                          {surgeMultipliers.weather > 1.0 && surgeMultipliers.traffic > 1.0
                                              ? "Fares are currently higher due to heavy traffic delays and poor weather conditions in your area."
-                                             : surgeMultipliers.weather > 1.0 
-                                             ? "Fares are currently higher due to poor weather conditions in your area."
-                                             : "Fares are currently higher due to heavy traffic delays on your selected route."}
+                                             : surgeMultipliers.weather > 1.0
+                                                ? "Fares are currently higher due to poor weather conditions in your area."
+                                                : "Fares are currently higher due to heavy traffic delays on your selected route."}
                                        </p>
                                     </div>
                                  </div>
@@ -540,7 +561,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                              className={cn(
                                                 'transition-all active:scale-[0.99] glass-container glass-container--rounded block',
                                                 selected
-                                                   ? 'bg-white/[0.14] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
+                                                   ? 'bg-white/[1] border-white/30 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
                                                    : 'bg-white/[0.05] border-white/10 opacity-70 hover:opacity-100',
                                              )}
                                           >
@@ -550,9 +571,9 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                              <div className="glass-content flex items-center justify-between gap-4 p-4 text-left">
                                                 <div className="flex items-center gap-4">
                                                    <div className={cn('rounded-2xl p-2 shrink-0 shadow-md', vehicle.gradient)}>
-                                                      <img 
-                                                         src={vehicleIcons[vehicle.id]} 
-                                                         alt={vehicle.name} 
+                                                      <img
+                                                         src={vehicleIcons[vehicle.id]}
+                                                         alt={vehicle.name}
                                                          className="h-[52px] w-[52px] object-contain drop-shadow-md dark:[filter:drop-shadow(1px_1px_0_white)_drop-shadow(-1px_-1px_0_white)_drop-shadow(1px_-1px_0_white)_drop-shadow(-1px_1px_0_white)]"
                                                       />
                                                    </div>
@@ -605,7 +626,7 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
                                     <p className="mt-1.5 text-xs text-white/60 leading-relaxed">
                                        The driver did not reach the drop location within the allowed distance-based time limit. Your escrowed GIGC tokens have been auto-refunded to your wallet.
                                     </p>
-                                    <a 
+                                    <a
                                        href={`https://testnet.explorer.peraswap.app/tx/${refundedTxId}`}
                                        target="_blank"
                                        rel="noopener noreferrer"
@@ -888,6 +909,38 @@ export function CustomerDashboard({ ride, onBack, onSwitchRole }: { ride: RideHo
             <Web3ReceiptModal ride={selectedReceiptRide} onClose={() => setSelectedReceiptRide(null)} />
          )}
          <PWAInstallFooter />
+
+         {typeof document !== 'undefined' && createPortal(
+            <AnimatePresence>
+               {showOptInPopup && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                     className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#05060a]/90 backdrop-blur-md px-4">
+                     <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+                        className="w-full max-w-sm glass-container glass-container--rounded glass-container--large p-6 relative">
+                        <div className="glass-filter" style={{ backdropFilter: 'blur(32px) saturate(150%)' }}></div>
+                        <div className="glass-overlay"></div>
+                        <div className="glass-specular"></div>
+                        <div className="glass-content text-center">
+                           <div className="mx-auto w-12 h-12 flex items-center justify-center rounded-full bg-rose-500/10 text-rose-400 mb-4">
+                              <Zap className="h-6 w-6" />
+                           </div>
+                           <h3 className="text-lg font-bold text-white mb-2">Not Opted In</h3>
+                           <p className="text-sm text-white/60 mb-6">
+                              You have not opted into GIGC. Go to profile {'\u2192'} topup-GIGC to opt in before booking a ride.
+                           </p>
+                           <div className="flex gap-3 justify-center">
+                              <button type="button" onClick={() => setShowOptInPopup(false)}
+                                 className="rounded-xl border border-white/10 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/5">
+                                 Close
+                              </button>
+                           </div>
+                        </div>
+                     </motion.div>
+                  </motion.div>
+               )}
+            </AnimatePresence>,
+            document.body
+         )}
       </div>
    )
 }
@@ -1005,16 +1058,16 @@ function PassesTabContent({ ride }: { ride: RideHook }) {
    )
 }
 
-function CustomerProfileDropdown({ 
+function CustomerProfileDropdown({
    ride,
-   onSwitchRole, 
-   currentTab, 
-   onTabChange, 
-   rideCount 
-}: { 
+   onSwitchRole,
+   currentTab,
+   onTabChange,
+   rideCount
+}: {
    ride: RideHook,
-   onSwitchRole: (role: AppRole) => void, 
-   currentTab?: string, 
+   onSwitchRole: (role: AppRole) => void,
+   currentTab?: string,
    onTabChange?: (tab: 'book' | 'history' | 'passes') => void,
    rideCount?: number
 }) {
@@ -1058,7 +1111,7 @@ function CustomerProfileDropdown({
                   setProfilePhoto(photoBase64);
                   return;
                }
-               
+
                // Fallback to rider documents if available (not needed anymore, but we can keep it safely)
                const driverCid = await ipfs.getDriverMetadataCID(activeAddress);
                if (driverCid) {
@@ -1087,18 +1140,18 @@ function CustomerProfileDropdown({
 
       try {
          setIsUploading(true)
-         
+
          // Convert file to base64
          const reader = new FileReader();
          reader.readAsDataURL(file);
-         
+
          reader.onload = async () => {
             const base64String = reader.result as string;
             await ipfs.saveCustomerProfile(activeAddress, base64String);
             setProfilePhoto(base64String);
             setIsUploading(false);
          };
-         
+
          reader.onerror = (error) => {
             console.error('Error reading file:', error);
             setIsUploading(false);
@@ -1113,7 +1166,7 @@ function CustomerProfileDropdown({
 
    return (
       <div className="relative">
-         <button 
+         <button
             onClick={() => setIsOpen(!isOpen)}
             disabled={isUploading}
             className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.3)] overflow-hidden disabled:opacity-50"
@@ -1130,7 +1183,7 @@ function CustomerProfileDropdown({
          <AnimatePresence>
             {isOpen && (
                <div className="absolute right-0 top-full mt-3 w-[280px] sm:w-64 origin-top-right z-[100] pointer-events-auto">
-                  <motion.div 
+                  <motion.div
                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
                      animate={{ opacity: 1, y: 0, scale: 1 }}
                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -1157,7 +1210,7 @@ function CustomerProfileDropdown({
 
                         {!profilePhoto && (
                            <div className="mb-4">
-                              <button 
+                              <button
                                  onClick={() => document.getElementById('profile-upload')?.click()}
                                  className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left group"
                               >
@@ -1173,37 +1226,37 @@ function CustomerProfileDropdown({
                            </div>
                         )}
 
-                         {/* Mobile Tabs */}
-                         {onTabChange && (
-                            <div className="lg:hidden space-y-1 mb-4 border-b border-white/10 pb-4">
-                               <p className="text-[10px] uppercase tracking-wider font-semibold text-white/40 mb-2 px-1">Navigation</p>
-                               <button onClick={() => { setIsOpen(false); onTabChange('book') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'book' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                                  <CarFront className="w-4 h-4" />
-                                  <span className="text-sm font-medium">Book</span>
-                               </button>
-                               <button onClick={() => { setIsOpen(false); onTabChange('history') }} className={cn("w-full flex items-center justify-between gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'history' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                                  <div className="flex items-center gap-3">
-                                     <History className="w-4 h-4" />
-                                     <span className="text-sm font-medium">My Rides</span>
-                                  </div>
-                                  {rideCount ? <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{rideCount}</span> : null}
-                               </button>
-                               <button onClick={() => { setIsOpen(false); onTabChange('passes') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'passes' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
-                                  <Gem className="w-4 h-4" />
-                                  <span className="text-sm font-medium">Your Passes</span>
-                               </button>
-                            </div>
-                         )}
+                        {/* Mobile Tabs */}
+                        {onTabChange && (
+                           <div className="lg:hidden space-y-1 mb-4 border-b border-white/10 pb-4">
+                              <p className="text-[10px] uppercase tracking-wider font-semibold text-white/40 mb-2 px-1">Navigation</p>
+                              <button onClick={() => { setIsOpen(false); onTabChange('book') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'book' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                                 <CarFront className="w-4 h-4" />
+                                 <span className="text-sm font-medium">Book</span>
+                              </button>
+                              <button onClick={() => { setIsOpen(false); onTabChange('history') }} className={cn("w-full flex items-center justify-between gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'history' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                                 <div className="flex items-center gap-3">
+                                    <History className="w-4 h-4" />
+                                    <span className="text-sm font-medium">My Rides</span>
+                                 </div>
+                                 {rideCount ? <span className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{rideCount}</span> : null}
+                              </button>
+                              <button onClick={() => { setIsOpen(false); onTabChange('passes') }} className={cn("w-full flex items-center gap-3 p-2.5 rounded-xl transition text-left", currentTab === 'passes' ? "bg-white/10 text-white" : "bg-transparent text-white/70 hover:bg-white/[0.04] hover:text-white")}>
+                                 <Gem className="w-4 h-4" />
+                                 <span className="text-sm font-medium">Your Passes</span>
+                              </button>
+                           </div>
+                        )}
 
-                         <div className="space-y-2 mb-4">
-                           <button 
+                        <div className="space-y-2 mb-4">
+                           <button
                               onClick={() => { setIsOpen(false); onSwitchRole('driver') }}
                               className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
                            >
                               <ShieldCheck className="w-4 h-4 text-emerald-400" />
                               <span className="text-sm font-medium">Driver Dashboard</span>
                            </button>
-                           <button 
+                           <button
                               onClick={() => { setIsOpen(false); onSwitchRole('admin') }}
                               className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.04] hover:bg-white/10 transition text-left"
                            >
@@ -1213,34 +1266,34 @@ function CustomerProfileDropdown({
                         </div>
 
                         <div className="mb-4 p-3.5 rounded-2xl border border-white/5 bg-white/[0.03] backdrop-blur-xl">
-                            <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-white/40 mb-2 font-bold">
-                               <span>Status</span>
-                               <span className="font-semibold text-emerald-400 flex items-center gap-1.5 normal-case font-mono">
-                                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                                  Connected
-                               </span>
-                            </div>
-                            <div className="flex items-center justify-between text-xs font-semibold">
-                               <span className="text-white/60">Your GIGC Balance</span>
-                               <span className="font-bold text-white flex items-center gap-1">
-                                  {isFetchingBalance ? (
-                                     <Loader2 className="w-3.5 h-3.5 animate-spin text-white/40" />
-                                  ) : (
-                                     `${gigcBalance !== null ? gigcBalance.toLocaleString() : '0'} GIGC`
-                                  )}
-                               </span>
-                            </div>
-                         </div>
+                           <div className="flex items-center justify-between text-[10px] uppercase tracking-wider text-white/40 mb-2 font-bold">
+                              <span>Status</span>
+                              <span className="font-semibold text-emerald-400 flex items-center gap-1.5 normal-case font-mono">
+                                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                 Connected
+                              </span>
+                           </div>
+                           <div className="flex items-center justify-between text-xs font-semibold">
+                              <span className="text-white/60">Your GIGC Balance</span>
+                              <span className="font-bold text-white flex items-center gap-1">
+                                 {isFetchingBalance ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin text-white/40" />
+                                 ) : (
+                                    `${gigcBalance !== null ? gigcBalance.toLocaleString() : '0'} GIGC`
+                                 )}
+                              </span>
+                           </div>
+                        </div>
 
-                         <button 
-                            onClick={() => { setIsOpen(false); setIsTopUpOpen(true) }}
-                            className="w-full flex items-center justify-center gap-2 py-3 mb-2.5 rounded-xl bg-white text-black hover:bg-white/90 active:scale-[0.98] transition font-bold text-sm shadow-lg shadow-black/20"
-                         >
-                            <Coins className="w-4 h-4" />
-                            Top-Up GIGC
-                         </button>
+                        <button
+                           onClick={() => { setIsOpen(false); setIsTopUpOpen(true) }}
+                           className="w-full flex items-center justify-center gap-2 py-3 mb-2.5 rounded-xl bg-white text-black hover:bg-white/90 active:scale-[0.98] transition font-bold text-sm shadow-lg shadow-black/20"
+                        >
+                           <Coins className="w-4 h-4" />
+                           Top-Up GIGC
+                        </button>
 
-                        <button 
+                        <button
                            onClick={() => activeWallet?.disconnect()}
                            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 active:scale-[0.98] transition font-semibold text-sm"
                         >
@@ -1255,7 +1308,7 @@ function CustomerProfileDropdown({
          {typeof document !== 'undefined' && createPortal(
             <AnimatePresence>
                {isTopUpOpen && (
-                  <TopUpModal 
+                  <TopUpModal
                      ride={ride}
                      activeAddress={activeAddress}
                      isOptedIn={isOptedIn}
@@ -1369,7 +1422,7 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
 
          const atc = new algosdk.AtomicTransactionComposer()
          atc.addTransaction({ txn: paymentTxn, signer: transactionSigner })
-         
+
          const result = await atc.execute(algod, 4)
          const txId = result.txIDs[0]
 
@@ -1386,16 +1439,16 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
             setStatus('success')
             setTimeout(() => {
                onSuccess()
-             }, 2000)
-          } else {
-             throw new Error(response.data.error || 'Failed to verify transaction on the backend.')
-          }
-       } catch (err: any) {
-          console.error('Top-up failed:', err)
-          setErrorMsg(parseTransactionError(err, 'Top-Up failed.'))
-          setStatus('error')
-       }
-    }
+            }, 2000)
+         } else {
+            throw new Error(response.data.error || 'Failed to verify transaction on the backend.')
+         }
+      } catch (err: any) {
+         console.error('Top-up failed:', err)
+         setErrorMsg(parseTransactionError(err, 'Top-Up failed.'))
+         setStatus('error')
+      }
+   }
 
    return (
       <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/65 p-4 backdrop-blur-xl overflow-y-auto">
@@ -1578,7 +1631,7 @@ function TopUpModal({ ride, activeAddress, isOptedIn, onClose, onSuccess }: TopU
                            An error occurred while processing your top-up.
                         </p>
                      </div>
-                     
+
                      {errorMsg && (
                         <div className="rounded-xl border border-red-500/15 bg-red-500/[0.05] p-3 text-xs text-red-400 text-center font-mono">
                            {errorMsg}

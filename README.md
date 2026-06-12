@@ -111,6 +111,21 @@ This hybrid architecture gives:
 
 ---
 
+## 🛡️ Trust & Policies (Auto-Enforced)
+
+* **Cancellation Policy & Auto-Refunds**: Full refund if canceled before driver arrival. If canceled after arrival, the fare is paid to the driver. Auto-refunds trigger if the driver doesn't reach the drop location within a distance-based time limit.
+* **Wait Time Fees**: 3-minute grace period upon driver arrival, followed by an automatically accumulating wait fee.
+* **No-Show Protection**: Drivers can claim the fare if a customer is a no-show for 10 minutes.
+
+---
+
+## 🎟️ NFT Subscription Passes & Web3 Receipts
+
+* **Discount Passes**: Hold our exclusive NFT Passes in your wallet to automatically apply fare discounts to your rides.
+* **Immutable Receipts**: Every completed ride generates a cryptographically verifiable Web3 receipt stored on IPFS.
+
+---
+
 # 🛵 Built for the Boda Boda Ecosystem
 
 <p align="center">
@@ -142,7 +157,7 @@ Gigo integrates AI to improve transportation efficiency.
 ### AI Features:
 
 * 📈 Demand prediction
-* 🌦 Weather-based surge analysis
+* 🌦 **Dynamic Surge Pricing**: Real-time fare adjustments based on live weather conditions and traffic delays.
 * 📍 Rider hotspot suggestions
 * ⛽ Fuel/range alerts
 * 🎙 Voice booking automation
@@ -215,6 +230,8 @@ CID stored in backend/blockchain
 /projects/frontend   # Passenger & Rider dashboards
 /projects/backend    # AI, APIs, Realtime Logic
 /projects/contracts  # Algorand Smart Contracts
+/TESTS               # Automated test suites and reports
+/DOCS                # Architecture diagrams and technical documentation
 ```
 
 *Want to know more about how each part works? Check out our human-readable deep dives:*
