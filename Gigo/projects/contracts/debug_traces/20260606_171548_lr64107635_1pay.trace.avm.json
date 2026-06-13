@@ -1,0 +1,46 @@
+{
+  "eval-overrides": {
+    "allow-empty-signatures": true,
+    "allow-unnamed-resources": true,
+    "max-log-calls": 2048,
+    "max-log-size": 65536
+  },
+  "exec-trace-config": {
+    "enable": true,
+    "scratch-change": true,
+    "stack-change": true,
+    "state-change": true
+  },
+  "initial-states": {},
+  "last-round": 64107635,
+  "txn-groups": [
+    {
+      "failed-at": [
+        0
+      ],
+      "failure-message": "transaction 2IBURY6LESXIJMYKFGNZQ75WZLX4ICZVWDHWCUI4MS2PKA6T3XMQ: account FDSKCI2DHPIOTFR2CXHPESMLAUA4Y66B6KKGJ2CDKDY3UX34W43QVN52NA balance 2750500 below min 3270000 (12 assets)",
+      "txn-results": [
+        {
+          "txn-result": {
+            "pool-error": "",
+            "txn": {
+              "sig": "KXOcGdpiJWWMsk/5/AHtNAzXPPXFCeuzWEI+T/DFzpNoIFu8rY980+6K2YGaj6LWUeMIMI4aNml0+MAnv+9mDA==",
+              "txn": {
+                "amt": 1000000,
+                "fee": 1000,
+                "fv": 64107634,
+                "gen": "testnet-v1.0",
+                "gh": "SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=",
+                "lv": 64108634,
+                "rcv": "NDYQPTW5U72OSXJ4LJZWXIO5SIOGT2GGF6R2VER263ZX77GRFJQD3NTRMM",
+                "snd": "FDSKCI2DHPIOTFR2CXHPESMLAUA4Y66B6KKGJ2CDKDY3UX34W43QVN52NA",
+                "type": "pay"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "version": 2
+}

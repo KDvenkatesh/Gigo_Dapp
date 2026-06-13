@@ -1,0 +1,60 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: |
+            Gigo/projects/frontend/package-lock.json
+            Gigo/projects/backend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: Gigo/projects/frontend
+        run: npm ci || npm install
+
+      - name: Build Frontend
+        working-directory: Gigo/projects/frontend
+        run: npm run build
+
+      - name: Install Backend Dependencies
+        working-directory: Gigo/projects/backend
+        run: npm ci || npm install
+
+      - name: Build Backend
+        working-directory: Gigo/projects/backend
+        run: npm run build
+
+  docker-validation:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        
+      - name: Setup Environment Files
+        working-directory: Gigo
+        run: |
+          cp projects/frontend/.env.example projects/frontend/.env
+          cp projects/backend/.env.example projects/backend/.env
+
+      - name: Test Docker Compose Build
+        working-directory: Gigo
+        run: docker compose build

@@ -3,7 +3,7 @@ import algosdk from 'algosdk';
 import { useCallback, useMemo } from 'react';
 import { algorandConfig } from '../config/algorand';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 
 /**
  * x402 Payment Hook for Gigo DApp.

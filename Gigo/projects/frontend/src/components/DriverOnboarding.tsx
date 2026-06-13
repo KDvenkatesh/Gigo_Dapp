@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Upload, Bike, Car, BatteryCharging, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Upload, ShieldCheck } from 'lucide-react';
+import bodaIcon from '../assets/Boda.png';
+import carIcon from '../assets/Car.png';
+import autoIcon from '../assets/Auto.png';
 import { useDriverContext } from '../contexts/DriverContext';
 import { WalletConnectButton } from './WalletConnectButton';
 import { ipfs } from '../lib/ipfs';
 import { Loader2 } from 'lucide-react';
 
 export function DriverOnboarding({ onBack }: { onBack: () => void }) {
-  const { status, submitApplication, ride } = useDriverContext();
+  const { status, setStatus, submitApplication, ride } = useDriverContext();
   const [vehicleType, setVehicleType] = useState('');
   const [uploadedDocs, setUploadedDocs] = useState<Record<string, string>>({});
   const [uploadingDocs, setUploadingDocs] = useState<Record<string, boolean>>({});
@@ -16,7 +19,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const docKeys = Object.keys(uploadedDocs);
-    if (!vehicleType || docKeys.length < 2) return;
+    if (!vehicleType || docKeys.length < 4) return;
     setIsSubmitting(true);
     // Simulate submission delay
     setTimeout(() => {
@@ -30,7 +33,7 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
     
     setUploadingDocs(prev => ({ ...prev, [doc]: true }));
     try {
-      const cid = await ipfs.uploadFile(file);
+      const cid = await ipfs.uploadFile(file, ride.activeAddress || undefined, 'driver', doc);
       setUploadedDocs(prev => ({ ...prev, [doc]: cid }));
     } catch (error) {
       console.error(`Failed to upload ${doc}`, error);
@@ -40,9 +43,9 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
   };
 
   const vehicleOptions = [
-    { id: 'boda', label: 'Boda', icon: Bike },
-    { id: 'car', label: 'Car', icon: Car },
-    { id: 'ev', label: 'EV Ride', icon: BatteryCharging },
+    { id: 'boda', label: 'Boda', icon: bodaIcon },
+    { id: 'car', label: 'Car', icon: carIcon },
+    { id: 'auto', label: 'Auto', icon: autoIcon },
   ];
 
   if (!ride.activeAddress) {
@@ -61,15 +64,20 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
   if (status === 'pending') {
     return (
       <div className="flex h-screen flex-col items-center justify-center p-6 text-center">
-        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-panel p-8 rounded-3xl max-w-md w-full">
-          <div className="inline-flex rounded-full bg-yellow-400/10 p-4 text-yellow-400 mb-6 ring-1 ring-inset ring-yellow-400/20">
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-container glass-container--rounded glass-container--large max-w-md w-full">
+          <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
+          <div className="glass-overlay"></div>
+          <div className="glass-specular"></div>
+          <div className="glass-content p-8">
+            <div className="inline-flex rounded-full bg-yellow-400/10 p-4 text-yellow-400 mb-6 ring-1 ring-inset ring-yellow-400/20">
             <Upload className="h-8 w-8" />
           </div>
-          <h2 className="text-2xl font-bold mb-2">Application Pending</h2>
+          <h2 className="text-title-2 font-bold mb-2">Application Pending</h2>
           <p className="text-white/60 mb-6">Your rider application is currently under review by our admin team. Please check back later.</p>
-          <button onClick={onBack} className="w-full rounded-2xl bg-white/10 p-4 font-semibold text-white hover:bg-white/20 transition">
+          <button onClick={onBack} className="w-full clay-btn clay-btn-brand py-3 text-sm">
             Return to Home
           </button>
+          </div>
         </motion.div>
       </div>
     );
@@ -78,15 +86,20 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
   if (status === 'rejected') {
     return (
       <div className="flex h-screen flex-col items-center justify-center p-6 text-center">
-        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-panel p-8 rounded-3xl max-w-md w-full border-red-500/20">
-          <h2 className="text-2xl font-bold mb-2 text-red-400">Application Rejected</h2>
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-container glass-container--rounded glass-container--large max-w-md w-full border-red-500/25">
+          <div className="glass-filter" style={{ backdropFilter: 'blur(24px) saturate(130%)' }}></div>
+          <div className="glass-overlay"></div>
+          <div className="glass-specular"></div>
+          <div className="glass-content p-8">
+            <h2 className="text-title-2 font-bold mb-2 text-red-400 font-mono">Application Rejected</h2>
           <p className="text-white/60 mb-6">Unfortunately, your application was not approved.</p>
-          <button onClick={() => submitApplication({ vehicleType: 'boda' })} className="w-full rounded-2xl bg-white/10 p-4 font-semibold text-white hover:bg-white/20 transition mb-3">
+          <button onClick={() => setStatus('none')} className="w-full clay-btn clay-btn-brand py-3 text-sm mb-3">
             Re-apply
           </button>
           <button onClick={onBack} className="w-full text-white/50 hover:text-white text-sm py-2">
             Back to Home
           </button>
+          </div>
         </motion.div>
       </div>
     );
@@ -96,39 +109,53 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
     <div className="absolute inset-0 z-40 flex flex-col overflow-hidden bg-[#05060a]">
       <div className="flex-1 overflow-y-auto pb-20 px-4 pt-8 sm:px-6 md:pt-12 no-scrollbar">
         <div className="max-w-2xl mx-auto w-full">
-        <button onClick={onBack} className="mb-8 flex items-center gap-2 text-sm font-semibold text-white/50 transition hover:text-white">
-          <ArrowLeft className="h-4 w-4" /> Back
+        <button onClick={onBack} className="mb-8 glass-container glass-container--rounded text-footnote font-bold text-white/50 transition hover:text-white" style={{ borderRadius: '9999px' }}>
+          <div className="glass-filter" style={{ borderRadius: '9999px' }}></div>
+          <div className="glass-overlay" style={{ borderRadius: '9999px' }}></div>
+          <div className="glass-specular" style={{ borderRadius: '9999px' }}></div>
+          <div className="glass-content px-4 py-2 inline-flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" /> Back
+          </div>
         </button>
         
-        <h1 className="text-4xl font-black tracking-tight mb-2">Become a Boda Rider</h1>
-        <p className="text-white/60 mb-10">Join the decentralized mobility revolution.</p>
+        <h1 className="text-large-title tracking-tight mb-2">Become a Boda Rider</h1>
+        <p className="text-body text-white/60 mb-10">Join the decentralized mobility revolution.</p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">1. Select Vehicle Type</h3>
+            <h3 className="text-title-3 font-semibold text-white">1. Select Vehicle Type</h3>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               {vehicleOptions.map(option => (
                 <button
                   key={option.id}
                   type="button"
                   onClick={() => setVehicleType(option.id)}
-                  className={`flex flex-col items-center gap-3 rounded-2xl border p-4 transition ${
+                  className={`transition-all active:scale-[0.99] glass-container glass-container--rounded block ${
                     vehicleType === option.id 
-                      ? 'border-emerald-400 bg-emerald-400/10 text-emerald-300' 
-                      : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                      ? 'bg-emerald-500/10 border-emerald-400/50 text-emerald-300 shadow-[0_8px_24px_rgba(16,185,129,0.15)]' 
+                      : 'bg-white/[0.05] border-white/10 text-white/60 hover:text-white'
                   }`}
                 >
-                  <option.icon className="h-8 w-8" />
-                  <span className="text-sm font-medium">{option.label}</span>
+                  <div className="glass-filter"></div>
+                  <div className="glass-overlay"></div>
+                  <div className="glass-specular"></div>
+                  <div className="glass-content flex flex-col items-center gap-3 p-4.5">
+                    <img 
+                      src={option.icon} 
+                      alt={option.label} 
+                      className="h-[60px] w-[60px] object-contain drop-shadow-md dark:[filter:drop-shadow(1px_1px_0_white)_drop-shadow(-1px_-1px_0_white)_drop-shadow(1px_-1px_0_white)_drop-shadow(-1px_1px_0_white)]"
+                    />
+                    <span className="text-sm font-medium">{option.label}</span>
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold">2. Upload Documents</h3>
+            <h3 className="text-title-3 font-semibold text-white">2. Upload Documents</h3>
             <div className="grid gap-4 sm:grid-cols-2">
-              {['Driving License', 'National ID', 'Vehicle Registration', 'Insurance', 'Profile Photo'].map(doc => {
+              {['Driving License', 'National ID', 'Vehicle Registration', 'Insurance'].map(doc => {
                 const isUploaded = !!uploadedDocs[doc];
                 return (
                   <div key={doc} className="relative">
@@ -141,20 +168,25 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
                       title={`Upload ${doc}`}
                     />
                     <div 
-                      className={`rounded-2xl border border-dashed p-6 text-center transition ${
-                        isUploaded ? 'border-emerald-500 bg-emerald-500/10' : 'border-white/20 hover:border-white/40 hover:bg-white/[0.02]'
+                      className={`border border-dashed transition-all glass-container glass-container--rounded ${
+                        isUploaded ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300' : 'border-white/15 bg-white/[0.03] hover:border-white/30'
                       }`}
                     >
-                      {uploadingDocs[doc] ? (
-                        <Loader2 className="mx-auto h-6 w-6 text-white/40 mb-3 animate-spin" />
-                      ) : isUploaded ? (
-                        <ShieldCheck className="mx-auto h-6 w-6 text-emerald-400 mb-3" />
-                      ) : (
-                        <Upload className="mx-auto h-6 w-6 text-white/40 mb-3" />
-                      )}
-                      <p className={`text-sm font-medium ${isUploaded ? 'text-emerald-300' : 'text-white/80'}`}>
-                        {uploadingDocs[doc] ? `Uploading ${doc}...` : isUploaded ? `${doc} Uploaded` : `Upload ${doc}`}
-                      </p>
+                      <div className="glass-filter"></div>
+                      <div className="glass-overlay"></div>
+                      <div className="glass-specular"></div>
+                      <div className="glass-content p-6 text-center">
+                        {uploadingDocs[doc] ? (
+                          <Loader2 className="mx-auto h-6 w-6 text-white/40 mb-3 animate-spin" />
+                        ) : isUploaded ? (
+                          <ShieldCheck className="mx-auto h-6 w-6 text-emerald-400 mb-3" />
+                        ) : (
+                          <Upload className="mx-auto h-6 w-6 text-white/40 mb-3" />
+                        )}
+                        <p className={`text-sm font-medium ${isUploaded ? 'text-emerald-300' : 'text-white/80'}`}>
+                          {uploadingDocs[doc] ? `Uploading ${doc}...` : isUploaded ? `${doc} Uploaded` : `Upload ${doc}`}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 );
@@ -164,8 +196,8 @@ export function DriverOnboarding({ onBack }: { onBack: () => void }) {
 
           <button
             type="submit"
-            disabled={!vehicleType || Object.keys(uploadedDocs).length < 2 || isSubmitting}
-            className="w-full rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 p-4 font-bold text-slate-950 disabled:opacity-50 transition-transform active:scale-95"
+            disabled={!vehicleType || Object.keys(uploadedDocs).length < 4 || isSubmitting}
+            className="w-full clay-btn clay-btn-brand py-4 font-black disabled:opacity-40"
           >
             {isSubmitting ? 'Submitting...' : 'Submit for Verification'}
           </button>

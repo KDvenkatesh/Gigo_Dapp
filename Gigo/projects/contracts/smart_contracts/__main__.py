@@ -57,7 +57,7 @@ def build(output_dir: Path, contract_path: Path) -> Path:
     """
     output_dir = output_dir.resolve()
     if output_dir.exists():
-        rmtree(output_dir)
+        rmtree(output_dir, ignore_errors=True)
     output_dir.mkdir(exist_ok=True, parents=True)
     logger.info(f"Exporting {contract_path} to {output_dir}")
 

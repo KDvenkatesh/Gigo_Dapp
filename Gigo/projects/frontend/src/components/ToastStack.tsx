@@ -14,9 +14,9 @@ const icons = {
 } as const
 
 const tones = {
-  info: 'border-sky-300/20 bg-sky-300/12',
-  success: 'border-emerald-300/20 bg-emerald-300/12',
-  error: 'border-rose-300/20 bg-rose-300/12',
+  info: 'border-sky bg-white',
+  success: 'border-black bg-white',
+  error: 'border-black bg-white',
 } as const
 
 export function ToastStack({ toasts, onDismiss }: ToastStackProps) {
@@ -37,12 +37,12 @@ export function ToastStack({ toasts, onDismiss }: ToastStackProps) {
               className={`pointer-events-auto rounded-[24px] border px-4 py-3 text-left shadow-[0_16px_48px_rgba(0,0,0,0.35)] backdrop-blur-xl ${tones[toast.tone]}`}
             >
               <div className="flex items-start gap-3">
-                <div className="rounded-2xl bg-black/20 p-2">
-                  <Icon className="h-4.5 w-4.5 text-white" />
+                <div className="rounded-2xl bg-white p-2">
+                  <Icon className="h-4.5 w-4.5 text-black" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-white">{toast.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-white/68">{toast.description}</p>
+                  <p className="text-sm font-semibold text-black">{toast.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-black">{toast.description}</p>
                 </div>
               </div>
             </motion.button>

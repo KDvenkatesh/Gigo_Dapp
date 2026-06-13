@@ -11,6 +11,7 @@ interface DriverContextType {
   ride: RideContractReturn;
   status: DriverStatus;
   setStatus: (status: DriverStatus) => void;
+  vehicleType: string | undefined;
   active: boolean;
   setActive: (active: boolean) => void;
   submitApplication: (data: any) => void;
@@ -21,39 +22,45 @@ const DriverContext = createContext<DriverContextType | undefined>(undefined);
 export function DriverProvider({ children }: { children: ReactNode }) {
   const ride = useRideContract();
   
-  // Use wallet address as the key for driver status in local storage to simulate backend
   const walletAddress = ride.activeAddress || 'disconnected';
   
   const [status, setStatusState] = useState<DriverStatus>('none');
+  const [vehicleType, setVehicleType] = useState<string | undefined>(undefined);
   const [active, setActive] = useState(false);
 
-  // Load status from IPFS when wallet changes
   useEffect(() => {
     if (walletAddress !== 'disconnected') {
       const fetchDriverData = async () => {
         try {
-          const cid = await ipfs.getDriverMetadataCID(walletAddress);
-          if (cid) {
-            const driverData = await ipfs.getJSON(cid);
-            if (driverData && driverData.status) {
-              setStatusState(driverData.status as DriverStatus);
-            } else {
-              setStatusState('none');
-            }
-          } else {
-            // Fallback for demo if no CID found on backend yet
-            setStatusState('none');
+          const record = await ipfs.getDriverRecord(walletAddress);
+          let realStatus = record.status;
+          
+          if (record.cid) {
+             try {
+                const ipfsData = await ipfs.getJSON(record.cid);
+                if (ipfsData && ipfsData.status && ipfsData.status !== realStatus) {
+                   realStatus = ipfsData.status;
+                   // Sync DB with truth
+                   await ipfs.saveDriverMetadata(walletAddress, record.cid, realStatus, record.vehicleType);
+                }
+             } catch (err) {
+                console.error('Failed to verify IPFS status', err);
+             }
           }
+          
+          setStatusState(realStatus as DriverStatus);
+          setVehicleType(record.vehicleType);
         } catch (e) {
-          console.error('Failed to fetch driver data from IPFS', e);
+          console.error('Failed to fetch driver data from IPFS/Backend', e);
           setStatusState('none');
+          setVehicleType(undefined);
         }
       };
       fetchDriverData();
     } else {
       setStatusState('none');
+      setVehicleType(undefined);
     }
-    // Default offline when switching accounts
     setActive(false);
   }, [walletAddress]);
 
@@ -73,8 +80,8 @@ export function DriverProvider({ children }: { children: ReactNode }) {
           updatedAt: new Date().toISOString()
         };
         
-        const newCid = await ipfs.uploadJSON(updatedData);
-        await ipfs.saveDriverMetadata(walletAddress, newCid);
+        const newCid = await ipfs.uploadJSON(updatedData, walletAddress, 'driver', 'profile');
+        await ipfs.saveDriverMetadata(walletAddress, newCid, newStatus, vehicleType);
       } catch (e) {
         console.error('Failed to update driver status on IPFS', e);
       }
@@ -83,6 +90,7 @@ export function DriverProvider({ children }: { children: ReactNode }) {
 
   const submitApplication = async (data: any) => {
     setStatusState('pending');
+    setVehicleType(data.vehicle);
     if (walletAddress !== 'disconnected') {
       try {
         const applicationData = {
@@ -91,17 +99,18 @@ export function DriverProvider({ children }: { children: ReactNode }) {
           submittedAt: new Date().toISOString()
         };
         
-        const cid = await ipfs.uploadJSON(applicationData);
-        await ipfs.saveDriverMetadata(walletAddress, cid);
+        const cid = await ipfs.uploadJSON(applicationData, walletAddress, 'driver', 'profile');
+        await ipfs.saveDriverMetadata(walletAddress, cid, 'pending', data.vehicle);
       } catch (e) {
         console.error('Failed to submit application to IPFS', e);
         setStatusState('none');
+        setVehicleType(undefined);
       }
     }
   };
 
   return (
-    <DriverContext.Provider value={{ ride, status, setStatus, active, setActive, submitApplication }}>
+    <DriverContext.Provider value={{ ride, status, setStatus, vehicleType, active, setActive, submitApplication }}>
       {children}
     </DriverContext.Provider>
   );

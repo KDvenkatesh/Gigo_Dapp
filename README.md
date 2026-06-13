@@ -10,6 +10,30 @@
 
 ---
 
+## 🐳 Fast Start (Docker Compose)
+
+The easiest way to run the entire Gigo stack locally in a production-ready environment is using Docker. Ensure Docker Desktop is installed and running.
+
+```bash
+# Clone the repository
+git clone https://github.com/KDvenkatesh/Gigo_Dapp.git
+cd Gigo_Dapp/Gigo
+
+# Copy the environment templates (if you haven't already)
+cp projects/frontend/.env.example projects/frontend/.env
+cp projects/backend/.env.example projects/backend/.env
+
+# Build and start all services
+docker compose up --build
+```
+
+This single command will automatically:
+- Start a local **MongoDB** database instance.
+- Build and run the **Node.js Backend API** on port `3001`.
+- Build the **React PWA Frontend** and serve it via Nginx on port `5173`.
+
+---
+
 # 🌍 What is Gigo?
 
 Gigo is a decentralized ride-sharing and mobility infrastructure platform designed for **boda boda ecosystems** and informal transportation networks in emerging markets like **Uganda**, **Kenya**, and **East Africa**.
@@ -87,6 +111,21 @@ This hybrid architecture gives:
 
 ---
 
+## 🛡️ Trust & Policies (Auto-Enforced)
+
+* **Cancellation Policy & Auto-Refunds**: Full refund if canceled before driver arrival. If canceled after arrival, the fare is paid to the driver. Auto-refunds trigger if the driver doesn't reach the drop location within a distance-based time limit.
+* **Wait Time Fees**: 3-minute grace period upon driver arrival, followed by an automatically accumulating wait fee.
+* **No-Show Protection**: Drivers can claim the fare if a customer is a no-show for 10 minutes.
+
+---
+
+## 🎟️ NFT Subscription Passes & Web3 Receipts
+
+* **Discount Passes**: Hold our exclusive NFT Passes in your wallet to automatically apply fare discounts to your rides.
+* **Immutable Receipts**: Every completed ride generates a cryptographically verifiable Web3 receipt stored on IPFS.
+
+---
+
 # 🛵 Built for the Boda Boda Ecosystem
 
 <p align="center">
@@ -118,7 +157,7 @@ Gigo integrates AI to improve transportation efficiency.
 ### AI Features:
 
 * 📈 Demand prediction
-* 🌦 Weather-based surge analysis
+* 🌦 **Dynamic Surge Pricing**: Real-time fare adjustments based on live weather conditions and traffic delays.
 * 📍 Rider hotspot suggestions
 * ⛽ Fuel/range alerts
 * 🎙 Voice booking automation
@@ -161,33 +200,10 @@ CID stored in backend/blockchain
 <p align="center">
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/0ef7a6d4-4141-4894-9e2b-7b80652ff1f1" />
 
- 
 
 </p>
 
-```text
-                    ┌────────────────────┐
-                    │    Passenger App   │
-                    └─────────┬──────────┘
-                              │
-                              ▼
-                  ┌─────────────────────┐
-                  │   React PWA Frontend│
-                  └─────────┬───────────┘
-                            │
-          ┌─────────────────┼─────────────────┐
-          ▼                                   ▼
-┌────────────────────┐             ┌────────────────────┐
-│   Node.js Backend  │             │ Algorand Blockchain│
-│ MongoDB + AI Layer │             │ Smart Contracts    │
-└─────────┬──────────┘             └─────────┬──────────┘
-          │                                  │
-          ▼                                  ▼
-┌────────────────────┐             ┌────────────────────┐
-│  Pinata IPFS       │             │ GIGC ASA Payments  │
-│ Document Storage   │             │ Escrow + Payouts   │
-└────────────────────┘             └────────────────────┘
-```
+
 
 ---
 
@@ -203,7 +219,8 @@ CID stored in backend/blockchain
 | Database        | MongoDB                          |
 | Wallet          | Pera Wallet                      |
 | AI              | Groq AI + OpenRoute              |
-| Deployment      |Vercel + Render + Algorand testnet|
+| DevOps          | Docker Compose + GitHub Actions  |
+| Deployment      | Vercel + Render + Algorand testnet|
 
 ---
 
@@ -213,32 +230,272 @@ CID stored in backend/blockchain
 /projects/frontend   # Passenger & Rider dashboards
 /projects/backend    # AI, APIs, Realtime Logic
 /projects/contracts  # Algorand Smart Contracts
+/TESTS               # Automated test suites and reports
+/DOCS                # Architecture diagrams and technical documentation
+```
+
+*Want to know more about how each part works? Check out our human-readable deep dives:*
+- 🖥️ **[Frontend Architecture ➜](./Gigo/projects/frontend/README.md)**
+- ⚙️ **[Backend Architecture ➜](./Gigo/projects/backend/README.md)**
+- 📜 **[Smart Contracts (The Trust Layer) ➜](./Gigo/projects/contracts/README.md)**
+
+---
+
+---
+
+# 🚀 Setup Guide
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have installed:
+
+- **Node.js** (v18+) and npm
+- **Python** (v3.10+) - For smart contracts
+- **Git**
+- **Wallet**: [Pera Wallet](https://perawallet.app/) or [Defly](https://www.defly.app/)
+
+---
+
+## 1️⃣ Clone the Repository
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/Gigo.git
+cd Gigo/Gigo_Dapp/Gigo
+
+# Navigate to projects directory
+cd projects
 ```
 
 ---
 
-# 🚀 Quick Setup
+---
 
-## 1️⃣ Frontend Environment
+## 🛠️ Manual Setup (Without Docker)
 
-`/frontend/.env`
+If you prefer to run the services manually without Docker, follow the steps below.
+
+### 2️⃣ Frontend Setup
+
+```bash
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cp .env  # or create manually with the template below
+```
+
+### Frontend Environment Variables (`.env`)
 
 ```env
-VITE_BACKEND_URL=
-VITE_RIDE_APP_ID=
-VITE_GIGC_ASA_ID=762258472
+# Algorand Configuration
+VITE_RIDE_APP_ID=763756954
+VITE_BACKEND_URL=...
+
+# Optional: Override with local backend
+# VITE_BACKEND_URL=http://localhost:3001
+```
+
+### Run Frontend
+
+```bash
+# Development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+Frontend will be available at `http://localhost:5173`
+
+---
+
+## 3️⃣ Backend Setup
+
+```bash
+# Navigate to backend directory
+cd ../backend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cp .env  # or create manually with the template below
+```
+
+### Backend Environment Variables (`.env`)
+
+```env
+# Server Configuration
+PORT=3001
+
+# Algorand Configuration
+ALGORAND_NODE=https://testnet-api.algonode.cloud
+RIDE_APP_ID= 764183368
+PLATFORM_WALLET=YOUR_PLATFORM_WALLET_ADDRESS
+
+# AI & Route Optimization
+GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxx
+ORS_API_KEY=eyrfhvcddfvgvdecv.............
+
+# Database
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/gigodapp
+
+# IPFS Storage (Pinata)
+PINATA_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxx
+PINATA_API_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PINATA_JWT=egfvgnhgfJhbG...
+
+# GIGC Token Configuration
+TREASURY_ADDRESS=YOUR_TREASURY_WALLET_ADDRESS
+TREASURY_MNEMONIC="word1 word2 ... word25"  # 25-word mnemonic
+CONVERSION_RATIO=100
+GIGC_ASSET_ID=763011769
+```
+
+### Run Backend
+
+```bash
+# Development server (with auto-reload)
+npm run dev
+
+# Production server
+npm start
+```
+
+Backend API will be available at `http://localhost:3001`
+
+---
+
+## 4️⃣ Smart Contracts Setup
+
+```bash
+# Navigate to contracts directory
+cd ../contracts
+
+# Install dependencies
+pip install -r requirements.txt
+# or
+poetry install
+```
+
+### Smart Contracts Environment Variables (`.env`)
+
+```env
+# TestNet Algod Configuration
+ALGOD_SERVER=https://testnet-api.4160.nodely.dev
+ALGOD_PORT=
+ALGOD_TOKEN=
+
+# TestNet Indexer Configuration
+INDEXER_SERVER=https://testnet-idx.4160.nodely.dev
+INDEXER_PORT=
+INDEXER_TOKEN=
+
+# Deployer Account (25-word mnemonic)
+DEPLOYER_MNEMONIC="word1 word2 word3 ... word25"
+```
+
+### Deploy Smart Contracts
+
+```bash
+# Deploy to TestNet
+python -m smart_contracts
+
+# View deployment artifacts
+ls artifacts/
 ```
 
 ---
 
-## 2️⃣ Backend Environment
+## 5️⃣ Environment Variables Summary
 
-`/backend/.env`
+| Component | Variable | Example Value |
+|-----------|----------|---------------|
+| **Frontend** | `VITE_RIDE_APP_ID` | ` 764183368` |
+| **Frontend** | `VITE_BACKEND_URL` | `http://localhost:3001` |
+| **Backend** | `PORT` | `3001` |
+| **Backend** | `MONGODB_URI` | `mongodb+srv://...` |
+| **Backend** | `GROQ_API_KEY` | `gffrcff_...` |
+| **Backend** | `PINATA_JWT` | `eyfvgfrfgh...` |
+| **Backend** | `RIDE_APP_ID` | ` 764183368` |
+| **Contracts** | `DEPLOYER_MNEMONIC` | `word1 word2 ...` |
 
-```env
-MONGODB_URI=
-GROQ_API_KEY=
-PINATA_JWT=
+---
+
+## 🔗 Important Addresses & IDs
+
+| Name | Value | Type |
+|------|-------|------|
+| **GIGC ASA ID** | `763011769` | Asset |
+| **Ride App ID** | ` 764183368` | Smart Contract |
+| **Platform Wallet** | `YOUR_PLATFORM_WALLET_ADDRESS` | Account |
+| **Network** | `Algorand TestNet` | Blockchain |
+
+---
+
+## ✅ Verification Checklist
+
+After setup, verify everything is working:
+
+- [ ] Frontend starts without errors: `npm run dev`
+- [ ] Backend server running: `http://localhost:3001`
+- [ ] MongoDB connection successful
+- [ ] Wallet connected in frontend
+- [ ] Smart contracts deployed
+- [ ] IPFS (Pinata) accessible
+
+---
+
+## 🆘 Troubleshooting
+
+### Port Already in Use
+```bash
+# Find process on port 3001
+lsof -i :3001
+
+# Kill the process
+kill -9 <PID>
+```
+
+### Module Not Found
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules
+npm install
+```
+
+### Environment Variables Not Loading
+- Verify `.env` file is in the correct directory
+- Restart the development server after creating `.env`
+- Check for typos in variable names
+
+---
+
+## 🧪 Running in Development
+
+### Terminal 1: Backend
+```bash
+cd projects/backend
+npm run dev
+```
+
+### Terminal 2: Frontend
+```bash
+cd projects/frontend
+npm run dev
+```
+
+### Terminal 3: Smart Contracts (optional for testing)
+```bash
+cd projects/contracts
+python -m smart_contracts
 ```
 
 ---
@@ -249,7 +506,16 @@ PINATA_JWT=
 | ---------- | ----------- |
 | Asset Name | Gigo Credit |
 | Ticker     | GIGC        |
-| ASA ID     | 762258472   |
+| ASA ID     | 763011769   |
+
+---
+# 🪙 GIGC ASA Information
+
+| Property   | Value       |
+| ---------- | ----------- |
+| Asset Name | Gigo Credit |
+| Ticker     | GIGC        |
+| ASA ID     | 763011769   |
 
 ---
 

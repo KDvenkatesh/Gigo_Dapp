@@ -36,17 +36,17 @@ export function NFTPassCard({ pass, isWalletConnected, onBuyPass }: NFTPassCardP
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -4 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
-      className="group relative flex h-full flex-col"
+      className={cn(
+        'group relative flex h-full flex-col glass-container glass-container--rounded transition-all duration-300',
+        isActive
+          ? 'border-white/12 shadow-[0_8px_24px_rgba(255,255,255,0.04)]'
+          : 'border-white/6 opacity-85 hover:opacity-100'
+      )}
     >
-      <div
-        className={cn(
-          'relative flex h-full flex-col overflow-hidden rounded-[20px] border transition-all duration-300',
-          isActive
-            ? 'border-white/10 bg-white/[0.03]'
-            : 'border-white/[0.06] bg-white/[0.02]',
-          'hover:border-white/[0.15] hover:bg-white/[0.04]',
-        )}
-      >
+      <div className="glass-filter"></div>
+      <div className="glass-overlay"></div>
+      <div className="glass-specular"></div>
+      <div className="glass-content flex flex-col h-full">
         {/* ── Image Header ── */}
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#05060a]">
           <img

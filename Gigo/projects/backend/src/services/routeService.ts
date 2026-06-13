@@ -56,8 +56,8 @@ export async function getRouteOptions(
       const distanceKm = route.summary.distance / 1000;
       const durationMinutes = route.summary.duration / 60;
 
-      // Estimate traffic delay based on speed vs expected speed
-      const expectedSpeed = 30; // km/h average in Indian cities
+      // Estimate traffic delay based on speed vs expected speed (60 km/h ideal for strict surge simulation)
+      const expectedSpeed = 60; // km/h ideal open road
       const expectedDuration = (distanceKm / expectedSpeed) * 60;
       const trafficDelay = Math.max(0, (durationMinutes - expectedDuration) * 60);
 
@@ -79,11 +79,11 @@ export function getTrafficCondition(routes: RouteOption[]): TrafficCondition {
   if (routes.length === 0) return 'MODERATE';
 
   const primaryRoute = routes[0];
-  const expectedMinutes = (primaryRoute.distance_km / 30) * 60; // 30 km/h avg
+  const expectedMinutes = (primaryRoute.distance_km / 60) * 60; // 60 km/h ideal
   const ratio = primaryRoute.duration_minutes / expectedMinutes;
 
-  if (ratio < 1.2) return 'CLEAR';
-  if (ratio < 1.6) return 'MODERATE';
+  if (ratio < 1.1) return 'CLEAR';
+  if (ratio < 1.3) return 'MODERATE';
   return 'HEAVY';
 }
 

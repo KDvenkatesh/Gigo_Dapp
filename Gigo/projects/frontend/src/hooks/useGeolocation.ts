@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { reverseGeocodeLocation } from './usePlaceSearch'
 import type { RideLocation } from '../types/ride'
 
@@ -15,13 +15,13 @@ export function useGeolocation() {
   const [locationError, setLocationError] = useState<string | null>(
     geolocationSupported ? null : 'Geolocation is not supported in this browser.',
   )
+  const watchIdRef = useRef<number | null>(null)
 
   useEffect(() => {
-    if (!geolocationSupported) {
-      return
-    }
+    if (!geolocationSupported) return
 
-    navigator.geolocation.getCurrentPosition(
+    // Use watchPosition for continuous live GPS updates (not just a one-shot)
+    watchIdRef.current = navigator.geolocation.watchPosition(
       async (position) => {
         const nextLocation = {
           label: 'Current location',
@@ -34,15 +34,23 @@ export function useGeolocation() {
           setLocation(nextLocation)
         }
         setIsLocating(false)
+        setLocationError(null)
       },
       () => {
         setLocation(defaultLocation)
         setIsLocating(false)
-        setLocationError('Using fallback city center because live location is blocked.')
+        setLocationError('Live location is unavailable. Using city center fallback.')
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 },
     )
+
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current)
+      }
+    }
   }, [geolocationSupported])
 
   return { location, isLocating, locationError }
 }
+

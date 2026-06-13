@@ -10,11 +10,7 @@ import { formatAlgoAmount } from '../lib/location'
 import { RideStatus, type ContractNotice, type RideLocation, type RideRecord, type ToastMessage } from '../types/ride'
 import axios from 'axios'
 
-let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
-if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && BACKEND_URL.includes('localhost')) {
-  BACKEND_URL = 'https://gigo-dapp.onrender.com'
-}
-
+let BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
 type RideActionState = {
   createRide: boolean
   payout: boolean
@@ -120,11 +116,15 @@ export function useRideContract() {
     args,
     sender,
     feeMultiplier = 1,
+    extraTxns = [],
+    boxes,
   }: {
     method: algosdk.ABIMethod
     args: any[]
     sender: string
     feeMultiplier?: number
+    extraTxns?: algosdk.Transaction[]
+    boxes?: algosdk.BoxReference[]
   }) {
     if (!algorandConfig.appId || !activeAddress || !transactionSigner) {
       throw new Error('Wallet/App not ready.')
@@ -136,6 +136,10 @@ export function useRideContract() {
       params.flatFee = true
     }
     const atc = new algosdk.AtomicTransactionComposer()
+
+    for (const txn of extraTxns) {
+      atc.addTransaction({ txn, signer: transactionSigner })
+    }
 
     // Transform args to handle transactions
     const methodArgs = args.map(arg => {
@@ -152,10 +156,11 @@ export function useRideContract() {
       sender,
       suggestedParams: params,
       signer: transactionSigner,
+      boxes,
     })
 
-    const populated = await populateAppCallResources(atc, algod)
-    return populated.execute(algod, 4)
+    // Bypass populateAppCallResources to prevent WalletConnect transaction ID mismatch bugs
+    return atc.execute(algod, 4)
   }
 
   async function refreshRides() {
@@ -205,7 +210,19 @@ export function useRideContract() {
             fareMicroAlgos: mongoRide.fareMicroAlgos ? BigInt(mongoRide.fareMicroAlgos) : (chainData.fareMicroAlgos || 0n),
             otp: mongoRide.otp,
             paymentLocked: mongoRide.paymentLocked,
-            vehicleType: mongoRide.vehicleType
+            vehicleType: mongoRide.vehicleType,
+            customerPressedImHere: mongoRide.customerPressedImHere,
+            driverArrivalAt: mongoRide.driverArrivalAt,
+            waitTimeFee: mongoRide.waitTimeFee,
+            receiptHash: mongoRide.receiptHash,
+            settlementReason: mongoRide.settlementReason,
+            weatherMultiplier: mongoRide.weatherMultiplier,
+            trafficDelayFee: mongoRide.trafficDelayFee,
+            settlementTxId: mongoRide.settlementTxId,
+            cancellationReason: mongoRide.cancellationReason,
+            isSurge: mongoRide.isSurge,
+            updatedAt: mongoRide.updatedAt,
+            presenceEvidence: mongoRide.presenceEvidence
          };
       });
 
@@ -217,7 +234,7 @@ export function useRideContract() {
     }
   }
 
-  async function createRide(pickup: RideLocation, drop: RideLocation, fareMicroAlgos: bigint) {
+  async function createRide(pickup: RideLocation, drop: RideLocation, fareMicroAlgos: bigint, isSurge: boolean = false) {
     if (!activeAddress) throw new Error('Connect wallet first.')
     
     updateActionState('createRide', true)
@@ -225,19 +242,35 @@ export function useRideContract() {
       const rideId = BigInt(Date.now())
 
       const suggestedParams = await algod.getTransactionParams().do()
+      
+      const mbrTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+        sender: activeAddress,
+        receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
+        amount: 29000,
+        suggestedParams,
+      })
+
       const paymentTxn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
         sender: activeAddress,
         receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
         amount: Number(fareMicroAlgos),
-        assetIndex: 762258472,
+        assetIndex: 763011769,
         suggestedParams,
       })
+
+      const rideIdBytes = algosdk.encodeUint64(rideId)
+      const boxes: algosdk.BoxReference[] = [
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('c_'), ...rideIdBytes]) },
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('f_'), ...rideIdBytes]) },
+      ]
 
       // Pass paymentTxn as the first argument (axfer)
       await executeMethod({
         method: rideAbiMethods.init_escrow,
         args: [paymentTxn, rideId],
         sender: activeAddress,
+        extraTxns: [mbrTxn],
+        boxes,
       })
 
       await axios.post(`${BACKEND_URL}/api/rides/create`, {
@@ -248,7 +281,8 @@ export function useRideContract() {
          fareMicroAlgos: fareMicroAlgos.toString(),
          vehicleType: selectedVehicle.name,
          status: RideStatus.REQUESTED,
-         paymentLocked: true
+         paymentLocked: true,
+         isSurge
       });
 
       pushToast({
@@ -291,11 +325,18 @@ export function useRideContract() {
     
     updateActionState('payout', true)
     try {
+      const rideIdBytes = algosdk.encodeUint64(rideId)
+      const boxes: algosdk.BoxReference[] = [
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('c_'), ...rideIdBytes]) },
+        { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('f_'), ...rideIdBytes]) },
+      ]
+
       await executeMethod({
         method: rideAbiMethods.payout,
         args: [rideId, riderAddress],
         sender: activeAddress,
         feeMultiplier: 2,
+        boxes,
       })
 
       await axios.post(`${BACKEND_URL}/api/rides/update-status`, {
@@ -318,9 +359,9 @@ export function useRideContract() {
     }
   }
 
-  async function checkAsaBalance(address: string): Promise<{ optedIn: boolean; balance: bigint }> {
+  async function checkAsaBalance(address: string, assetId: number = 763011769): Promise<{ optedIn: boolean; balance: bigint }> {
     try {
-      const info = await algod.accountAssetInformation(address, 762258472).do()
+      const info = await algod.accountAssetInformation(address, assetId).do()
       const holding = (info as any)['asset-holding'] || (info as any)['assetHolding'] || info
       const amount = holding['amount'] !== undefined ? holding['amount'] : (holding.amount ?? 0)
       return { optedIn: true, balance: BigInt(amount) }
@@ -329,7 +370,7 @@ export function useRideContract() {
     }
   }
 
-  async function optInToAsa() {
+  async function optInToAsa(assetId: number = 763011769) {
     if (!activeAddress || !transactionSigner) return
     updateActionState('optIn', true)
     try {
@@ -338,14 +379,57 @@ export function useRideContract() {
         sender: activeAddress,
         receiver: activeAddress,
         amount: 0,
-        assetIndex: 762258472,
+        assetIndex: assetId,
         suggestedParams,
       })
       const atc = new algosdk.AtomicTransactionComposer()
       atc.addTransaction({ txn, signer: transactionSigner })
       await atc.execute(algod, 4)
-      pushToast({ tone: 'success', title: 'Opt-in successful', description: 'GIGC enabled.' })
+      pushToast({ tone: 'success', title: 'Opt-in successful', description: `Asset enabled.` })
       return true
+    } finally {
+      updateActionState('optIn', false)
+    }
+  }
+
+  async function optInContractToAsa() {
+    if (!activeAddress || !transactionSigner) throw new Error('Connect wallet first.')
+    
+    updateActionState('optIn', true)
+    try {
+      const suggestedParams = await algod.getTransactionParams().do()
+      
+      // Provide 0.2 ALGO to the contract to cover the Min Balance Requirement (MBR) for the base account (100k) + holding 1 ASA (100k)
+      const fundTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+        sender: activeAddress,
+        receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
+        amount: 200000, 
+        suggestedParams,
+      })
+      
+      const atc = new algosdk.AtomicTransactionComposer()
+      atc.addTransaction({ txn: fundTxn, signer: transactionSigner })
+      
+      // Double the fee for the ABI call because it fires 1 inner transaction
+      const callParams = { ...suggestedParams, fee: 2000, flatFee: true }
+      
+      atc.addMethodCall({
+        appID: Number(algorandConfig.appId),
+        method: rideAbiMethods.opt_in_to_asa,
+        methodArgs: [],
+        sender: activeAddress,
+        suggestedParams: callParams,
+        signer: transactionSigner,
+      })
+
+      const populated = await populateAppCallResources(atc, algod)
+      await populated.execute(algod, 4)
+      
+      pushToast({ tone: 'success', title: 'Contract Initialized', description: `Escrow contract is now ready to receive GIGC.` })
+      return true
+    } catch (error) {
+      pushToast({ tone: 'error', title: 'Contract Initialization failed', description: getErrorMessage(error) })
+      throw error
     } finally {
       updateActionState('optIn', false)
     }
@@ -361,6 +445,47 @@ export function useRideContract() {
     const interval = window.setInterval(refreshRidesEvent, 30000)
     return () => window.clearInterval(interval)
   }, [])
+
+    const cancelRide = async (rideId: bigint) => {
+    if (!activeAddress) return;
+    try {
+      setActionState(s => ({ ...s, endRide: true }))
+      // Assuming we need current lat/lng, but we can pass 0,0 if unavailable.
+      const response = await axios.post(`${BACKEND_URL}/api/rides/customer-cancel`, {
+        rideId: rideId.toString(),
+        currentLat: 0,
+        currentLng: 0
+      });
+      if (response.data.success) {
+        await refreshRides();
+        pushToast({ tone: 'success', title: 'Ride Cancelled', description: 'Ride cancelled successfully' });
+      }
+    } catch (error: any) {
+      console.error('Failed to cancel ride', error);
+      pushToast({ tone: 'error', title: 'Error', description: error?.response?.data?.error || 'Failed to cancel ride' });
+    } finally {
+      setActionState(s => ({ ...s, endRide: false }))
+    }
+  }
+
+  const reportCustomerNoShow = async (rideId: bigint) => {
+    if (!activeAddress) return;
+    try {
+      setActionState(s => ({ ...s, endRide: true }))
+      const response = await axios.post(`${BACKEND_URL}/api/rides/customer-no-show`, {
+        rideId: rideId.toString()
+      });
+      if (response.data.success) {
+        await refreshRides();
+        pushToast({ tone: 'success', title: 'Customer No-Show', description: 'Customer no-show recorded. Fare transferred.' });
+      }
+    } catch (error: any) {
+      console.error('Failed to report customer no-show', error);
+      pushToast({ tone: 'error', title: 'Error', description: error?.response?.data?.error || 'Failed to report customer no-show' });
+    } finally {
+      setActionState(s => ({ ...s, endRide: false }))
+    }
+  }
 
   return {
     activeAddress,
@@ -386,12 +511,41 @@ export function useRideContract() {
     formatAlgoAmount,
     createRide,
     releasePayment,
+    customerConfirmPayout: async (rideId: bigint) => {
+      if (!activeAddress) throw new Error('Connect wallet first.')
+      updateActionState('payout', true)
+      try {
+        const response = await axios.post(`${BACKEND_URL}/api/rides/end-ride`, {
+          rideId: rideId.toString(),
+        })
+        if (response.data?.payoutTxId) {
+          pushToast({
+            tone: 'success',
+            title: 'Payment Released',
+            description: `Payment released! TxID: ${response.data.payoutTxId.slice(0, 12)}...`,
+          })
+          // Optimistically update the UI to avoid waiting for a full refresh
+          setRides(prev => prev.map(r => r.rideId === rideId ? { ...r, status: RideStatus.RIDE_COMPLETED } : r))
+        }
+        await refreshRides()
+      } catch (error: any) {
+        const msg = error?.response?.data?.error || error?.message || 'Failed to confirm payout'
+        pushToast({ tone: 'error', title: 'Payout failed', description: msg })
+        throw error
+      } finally {
+        updateActionState('payout', false)
+      }
+    },
+    cancelRide,
+    reportCustomerNoShow,
+    optInContractToAsa,
+    generateOtp,
+    pushToast,
+    toasts,
+    dismissToast,
     refreshRides,
     checkAsaBalance,
     optInToAsa,
-    generateOtp,
-    toasts,
-    dismissToast,
     focusedRide,
     focusedRideId,
     setFocusedRideId,
@@ -399,26 +553,79 @@ export function useRideContract() {
       setRides([])
     },
     acceptRide: async (rideId: bigint) => {
+      if (!activeAddress) throw new Error('Connect wallet first.')
       updateActionState('acceptRide', true)
       try {
-        await axios.post(`${BACKEND_URL}/api/rides/update-status`, {
-           rideId: rideId.toString(),
-           status: RideStatus.RIDER_ASSIGNED,
-           rider: activeAddress
+        const rideIdBytes = algosdk.encodeUint64(rideId)
+        const boxes: algosdk.BoxReference[] = [
+          { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('c_'), ...rideIdBytes]) },
+          { appIndex: Number(algorandConfig.appId), name: new Uint8Array([...Buffer.from('d_'), ...rideIdBytes]) },
+        ]
+
+        const suggestedParams = await algod.getTransactionParams().do()
+        
+        // 19,300 microAlgos MBR required for the new d_ box
+        const mbrTxn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
+          sender: activeAddress,
+          receiver: algosdk.getApplicationAddress(Number(algorandConfig.appId)),
+          amount: 19300,
+          suggestedParams,
+        })
+
+        await executeMethod({
+          method: rideAbiMethods.accept_ride,
+          args: [rideId, activeAddress],
+          sender: activeAddress,
+          extraTxns: [mbrTxn],
+          boxes,
+        })
+
+        await fetch(`${BACKEND_URL}/api/rides/update-status`, {
+           method: 'POST',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({
+             rideId: rideId.toString(),
+             status: RideStatus.RIDER_ASSIGNED,
+             rider: activeAddress
+           })
         });
         await refreshRides()
+      } catch (error: any) {
+        if (error?.message?.includes('another transaction request in progress') || error?.message?.includes('4100')) {
+          pushToast({ tone: 'error', title: 'Signature Pending', description: 'Please open Pera Wallet to sign the pending transaction.' });
+        } else {
+          pushToast({ tone: 'error', title: 'Accept Failed', description: getErrorMessage(error) });
+        }
+        throw error;
       } finally {
         updateActionState('acceptRide', false)
       }
     },
-    endRide: async (rideId: bigint) => {
+    endRide: async (rideId: bigint, driverLocation?: { lat: number; lng: number }) => {
+      if (!activeAddress) throw new Error('Connect wallet first.')
       updateActionState('endRide', true)
       try {
-        await axios.post(`${BACKEND_URL}/api/rides/update-status`, {
-           rideId: rideId.toString(),
-           status: RideStatus.RIDE_COMPLETED
-        });
+        if (!driverLocation) {
+          throw new Error('Driver location is required to end the ride. Please enable location services.')
+        }
+        const response = await axios.post(`${BACKEND_URL}/api/rides/driver-dropoff`, {
+          rideId: rideId.toString(),
+          driverAddress: activeAddress,
+          driverLat: driverLocation.lat,
+          driverLng: driverLocation.lng,
+        })
+        if (response.data?.success) {
+          pushToast({
+            tone: 'success',
+            title: 'Ride Ended',
+            description: `Waiting for customer to confirm payment...`,
+          })
+        }
         await refreshRides()
+      } catch (error: any) {
+        const msg = error?.response?.data?.error || error?.message || 'Failed to end ride'
+        pushToast({ tone: 'error', title: 'Could not end ride', description: msg })
+        throw error
       } finally {
         updateActionState('endRide', false)
       }
@@ -469,6 +676,6 @@ export function useRideContract() {
       } finally {
         updateActionState('startRide', false)
       }
-    },
+    }
   }
 }

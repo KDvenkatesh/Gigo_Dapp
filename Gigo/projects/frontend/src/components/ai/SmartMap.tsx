@@ -169,6 +169,38 @@ export function SmartMap({ pickup, destination }: SmartMapProps) {
 
   const traffic = routeInfo ? trafficConfig[routeInfo.traffic_status] : null;
 
+  const handleOpenGoogleMaps = () => {
+    if (!pickup.lat || !destination.lat) return;
+
+    let url = '';
+    if (waypoints.length > 2 && routeInfo) {
+      const intermediatePoints = waypoints.slice(1, -1);
+      const sampledPoints: LatLngExpression[] = [];
+      const step = Math.max(1, Math.floor(intermediatePoints.length / 8));
+      for (let i = 0; i < intermediatePoints.length; i += step) {
+        sampledPoints.push(intermediatePoints[i]);
+        if (sampledPoints.length >= 8) break;
+      }
+
+      const originStr = `${pickup.lat},${pickup.lng}`;
+      const destStr = `${destination.lat},${destination.lng}`;
+      const waypointsStr = sampledPoints
+        .map((wp) => {
+          if (Array.isArray(wp)) return `${wp[0]},${wp[1]}`;
+          const latLng = wp as { lat: number; lng: number };
+          return `${latLng.lat},${latLng.lng}`;
+        })
+        .join('|');
+
+      url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originStr)}&destination=${encodeURIComponent(destStr)}&waypoints=${encodeURIComponent(waypointsStr)}&travelmode=driving`;
+    } else {
+      const originStr = `${pickup.lat},${pickup.lng}`;
+      const destStr = `${destination.lat},${destination.lng}`;
+      url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(originStr)}&destination=${encodeURIComponent(destStr)}&travelmode=driving`;
+    }
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="relative h-full w-full">
       {/* Leaflet map */}
@@ -210,23 +242,39 @@ export function SmartMap({ pickup, destination }: SmartMapProps) {
         )}
       </MapContainer>
 
-      {/* ── Overlay: Smart Route button ── */}
-      {!routeInfo && !isLoading && (
-        <div className="absolute left-3 top-3" style={{ zIndex: 900 }}>
+      {/* ── Overlay: Smart Route & Directions buttons ── */}
+      {pickup.lat !== 0 && destination.lat !== 0 && (
+        <div className="absolute left-3 top-3 flex flex-wrap gap-2" style={{ zIndex: 900 }}>
+          {!routeInfo && !isLoading && (
+            <button
+              type="button"
+              onClick={() => void fetchSmartRoute()}
+              disabled={!isWalletReady}
+              className={cn(
+                'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold backdrop-blur-xl transition',
+                'bg-gradient-to-r from-violet-600/90 to-indigo-600/90 text-white',
+                'border border-white/10 shadow-[0_4px_24px_rgba(99,102,241,0.3)]',
+                'hover:shadow-[0_4px_32px_rgba(99,102,241,0.5)]',
+                'disabled:opacity-40 disabled:cursor-not-allowed',
+              )}
+            >
+              <Navigation className="h-3.5 w-3.5" />
+              AI Smart Route
+            </button>
+          )}
+
           <button
             type="button"
-            onClick={() => void fetchSmartRoute()}
-            disabled={!isWalletReady || !pickup.lat || !destination.lat}
+            onClick={handleOpenGoogleMaps}
             className={cn(
               'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold backdrop-blur-xl transition',
-              'bg-gradient-to-r from-violet-600/90 to-indigo-600/90 text-white',
-              'border border-white/10 shadow-[0_4px_24px_rgba(99,102,241,0.3)]',
-              'hover:shadow-[0_4px_32px_rgba(99,102,241,0.5)]',
-              'disabled:opacity-40 disabled:cursor-not-allowed',
+              'bg-emerald-500 text-black hover:bg-emerald-400',
+              'border border-white/10 shadow-[0_4px_24px_rgba(16,185,129,0.3)]',
+              'hover:shadow-[0_4px_32px_rgba(16,185,129,0.5)]',
             )}
           >
-            <Navigation className="h-3.5 w-3.5" />
-            AI Smart Route
+            <Navigation className="h-3.5 w-3.5 rotate-45 text-black" />
+            Directions
           </button>
         </div>
       )}
