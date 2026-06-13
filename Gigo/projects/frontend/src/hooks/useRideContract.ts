@@ -270,6 +270,25 @@ export function useRideContract() {
   async function releasePayment(rideId: bigint, riderAddress: string) {
     if (!activeAddress) throw new Error('Connect wallet first.')
     
+    // Find the ride from local state to identify expected customer
+    const targetRide = rides.find((r) => r.rideId === rideId)
+    const expectedCustomer = targetRide?.customer ?? ''
+
+    // Add diagnostic logs as requested
+    console.log('[releasePayment] caller:', activeAddress)
+    console.log('[releasePayment] expected authorized address:', expectedCustomer)
+
+    // Explicit frontend validation BEFORE method call
+    if (expectedCustomer && activeAddress.toLowerCase() !== expectedCustomer.toLowerCase()) {
+      const msg = `Only the customer who booked this ride (${expectedCustomer.slice(0, 6)}...) is authorized to release payment, not ${activeAddress.slice(0, 6)}...`
+      pushToast({
+        tone: 'error',
+        title: 'Authorization Failure',
+        description: msg,
+      })
+      throw new Error(msg)
+    }
+    
     updateActionState('payout', true)
     try {
       await executeMethod({

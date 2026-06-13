@@ -391,15 +391,10 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                         {item.status === RideStatus.RIDE_COMPLETED && item.rider === ride.activeAddress ? (
                           <button
                             type="button"
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              ride.setFocusedRideId(item.rideId)
-                              void ride.releasePayment(item.rideId, item.rider || ride.activeAddress || '')
-                            }}
-                            disabled={ride.actionState.payout}
-                            className="rounded-[22px] bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
+                            disabled={true}
+                            className="rounded-[22px] border border-white/10 bg-white/5 px-4 py-3 text-xs font-bold text-white/40 cursor-not-allowed"
                           >
-                            {ride.actionState.payout ? 'Releasing payment' : 'Release payment'}
+                            Awaiting Customer Release
                           </button>
                         ) : null}
                       </div>
@@ -486,22 +481,21 @@ export function DriverDashboard({ ride, onBack }: { ride: RideHook; onBack: () =
                   </div>
                 ) : null}
 
-                {activeRide.status === RideStatus.RIDE_COMPLETED && activeRide.rider === ride.activeAddress ? (
+                 {activeRide.status === RideStatus.RIDE_COMPLETED && activeRide.rider === ride.activeAddress ? (
                   <div className="mt-5 rounded-[28px] border border-amber-300/18 bg-amber-300/10 p-4">
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="mt-0.5 h-5 w-5 text-amber-100" />
                       <div>
                         <p className="text-sm font-semibold text-white">Destination reached</p>
                         <p className="mt-1 text-sm leading-6 text-white/62">
-                          Ride is complete! You can now request the payout from the escrow.
+                          Ride is complete! Awaiting customer to release payment from the escrow.
                         </p>
                         <button
                           type="button"
-                          onClick={() => void ride.releasePayment(activeRide.rideId, activeRide.rider || ride.activeAddress || '')}
-                          disabled={ride.actionState.payout}
-                          className="mt-3 rounded-[20px] bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 px-4 py-3 text-sm font-black text-slate-950 disabled:opacity-45"
+                          disabled={true}
+                          className="mt-3 rounded-[20px] border border-white/10 bg-white/5 px-4 py-3 text-sm font-bold text-white/40 cursor-not-allowed"
                         >
-                          {ride.actionState.payout ? 'Releasing payment' : 'Release payment to rider'}
+                          Awaiting Customer Release
                         </button>
                       </div>
                     </div>
